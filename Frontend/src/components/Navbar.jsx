@@ -1,43 +1,68 @@
+import { NavLink, Link } from "react-router-dom";
+import { Button } from "./Button.jsx";
 import { useState } from "react";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
 function Navbar() {
-  const [activeLink, setActiveLink] = useState("Home");
+  const getActiveClass = ({ isActive }) =>
+    `${
+      isActive
+        ? "active text-cyprus font-bold dark:text-cloud-white "
+        : "hover:text-cyprus dark:text-cloud-white hover:dark:text-cloud-white"
+    } relative nav-link`;
 
-  const links = ["Home", "About", "Services", "Contact"];
+  const { scrollY } = useScroll();
+
+  const [hidden, setHidden] = useState(false);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious();
+    if (latest > previous && latest > 150) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
 
   return (
-    <div className="flex justify-center mb-50">
-      <div className="bg-cloud-white w-5/6 rounded-full flex justify-between items-center fixed m-5 py-2 px-8 z-20 shadow-xl">
+    <div className=" mb-40 mx-auto w-5/6">
+      <motion.div
+        variants={{
+          visible: { y: 0, scaleX: 1, opacity: 1 },
+          hidden: { y: "-100%", scaleX: 0.8, opacity: 0 },
+        }}
+        animate={hidden ? "hidden" : "visible"}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        className="bg-cloud-white w-5/6 rounded-full fixed mt-5 sm:py-2 sm:px-8 z-20 flex justify-between items-center drop-shadow-xl origin-center
+        dark:bg-gray-950 dark:drop-shadow-cloud-white/50 dark:drop-shadow-xl py-3"
+      >
         <div>
-          <a href="/" className="text-cyprus text-2xl flex">
+          <Link
+            to="/"
+            className="text-cyprus dark:text-cloud-white text-2xl hidden sm:flex items-center"
+          >
             <i class="fa-regular fa-hospital p-1"></i>
             <p className="font-semibold italic font-logo py-0.5">Oncura</p>
-          </a>
+          </Link>
         </div>
 
-        <div className="flex gap-6">
-          {links.map((link) => (
-            <a
-              key={link}
-              href="#"
-              className={`relative nav-link ${activeLink === link ? "active text-cyprus font-bold" : "hover:text-cyprus"}`}
-              onClick={() => setActiveLink(link)}
-            >
-              {link}
-            </a>
-          ))}
-        </div>
+        <nav className="flex gap-6">
+          <NavLink to="/" className={getActiveClass}>
+            Home
+          </NavLink>
+          <NavLink to="/about" className={getActiveClass}>
+            About
+          </NavLink>
+          <NavLink to="/services" className={getActiveClass}>
+            Services
+          </NavLink>
+          <NavLink to="/contact" className={getActiveClass}>
+            Contact
+          </NavLink>
+        </nav>
 
-        <div>
-          <a
-            href="#_"
-            className="relative inline-block overflow-hidden bg-cyprus rounded-full py-2 px-4 text-cloud-white group"
-          >
-            <span className="absolute z-0 w-64 h-64 mt-12 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-teal-800 left-0 top-0"></span>
-            <span className="relative z-10">Appointment</span>
-          </a>
-        </div>
-      </div>
+        <Button text="Appointment" to="/login" />
+      </motion.div>
     </div>
   );
 }
@@ -45,3 +70,4 @@ function Navbar() {
 export default Navbar;
 
 // https://bootstrapmade.com/demo/MediTrust/
+// https://www.creative-tim.com/twcomponents/cheatsheet

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@tailwind utilities;
+
+
 @theme {
     --color-cyprus: #004643;
     --color-cloud-white: #FAFAFA;
@@ -23,6 +26,14 @@
 }
 
 @layer utilities {
+
+    @layer utilities {
+        .headings {
+            @apply relative after:content-[''] after:absolute after:top-[80px] sm:after:top-[60px] after:left-[47%] after:w-[5%] after:h-[2px] after:bg-[#004643] dark:after:bg-cloud-white;
+        }
+    }
+
+
     .active::before {
         content: '';
         position: absolute;
@@ -31,6 +42,12 @@
         width: 100%;
         height: 2px;
         background-color: #004643;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .active::before {
+            background-color: #FAFAFA;
+        }
     }
 
     .nav-link:not(.active)::before {
@@ -48,23 +65,10 @@
         width: 100%;
     }
 
-    .transition {
-        transition: all ease 0.5s;
-    }
-
-    .transition:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .headings::before {
-        content: '';
-        position: absolute;
-        top: 60px;
-        left: 47%;
-        width: 5%;
-        height: 2px;
-        background-color: #004643;
+    @media (prefers-color-scheme: dark) {
+        .nav-link:not(.active)::before {
+            background-color: #FAFAFA;
+        }
     }
 
     .medinfo {

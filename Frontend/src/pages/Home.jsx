@@ -1,5 +1,7 @@
-import Navbar from "../components/Navbar.jsx";
+import { Button, ButtonB } from "../components/Button.jsx";
+import { motion } from "framer-motion";
 import OperationTheatre from "../assets/Operation Theatre.jfif";
+import { FieldCards } from "../components/Cards.jsx";
 import HeartFailure from "../assets/Heart Failure.jfif";
 import Brain from "../assets/Brain.jfif";
 import Bone from "../assets/Tailored.jfif";
@@ -9,59 +11,116 @@ import Ambulance from "../assets/Advanced.jfif";
 import Skin from "../assets/PLINEST.jfif";
 import Eye from "../assets/eye.jfif";
 import Xray from "../assets/X-ray.jfif";
-import estetica from "../assets/estética.jfif";
-import Doctor from "../assets/Doctor.jfif";
-import Facial from "../assets/Facial.jfif";
-import love from "../assets/love.jfif";
-import Fans from "../assets/Fans.jfif";
-import Pagin from "../assets/Pagin.jfif";
-import undefin from "../assets/undefin.jfif";
-import undefine from "../assets/undefine.jfif";
-import undefined from "../assets/undefined.jfif";
-import Footer from "../components/Footer.jsx";
+// import estetica from "../assets/estética.jfif";
+// import Doctor from "../assets/Doctor.jfif";
+// import Facial from "../assets/Facial.jfif";
+// import love from "../assets/love.jfif";
+// import Fans from "../assets/Fans.jfif";
+// import Pagin from "../assets/Pagin.jfif";
+// import undefin from "../assets/undefin.jfif";
+// import undefine from "../assets/undefine.jfif";
+// import undefined from "../assets/undefined.jfif";
 
 function Home() {
   return (
     <>
-      <Navbar />
-
       <div>
-        <section className="w-xxl m-30">
-          <p className="bg-cyprus text-cloud-white w-1/5 rounded-full text-center text-sm py-2 font-[600]">
+        <section className="max-w-screen-xl px-5 sm:w-xl md:mx-20">
+          <motion.p
+            variants={{
+              hidden: { opacity: 0, x: -100, y: 100 },
+              show: {
+                opacity: 1,
+                x: 0,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="bg-cyprus text-cloud-white sm:w-1/2 w-2/5 rounded-full text-center sm:text-sm text-xs py-2 font-[600]"
+          >
             Leading Healthcare Specialists
-          </p>
+          </motion.p>
 
-          <h1 className="text-cloud-white text-[55px] font-bold my-4 leading-17">
-            Advanced Medical care<br></br>
-            for Your Family's Health
-          </h1>
+          <motion.h1
+            variants={{
+              hidden: { opacity: 0, x: -100, y: 100 },
+              show: {
+                opacity: 1,
+                x: 0,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-cloud-white text-[min(7vw,55px)] text-balance font-bold my-8 leading-[min(8vw,55px)]"
+          >
+            Advanced Medical care for Your Family's Health
+          </motion.h1>
 
-          <p className="text-cloud-white text-lg">
+          <motion.p
+            variants={{
+              hidden: { opacity: 0, x: -100, y: 100 },
+              show: {
+                opacity: 1,
+                x: 0,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-cloud-white text-[clamp(14px, 2vw, 18px)] text-balance leading-[min(5vw,30px)]"
+          >
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro
-            placeat <br></br>
-            necessitatibus quis, velit quisquam beatae.
-          </p>
+            placeat necessitatibus quis, velit quisquam beatae.
+          </motion.p>
 
-          <div className="my-9">
-            <a
-              href="#_"
-              className="relative inline-block overflow-hidden bg-teal-800 rounded-full py-4 px-7 text-cloud-white group mr-4"
-            >
-              <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-              <span className="relative z-10 font-bold">Book Appointment</span>
-            </a>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: -100, y: 100 },
+              show: {
+                opacity: 1,
+                x: 0,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="my-9 flex gap-5 justify-end sm:justify-normal"
+          >
+            <Button
+              text="Book Appointment"
+              to="/login"
+              className="py-4 px-7 inline-block"
+            />
 
-            <a
-              href="#_"
-              className="relative inline-block overflow-hidden border-2 border-cyprus rounded-full py-4 px-7 text-cloud-white group"
-            >
-              <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-teal-800 left-0 top-0"></span>
-              <span className="relative z-10 font-bold">Explore Services</span>
-            </a>
-          </div>
+            <ButtonB text="Explore Services" to="/services" />
+          </motion.div>
 
-          <div className="flex">
-            <div className="flex items-center mr-4">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: -50, y: 150 },
+              show: {
+                opacity: 1,
+                x: 0,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="flex flex-col sm:flex-row gap-6"
+          >
+            <div className="flex items-center">
               <i class="fa-solid fa-clock text-teal-800 text-3xl p-1"></i>
               <div className="mx-2">
                 <p className="text-violet-200 text-sm">Working Hours:</p>
@@ -80,426 +139,318 @@ function Home() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
+        </section>
 
-          <div className="w-xxl bg-black opacity-75 py-10 flex justify-around my-20 rounded-3xl">
-            <div className="flex">
-              <div className="mt-3">
-                <i class="fa-solid fa-heart-pulse bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
-              </div>
-              <div className="mx-2">
-                <p className="text-lg text-white my-1">Cardiology</p>
-                <p className="text-violet-200 text-sm">
-                  Lorem ipsum dolor sit amet,
-                  <br />
-                  consectetur adipiscing elit
+        <section className="mx-auto w-9/10 sm:w-5/6 bg-black/75 p-10 flex gap-5 sm:gap-16 rounded-3xl m-10 mb-30 flex-col sm:flex-row">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="flex"
+          >
+            <div className="mt-3">
+              <i class="fa-solid fa-heart-pulse bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
+            </div>
+            <div className="mx-2">
+              <p className="text-lg text-white my-1">Cardiology</p>
+              <p className="text-violet-200 text-sm text-wrap">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="flex"
+          >
+            <div className="mt-3">
+              <i class="fa-solid fa-lungs bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
+            </div>
+            <div className="mx-2">
+              <p className="text-lg text-white my-1">Pulmonology</p>
+              <p className="text-violet-200 text-sm text-wrap">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="flex"
+          >
+            <div className="mt-3">
+              <i class="fa-solid fa-capsules bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
+            </div>
+            <div className="mx-2">
+              <p className="text-lg text-white my-1">Diagnostics</p>
+              <p className="text-violet-200 text-sm text-wrap">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+              </p>
+            </div>
+          </motion.div>
+        </section>
+
+        <section className="bg-white pt-20 overflow-x-hidden dark:bg-gray-950 dark:text-cloud-white">
+          <div className="mx-auto w-9/10 sm:w-5/6">
+            <div className="flex items-center gap-10 flex-col-reverse sm:flex-row">
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, x: -150, y: 50 },
+                  show: {
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                  },
+                }}
+                initial="hidden"
+                whileInView="show"
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+                className="relative w-full"
+              >
+                <img
+                  loading="lazy"
+                  src={OperationTheatre}
+                  alt="State of the Art facilities"
+                  className="aspect-[4/3] w-full object-cover rounded-2xl shadow-md shadow-gray-400"
+                />
+                <div className="text-cloud-white bg-cyprus absolute right-10 -bottom-15 p-5 rounded-xl flex-col justify-center shadow-md shadow-gray-400">
+                  <p className="font-bold text-4xl">25+</p>
+                  <p>Years of excellence</p>
+                </div>
+              </motion.div>
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, x: 150, y: 50 },
+                  show: {
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                  },
+                }}
+                initial="hidden"
+                whileInView="show"
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+                className="w-full"
+              >
+                <h3 className="text-cyprus text-3xl text-wrap font-bold dark:text-teal-700">
+                  Committed to Exceptional Patient <br />
+                  Care
+                </h3>
+
+                <p className="text-cyprus opacity-70 text-wrap font-bold my-5 dark:text-teal-700">
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                  Eligendi iure ab fugit, consequatur sapiente inventore in
+                  ducimus earum voluptatem.
                 </p>
-              </div>
+
+                <p className="opacity-90 text-wrap">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Placeat minima quam cupiditate dolore velit qui accusamus
+                  eveniet sunt vel tenetur, accusantium ad rem deleniti Dolor.
+                </p>
+
+                <div className="my-15 flex gap-6 flex-col sm:flex-row">
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, y: 150 },
+                      show: { opacity: 1, y: 0 },
+                    }}
+                    initial="hidden"
+                    whileInView="show"
+                    transition={{ duration: 0.1, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                    className="p-4 inset-shadow-2xs shadow-sm rounded-xl dark:shadow-gray-900 dark:inset-shadow-gray-900 hover:-translate-y-2 transition-all ease-out duration-300 hover:shadow-md"
+                  >
+                    <i className="fa-solid fa-heart-pulse text-3xl text-cyprus dark:text-teal-700"></i>
+
+                    <p className="text-cyprus leading-12 font-semibold dark:text-teal-700">
+                      Compassionate Care
+                    </p>
+
+                    <small className="text-sm text-gray-600 dark:text-gray-300">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </small>
+                  </motion.div>
+
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, y: 150 },
+                      show: { opacity: 1, y: 0 },
+                    }}
+                    initial="hidden"
+                    whileInView="show"
+                    transition={{ duration: 0.1, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                    className="p-4 inset-shadow-2xs shadow-sm rounded-xl dark:shadow-gray-900 dark:inset-shadow-gray-900 hover:-translate-y-2 transition-all ease-out duration-300 hover:shadow-md"
+                  >
+                    <i className="fa-regular fa-star text-3xl text-cyprus dark:text-teal-700"></i>
+
+                    <p className="text-cyprus leading-12 font-semibold dark:text-teal-700">
+                      Medical Excellence
+                    </p>
+
+                    <small className="text-sm text-gray-600 dark:text-gray-300">
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    </small>
+                  </motion.div>
+                </div>
+
+                <div className="mt-15 hidden sm:flex gap-5">
+                  <Button
+                    text="Learn More About Us"
+                    to="/about"
+                    className="inline-block rounded-xl py-4 px-7"
+                  />
+
+                  <ButtonB
+                    text="Meet Our Team"
+                    to="/"
+                    className="inline-block rounded-xl text-cyprus hover:text-cloud-white hover:border-teal-800 dark:text-teal-700 dark:border-teal-700"
+                  />
+                </div>
+              </motion.div>
             </div>
 
-            <div className="flex">
-              <div className="mt-3">
-                <i class="fa-solid fa-lungs bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
-              </div>
-              <div className="mx-2">
-                <p className="text-lg text-white my-1">Pulmonology</p>
-                <p className="text-violet-200 text-sm">
-                  Lorem ipsum dolor sit amet,
-                  <br />
-                  consectetur adipiscing elit
-                </p>
-              </div>
-            </div>
+            <div className="mt-50 flex flex-col">
+              <h1 className="text-cyprus text-center text-3xl font-bold headings relative dark:text-teal-700 ">
+                Featured Departments
+              </h1>
 
-            <div className="flex">
-              <div className="mt-3">
-                <i class="fa-solid fa-capsules bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
-              </div>
-              <div className="mx-2">
-                <p className="text-lg text-white my-1">Diagnostics</p>
-                <p className="text-violet-200 text-sm">
-                  Lorem ipsum dolor sit amet,
-                  <br />
-                  consectetur adipiscing elit
-                </p>
+              <small className="text-sm text-black opacity-75 text-center mt-12 dark:text-cloud-white">
+                Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
+                consectetur velit
+              </small>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 my-20">
+                <FieldCards
+                  image={HeartFailure}
+                  alt="Cognitive Heart Failure (CHF)"
+                  iconClass="fa-solid fa-heart-pulse"
+                  title="Cardiology"
+                  description="Comprehensive cardiovascular care with advanced diagnostic
+                      techniques and treatment options for heart conditions,
+                      ensuring optimal cardiac health for all patients."
+                />
+
+                <FieldCards
+                  image={Brain}
+                  alt="Brain Surgeon Junction"
+                  iconClass="fa-solid fa-brain"
+                  title="Neurology"
+                  description="Expert neurological care specializing in brain and nervous
+                      system disorders, providing cutting-edge treatments and
+                      compassionate support for neurological conditions."
+                />
+
+                <FieldCards
+                  image={Bone}
+                  alt="Experience Natural Healing Physiotherapy"
+                  iconClass="fa-solid fa-bone"
+                  title="Orthopedics"
+                  description=" Advanced musculoskeletal care focusing on bones, joints,
+                      and muscles with innovative surgical and non-surgical
+                      treatment approaches for mobility restoration."
+                />
+
+                <FieldCards
+                  image={Child}
+                  alt="Child Specialist"
+                  iconClass="fa-solid fa-baby"
+                  title="Pediatrics"
+                  description="  Specialized healthcare for children from infancy through
+                      adolescence, offering comprehensive medical care in a
+                      child-friendly environment with experienced pediatric
+                      specialists."
+                />
+
+                <FieldCards
+                  image={Cancer}
+                  alt="Living Cancer Virus"
+                  iconClass="fa-solid fa-ribbon"
+                  title="Oncology"
+                  description="Comprehensive cancer care with multidisciplinary approach,
+                      offering advanced treatment options, clinical trials, and
+                      compassionate support throughout the cancer journey."
+                />
+
+                <FieldCards
+                  image={Ambulance}
+                  alt="Advanced Hospital SEO services"
+                  iconClass="fa-solid fa-truck-medical"
+                  title="Emergency Care"
+                  description=" Round-the-clock emergency medical services with rapid
+                      response capabilities, state-of-the-art equipment, and
+                      experienced emergency physicians for critical care."
+                />
+
+                <FieldCards
+                  image={Skin}
+                  alt="Microneedling Safe Practices"
+                  iconClass="fa-solid fa-hand-dots"
+                  title="Dermatology"
+                  description="Extensive skin care services offering expert diagnosis and
+                      treatment of various skin, hair, and nail conditions,
+                      using advanced therapies to restore and maintain healthy,
+                      radiant skin."
+                />
+
+                <FieldCards
+                  image={Eye}
+                  alt="Ophthalmology Simulation Training - cataract surgery"
+                  iconClass="fa-regular fa-eye"
+                  title="Optometry"
+                  description="Comprehensive eye and vision care with advanced diagnostic
+                      equipment and personalized treatment plans, ensuring clear
+                      vision, early detection of eye diseases, and long-term
+                      ocular health for all patients."
+                />
+
+                <FieldCards
+                  image={Xray}
+                  alt="X-ray review"
+                  iconClass="fa-solid fa-x-ray"
+                  title="Radiology"
+                  description="  Comprehensive Bone care with advanced diagnostic
+                      techniques and Xray options for bone conditions, ensuring
+                      optimal skeletal health for all patients."
+                />
               </div>
             </div>
           </div>
         </section>
 
-        <section className="bg-white pt-20 px-30">
-          <div className="flex items-center">
-            <div className="relative w-1/2">
-              <img
-                loading="lazy"
-                src={OperationTheatre}
-                alt="State of the Art facilities"
-                className="h-96 w-136 rounded-2xl shadow-md shadow-gray-400"
-              />
-              <div className="text-cloud-white bg-cyprus absolute right-10 -bottom-15 p-5 rounded-xl flex-col justify-center shadow-md shadow-gray-400">
-                <p className="font-bold text-4xl">25+</p>
-                <p>Years of excellence</p>
-              </div>
-            </div>
-            <div className="w-1/2  ml-8">
-              <h3 className="text-cyprus text-3xl font-bold">
-                Committed to Exceptional Patient <br />
-                Care
-              </h3>
-
-              <p className="text-cyprus opacity-70 font-bold my-5">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Eligendi iure ab fugit, consequatur sapiente inventore in
-                ducimus earum voluptatem.
-              </p>
-
-              <p className="opacity-90">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat
-                minima quam cupiditate dolore velit qui accusamus eveniet sunt
-                vel tenetur, accusantium ad rem deleniti Dolor.
-              </p>
-
-              <div className="my-15 flex">
-                <div className="p-4 shadow-sm rounded-xl mr-8 transition">
-                  <i class="fa-solid fa-heart-pulse text-3xl text-cyprus"></i>
-                  <p className="text-cyprus leading-12 font-semibold">
-                    Compassionate Care
-                  </p>
-
-                  <small className="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  </small>
-                </div>
-
-                <div className="p-4 shadow-sm rounded-xl transition">
-                  <i class="fa-regular fa-star text-3xl text-cyprus"></i>
-                  <p className="text-cyprus leading-12 font-semibold">
-                    Medical Excellence
-                  </p>
-
-                  <small className="text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  </small>
-                </div>
-              </div>
-
-              <div className="mt-15">
-                <a
-                  href="#_"
-                  className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                >
-                  <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                  <span className="relative z-10 font-bold">
-                    Learn More About Us
-                  </span>
-                </a>
-
-                <a
-                  href="#_"
-                  className="relative inline-block overflow-hidden border-1 border-cyprus rounded-xl py-4 px-7 text-cyprus group hover:border-teal-800 hover:text-cloud-white"
-                >
-                  <span className="absolute z-0 w-80 h-80 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-teal-800 -left-5 top-0"></span>
-                  <span className="relative z-10 font-bold">Meet Our Team</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-50 flex flex-col">
-            <h1 className="text-cyprus text-center text-3xl font-bold headings relative">
-              Featured Departments
-            </h1>
-
-            <small className="text-sm text-black opacity-75 text-center mt-12">
-              Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
-              consectetur velit
-            </small>
-
-            <div className="grid grid-cols-3 gap-7 my-20">
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={HeartFailure}
-                    alt="Cognitive Heart Failure (CHF)"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-solid fa-heart-pulse text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">
-                    Cardiology
-                  </p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Comprehensive cardiovascular care with advanced diagnostic
-                    techniques and treatment options for heart conditions,
-                    ensuring optimal cardiac health for all patients.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={Brain}
-                    alt="Brain Surgeon Junction"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-solid fa-brain text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">
-                    Neurology
-                  </p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Expert neurological care specializing in brain and nervous
-                    system disorders, providing cutting-edge treatments and
-                    compassionate support for neurological conditions.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={Bone}
-                    alt="Experience Natural Healing Physiotherapy"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-solid fa-bone text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">
-                    Orthopedics
-                  </p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Advanced musculoskeletal care focusing on bones, joints, and
-                    muscles with innovative surgical and non-surgical treatment
-                    approaches for mobility restoration.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={Child}
-                    alt="Child Specialist"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-solid fa-baby text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">
-                    Pediatrics
-                  </p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Specialized healthcare for children from infancy through
-                    adolescence, offering comprehensive medical care in a
-                    child-friendly environment with experienced pediatric
-                    specialists.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={Cancer}
-                    alt="Living Cancer Virus"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-solid fa-ribbon text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">Oncology</p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Comprehensive cancer care with multidisciplinary approach,
-                    offering advanced treatment options, clinical trials, and
-                    compassionate support throughout the cancer journey.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={Ambulance}
-                    alt="Advanced Hospital SEO services"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-solid fa-truck-medical text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">
-                    Emergency Care
-                  </p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Round-the-clock emergency medical services with rapid
-                    response capabilities, state-of-the-art equipment, and
-                    experienced emergency physicians for critical care.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={Skin}
-                    alt="Microneedling Safe Practices"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-solid fa-hand-dots text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">
-                    Dermatology
-                  </p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Extensive skin care services offering expert diagnosis and
-                    treatment of various skin, hair, and nail conditions, using
-                    advanced therapies to restore and maintain healthy, radiant
-                    skin.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={Eye}
-                    alt="Ophthalmology Simulation Training - cataract surgery"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-regular fa-eye text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">
-                    Optometry
-                  </p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Comprehensive eye and vision care with advanced diagnostic
-                    equipment and personalized treatment plans, ensuring clear
-                    vision, early detection of eye diseases, and long-term
-                    ocular health for all patients.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg group/card hover:shadow-2xl hover:-translate-y-3 transition-all ease-in duration-200">
-                <div className="overflow-hidden rounded-t-xl">
-                  <img
-                    loading="lazy"
-                    src={Xray}
-                    alt="X-ray review"
-                    className="object-cover w-full h-50 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                  />
-                </div>
-                <div className="px-7 pb-9 pt-18 flex flex-col relative">
-                  <i class="fa-solid fa-x-ray text-3xl text-cloud-white bg-cyprus p-3 rounded-full absolute -top-7 left-7 shadow-teal-800 shadow-lg"></i>
-                  <p className="font-semibold text-2xl text-cyprus">
-                    Radiology
-                  </p>
-
-                  <small className="text-sm text-black opacity-65 my-7 leading-6">
-                    Comprehensive Bone care with advanced diagnostic techniques
-                    and Xray options for bone conditions, ensuring optimal
-                    skeletal health for all patients.
-                  </small>
-
-                  <a
-                    href="/"
-                    className="text-cyprus font-semibold group/link hover:text-teal-600 transition-all ease-in duration-200 w-28"
-                  >
-                    Learn More{" "}
-                    <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-1 transition-all ease-in duration-200"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-teal-50 py-15 px-30 flex flex-col">
+        {/* <section className="bg-teal-50 py-15 px-30 flex flex-col">
           <h1 className="text-cyprus text-center text-3xl font-bold headings relative">
             Featured Services
           </h1>
@@ -1450,12 +1401,13 @@ function Home() {
               </ul>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
-
-      <Footer />
     </>
   );
 }
 
 export default Home;
+
+// hover:shadow-md hover:inset-shadow-none
+// dark:hover:shadow-gray-950

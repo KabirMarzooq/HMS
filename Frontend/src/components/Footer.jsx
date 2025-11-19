@@ -3,10 +3,10 @@ function Footer() {
 
   return (
     <>
-      <footer className="bg-teal-50 px-30">
+      <footer className="bg-teal-50 sm:px-30 flex flex-col px-10">
         <hr className="text-gray-200" />
 
-        <div className="pt-30 grid grid-cols-3 gap-8">
+        <div className="pt-30 sm:grid grid-cols-3 gap-8 flex flex-col">
           <div>
             <a
               href="/"
