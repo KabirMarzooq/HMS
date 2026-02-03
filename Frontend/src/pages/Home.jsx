@@ -1,7 +1,13 @@
-import { Button, ButtonB } from "../components/Button.jsx";
+import { Button, ButtonB, ButtonC } from "../components/Button.jsx";
 import { motion } from "framer-motion";
 import OperationTheatre from "../assets/Operation Theatre.jfif";
-import { FieldCards } from "../components/Cards.jsx";
+import {
+  FieldCards,
+  FeaturedCards,
+  DoctorsCards,
+  ServicesCards,
+  HelpCards,
+} from "../components/Cards.jsx";
 import HeartFailure from "../assets/Heart Failure.jfif";
 import Brain from "../assets/Brain.jfif";
 import Bone from "../assets/Tailored.jfif";
@@ -11,17 +17,54 @@ import Ambulance from "../assets/Advanced.jfif";
 import Skin from "../assets/PLINEST.jfif";
 import Eye from "../assets/eye.jfif";
 import Xray from "../assets/X-ray.jfif";
-// import estetica from "../assets/estética.jfif";
-// import Doctor from "../assets/Doctor.jfif";
-// import Facial from "../assets/Facial.jfif";
-// import love from "../assets/love.jfif";
-// import Fans from "../assets/Fans.jfif";
-// import Pagin from "../assets/Pagin.jfif";
-// import undefin from "../assets/undefin.jfif";
-// import undefine from "../assets/undefine.jfif";
-// import undefined from "../assets/undefined.jfif";
+import estetica from "../assets/estética.jfif";
+import Doctor from "../assets/Doctor.jfif";
+import Facial from "../assets/Facial.jfif";
+import love from "../assets/love.jfif";
+import Fans from "../assets/Fans.jfif";
+import Pagin from "../assets/Pagin.jfif";
+import undefin from "../assets/undefin.jfif";
+import undefine from "../assets/undefine.jfif";
+import undefined from "../assets/undefined.jfif";
+
+const parentVariant = {
+  hidden: { opacity: 0, y: 50 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 0.2,
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
+const childVariant = {
+  hidden: { opacity: 0, y: 50 },
+  show: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease: "easeOut" },
+};
 
 function Home() {
+  const services = [
+    {
+      icon: "fa-solid fa-heart-pulse",
+      title: "Cardiology",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    },
+    {
+      icon: "fa-solid fa-lungs",
+      title: "Pulmonology",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    },
+    {
+      icon: "fa-solid fa-capsules",
+      title: "Diagnostics",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    },
+  ];
+
   return (
     <>
       <div>
@@ -107,10 +150,9 @@ function Home() {
 
           <motion.div
             variants={{
-              hidden: { opacity: 0, x: -50, y: 150 },
+              hidden: { opacity: 0, y: 150 },
               show: {
                 opacity: 1,
-                x: 0,
                 y: 0,
               },
             }}
@@ -142,84 +184,30 @@ function Home() {
           </motion.div>
         </section>
 
-        <section className="mx-auto w-9/10 sm:w-5/6 bg-black/75 p-10 flex gap-5 sm:gap-16 rounded-3xl m-10 mb-30 flex-col sm:flex-row">
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 150 },
-              show: {
-                opacity: 1,
-                y: 0,
-              },
-            }}
-            initial="hidden"
-            whileInView="show"
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            viewport={{ once: true }}
-            className="flex"
-          >
-            <div className="mt-3">
-              <i class="fa-solid fa-heart-pulse bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
-            </div>
-            <div className="mx-2">
-              <p className="text-lg text-white my-1">Cardiology</p>
-              <p className="text-violet-200 text-sm text-wrap">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </p>
-            </div>
-          </motion.div>
+        <motion.section
+          variants={parentVariant}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="mx-auto w-9/10 sm:w-5/6 bg-black/75 p-10 flex gap-5 sm:gap-16 rounded-3xl m-10 mb-30 flex-col sm:flex-row"
+        >
+          {services.map((item, index) => (
+            <motion.div key={index} variants={childVariant} className="flex">
+              <div className="mt-3">
+                <i
+                  className={`${item.icon} bg-cyprus text-3xl p-3 text-teal-600 rounded-xl`}
+                ></i>
+              </div>
 
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 150 },
-              show: {
-                opacity: 1,
-                y: 0,
-              },
-            }}
-            initial="hidden"
-            whileInView="show"
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            viewport={{ once: true }}
-            className="flex"
-          >
-            <div className="mt-3">
-              <i class="fa-solid fa-lungs bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
-            </div>
-            <div className="mx-2">
-              <p className="text-lg text-white my-1">Pulmonology</p>
-              <p className="text-violet-200 text-sm text-wrap">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </p>
-            </div>
-          </motion.div>
+              <div className="mx-2">
+                <p className="text-lg text-white my-1">{item.title}</p>
+                <p className="text-violet-200 text-sm text-wrap">{item.text}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.section>
 
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 150 },
-              show: {
-                opacity: 1,
-                y: 0,
-              },
-            }}
-            initial="hidden"
-            whileInView="show"
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            viewport={{ once: true }}
-            className="flex"
-          >
-            <div className="mt-3">
-              <i class="fa-solid fa-capsules bg-cyprus text-3xl p-3 text-teal-600 rounded-xl"></i>
-            </div>
-            <div className="mx-2">
-              <p className="text-lg text-white my-1">Diagnostics</p>
-              <p className="text-violet-200 text-sm text-wrap">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </p>
-            </div>
-          </motion.div>
-        </section>
-
-        <section className="bg-white pt-20 overflow-x-hidden dark:bg-gray-950 dark:text-cloud-white">
+        <section className="bg-white pt-20 overflow-hidden dark:bg-gray-950 dark:text-cloud-white">
           <div className="mx-auto w-9/10 sm:w-5/6">
             <div className="flex items-center gap-10 flex-col-reverse sm:flex-row">
               <motion.div
@@ -343,16 +331,48 @@ function Home() {
             </div>
 
             <div className="mt-50 flex flex-col">
-              <h1 className="text-cyprus text-center text-3xl font-bold headings relative dark:text-teal-700 ">
+              <motion.h1
+                variants={{
+                  hidden: { opacity: 0, y: 150 },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                  },
+                }}
+                initial="hidden"
+                whileInView="show"
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+                className="text-cyprus text-center text-3xl font-bold headings relative dark:text-teal-700 "
+              >
                 Featured Departments
-              </h1>
+              </motion.h1>
 
-              <small className="text-sm text-black opacity-75 text-center mt-12 dark:text-cloud-white">
+              <motion.small
+                variants={{
+                  hidden: { opacity: 0, y: 150 },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                  },
+                }}
+                initial="hidden"
+                whileInView="show"
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+                className="text-sm text-black opacity-75 text-center mt-12 dark:text-cloud-white"
+              >
                 Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
                 consectetur velit
-              </small>
+              </motion.small>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 my-20">
+              <motion.div
+                variants={parentVariant}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 sm:grid-cols-3 gap-7 mt-20"
+              >
                 <FieldCards
                   image={HeartFailure}
                   alt="Cognitive Heart Failure (CHF)"
@@ -382,7 +402,14 @@ function Home() {
                       and muscles with innovative surgical and non-surgical
                       treatment approaches for mobility restoration."
                 />
-
+              </motion.div>
+              <motion.div
+                variants={parentVariant}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 my-7"
+              >
                 <FieldCards
                   image={Child}
                   alt="Child Specialist"
@@ -413,7 +440,14 @@ function Home() {
                       response capabilities, state-of-the-art equipment, and
                       experienced emergency physicians for critical care."
                 />
-
+              </motion.div>
+              <motion.div
+                variants={parentVariant}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 mb-20"
+              >
                 <FieldCards
                   image={Skin}
                   alt="Microneedling Safe Practices"
@@ -445,739 +479,389 @@ function Home() {
                       techniques and Xray options for bone conditions, ensuring
                       optimal skeletal health for all patients."
                 />
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
-        {/* <section className="bg-teal-50 py-15 px-30 flex flex-col">
-          <h1 className="text-cyprus text-center text-3xl font-bold headings relative">
+        <section className="bg-teal-50 py-15 px-2 sm:px-30 flex flex-col">
+          <motion.h1
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-cyprus text-center text-3xl font-bold headings relative"
+          >
             Featured Services
-          </h1>
+          </motion.h1>
 
-          <small className="text-sm text-black opacity-75 text-center mt-12">
+          <motion.small
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-sm text-black opacity-75 text-center mt-12"
+          >
             Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
             consectetur velit
-          </small>
+          </motion.small>
 
-          <div className="grid grid-cols-2 gap-7 mt-20">
-            <div className="bg-white border-t-4 border-cyprus rounded-xl flex flex-col p-5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="py-5">
-                <i class="fa-solid fa-heart-pulse text-5xl text-cyprus bg-teal-100 p-4 rounded-full"></i>
-              </div>
-
-              <p className="font-semibold text-2xl text-cyprus">
-                Cardiology Excellence
-              </p>
-
-              <small className="text-sm text-black opacity-65 my-7 leading-6">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+          <motion.div
+            variants={parentVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-7 mt-20 mb-7"
+          >
+            <FeaturedCards
+              iconClass="fa-solid fa-heart-pulse"
+              features="Cardiology Excellence"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation.
-              </small>
+                enim ad minim veniam, quis nostrud exercitation."
+              items={[
+                "Advanced Heart Surgery",
+                "24/7 Emergency Care",
+                "Preventive Screenings",
+              ]}
+            />
 
-              <ul>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>{" "}
-                  Advanced Heart Surgery
-                </li>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i> 24/7
-                  Emergency Care
-                </li>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>{" "}
-                  Preventive Screenings
-                </li>
-              </ul>
-
-              <a
-                href="/"
-                className="text-teal-600 font-semibold group/link hover:text-cyprus transition-all ease-in duration-200 w-28 my-4"
-              >
-                Learn More{" "}
-                <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-2 transition-all ease-in duration-200"></i>
-              </a>
-            </div>
-
-            <div className="bg-white border-t-4 border-cyprus rounded-xl flex flex-col p-5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="py-5">
-                <i class="fa-solid fa-brain text-5xl text-cyprus bg-teal-100 p-4 rounded-full"></i>
-              </div>
-
-              <p className="font-semibold text-2xl text-cyprus">
-                Neurology & Brain Health
-              </p>
-
-              <small className="text-sm text-black opacity-65 my-7 leading-6">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
+            <FeaturedCards
+              iconClass="fa-solid fa-brain"
+              features="Neurology & Brain Health"
+              description="Ut enim ad minim veniam, quis nostrud exercitation ullamco
                 laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                dolor in reprehenderit in voluptate velit esse.
-              </small>
-
-              <ul>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>{" "}
-                  Brain Imaging & Diagnostics
-                </li>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>
-                  Stroke Treatment Center
-                </li>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>{" "}
-                  Neurological Rehabilitation
-                </li>
-              </ul>
-
-              <a
-                href="/"
-                className="text-teal-600 font-semibold group/link hover:text-cyprus transition-all ease-in duration-200 w-28 my-4"
-              >
-                Learn More{" "}
-                <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-2 transition-all ease-in duration-200"></i>
-              </a>
-            </div>
-
-            <div className="bg-white border-t-4 border-cyprus rounded-xl flex flex-col p-5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="py-5">
-                <i class="fa-solid fa-bone text-5xl text-cyprus bg-teal-100 p-4 rounded-full"></i>
-              </div>
-
-              <p className="font-semibold text-2xl text-cyprus">
-                Orthopedic Surgery
-              </p>
-
-              <small className="text-sm text-black opacity-65 my-7 leading-6">
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                dolor in reprehenderit in voluptate velit esse."
+              items={[
+                "Brain Imaging & Diagnostics",
+                "Stroke Treatment Center",
+                "Neurological Rehabilitation",
+              ]}
+            />
+          </motion.div>
+          <motion.div
+            variants={parentVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-7 mb-20"
+          >
+            <FeaturedCards
+              iconClass="fa-solid fa-bone"
+              features="Orthopedic Surgery"
+              description="Excepteur sint occaecat cupidatat non proident, sunt in culpa
                 qui officia deserunt mollit anim id est laborum. Sed ut
-                perspiciatis unde omnis iste natus error.
-              </small>
+                perspiciatis unde omnis iste natus error."
+              items={[
+                "Joint Replacement Surgery",
+                "Sports Medicine",
+                "Minimally Invasive Procedures",
+              ]}
+            />
 
-              <ul>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>{" "}
-                  Joint Replacement Surgery
-                </li>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>
-                  Sports Medicine
-                </li>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>{" "}
-                  Minimally Invasive Procedures
-                </li>
-              </ul>
-
-              <a
-                href="/"
-                className="text-teal-600 font-semibold group/link hover:text-cyprus transition-all ease-in duration-200 w-28 my-4"
-              >
-                Learn More{" "}
-                <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-2 transition-all ease-in duration-200"></i>
-              </a>
-            </div>
-
-            <div className="bg-white border-t-4 border-cyprus rounded-xl flex flex-col p-5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="py-5">
-                <i class="fa-solid fa-truck-medical text-5xl text-cyprus bg-teal-100 p-4 rounded-full"></i>
-              </div>
-
-              <p className="font-semibold text-2xl text-cyprus">
-                Emergency & Trauma Care
-              </p>
-
-              <small className="text-sm text-black opacity-65 my-7 leading-6">
-                Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit
+            <FeaturedCards
+              iconClass="fa-solid fa-truck-medical"
+              features="Emergency & Trauma Care"
+              description="Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit
                 aut fugit, sed quia consequuntur magni dolores eos qui ratione
-                voluptatem sequi nesciunt.
-              </small>
-
-              <ul>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i> 24/7
-                  Emergency Department
-                </li>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i> 24/7
-                  Level 1 Trauma Center
-                </li>
-                <li className="text-sm text-gray-700 leading-8">
-                  <i class="fa-solid fa-circle-check text-cyprus pr-2"></i>{" "}
-                  Critical Care Units
-                </li>
-              </ul>
-
-              <a
-                href="/"
-                className="text-teal-600 font-semibold group/link hover:text-cyprus transition-all ease-in duration-200 w-28 my-4"
-              >
-                Learn More{" "}
-                <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-2 transition-all ease-in duration-200"></i>
-              </a>
-            </div>
-          </div>
+                voluptatem sequi nesciunt."
+              items={[
+                "24/7 Emergency Department",
+                "24/7 Level 1 Trauma Center",
+                "Critical Care Units",
+              ]}
+            />
+          </motion.div>
         </section>
 
-        <section className="bg-white py-15 px-30 flex flex-col">
-          <h1 className="text-cyprus text-center text-3xl font-bold headings relative">
+        <section className="bg-white py-15 px-2 sm:px-30 overflow-hidden dark:bg-gray-950 dark:text-cloud-white flex flex-col">
+          <motion.h1
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-cyprus text-center text-3xl font-bold headings relative dark:text-teal-700"
+          >
             Find A Doctor
-          </h1>
+          </motion.h1>
 
-          <small className="text-sm text-black opacity-75 text-center mt-12">
+          <motion.small
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-sm text-black opacity-75 text-center mt-12 dark:text-cloud-white"
+          >
             Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
             consectetur velit
-          </small>
+          </motion.small>
 
-          <div className="grid grid-cols-3 gap-7 my-20">
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={estetica}
-                  alt="Dr. Rauscher Preguntas"
-                  className="object-cover object-top rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-amber-300 px-4 py-1 rounded-full absolute top-4 right-4">
-                  IN SURGERY
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. Rauscher Preguntas
-                </p>
+          <motion.div
+            variants={parentVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-7 mt-20"
+          >
+            <DoctorsCards
+              image={estetica}
+              alt="Dr. Rauscher Preguntas"
+              name="Dr. Rauscher Preguntas"
+              role="Cardiologist"
+              experience="22+ years experience"
+              status="In Surgery"
+              ratings={4.9}
+            />
 
-                <p className="font-[600] text-md text-teal-800">Cardiology</p>
+            <DoctorsCards
+              image={Fans}
+              alt="Dr. Sarah Mitchel"
+              name="Dr. Sarah Mitchel"
+              role="Neurologist"
+              experience="5+ years experience"
+              status="Available"
+              ratings={3.5}
+            />
 
-                <small className="text-sm text-black opacity-65">
-                  22+ years experience
-                </small>
+            <DoctorsCards
+              image={Pagin}
+              alt="Dr. Shaun Murphy"
+              name="Dr. Shaun Murphy"
+              role="General Surgeon"
+              experience="15+ years experience"
+              status="Available"
+              ratings={4.9}
+            />
+          </motion.div>
 
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
+          <motion.div
+            variants={parentVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-7 my-7"
+          >
+            <DoctorsCards
+              image={Doctor}
+              alt="Dr. Jin Woo"
+              name="Dr. Jin Woo"
+              role="Oncologist"
+              experience="33+ years experience"
+              status="NEXT-TOMMOROW: 9AM"
+              ratings={3.79}
+            />
 
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (5.0)
-                  </small>
-                </div>
+            <DoctorsCards
+              image={undefin}
+              alt="Dr. Isaiah Washington"
+              name="Dr. Isaiah Washington"
+              role="Pediatrician"
+              experience="18+ years experience"
+              status="In Surgery"
+              ratings={4.5}
+            />
 
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
+            <DoctorsCards
+              image={love}
+              alt="Dr. Robert Kim"
+              name="Dr. Robert Kim"
+              role="Orthopedic Surgeon"
+              experience="11+ years experience"
+              status="Available"
+              ratings={4.85}
+            />
+          </motion.div>
 
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={Fans}
-                  alt="Dr. Sarah Mitchel"
-                  className="object-cover object-top rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-green-600 px-4 py-1 rounded-full absolute top-4 right-4">
-                  AVAILABLE
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. Sarah Mitchel
-                </p>
+          <motion.div
+            variants={parentVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-7 mb-20"
+          >
+            <DoctorsCards
+              image={undefined}
+              alt="Dr. Emily Chen"
+              name="Dr. Emily Chen"
+              role="Dermatologist"
+              experience="3+ years experience"
+              status="Available"
+              ratings={2.5}
+            />
 
-                <p className="font-[600] text-md text-teal-800">Neurology</p>
+            <DoctorsCards
+              image={Facial}
+              alt="Dr. James Thompson"
+              name="Dr. James Thompson"
+              role="Optometrist"
+              experience="15+ years experience"
+              status="MON-WED: 10AM"
+              ratings={3.9}
+            />
 
-                <small className="text-sm text-black opacity-65">
-                  5+ years experience
-                </small>
-
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star-half-stroke text-amber-300 text-sm"></i>
-                  <i class="fa-regular fa-star text-amber-300 text-sm"></i>
-
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (3.5)
-                  </small>
-                </div>
-
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={Pagin}
-                  alt="Dr. Shaun Murphy"
-                  className="object-cover object-top rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-green-600 px-4 py-1 rounded-full absolute top-4 right-4">
-                  AVAILABLE
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. Shaun Murphy
-                </p>
-
-                <p className="font-[600] text-md text-teal-800">
-                  General Surgeon
-                </p>
-
-                <small className="text-sm text-black opacity-65">
-                  15+ years experience
-                </small>
-
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (5.0)
-                  </small>
-                </div>
-
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={Doctor}
-                  alt="Dr. Jin Woo"
-                  className="object-cover object-top rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-gray-700/75 px-4 py-1 rounded-full absolute top-4 right-4">
-                  NEXT-TOMMOROW: 9AM
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. Jin Woo
-                </p>
-
-                <p className="font-[600] text-md text-teal-800">Oncology</p>
-
-                <small className="text-sm text-black opacity-65">
-                  33+ years experience
-                </small>
-
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-regular fa-star text-amber-300 text-sm"></i>
-
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (4.0)
-                  </small>
-                </div>
-
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={undefin}
-                  alt="Dr. Isaiah Washington"
-                  className="object-cover object-[1%_25%] rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-amber-300 px-4 py-1 rounded-full absolute top-4 right-4">
-                  IN SURGERY
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. Isaiah Washington
-                </p>
-
-                <p className="font-[600] text-md text-teal-800">Pediatrics</p>
-
-                <small className="text-sm text-black opacity-65">
-                  18+ years experience
-                </small>
-
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star-half-stroke text-amber-300 text-sm"></i>
-
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (4.5)
-                  </small>
-                </div>
-
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={love}
-                  alt="Dr. Robert Kim"
-                  className="object-cover object-top rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-green-600 px-4 py-1 rounded-full absolute top-4 right-4">
-                  AVAILABLE
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. Robert Kim
-                </p>
-
-                <p className="font-[600] text-md text-teal-800">Orthopedics</p>
-
-                <small className="text-sm text-black opacity-65">
-                  11+ years experience
-                </small>
-
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (5.0)
-                  </small>
-                </div>
-
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={undefined}
-                  alt="Dr. Emily Chen"
-                  className="object-cover object-[1%_40%] rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-green-600 px-4 py-1 rounded-full absolute top-4 right-4">
-                  AVAILABLE
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. Emily Chen
-                </p>
-
-                <p className="font-[600] text-md text-teal-800">Dermatology</p>
-
-                <small className="text-sm text-black opacity-65">
-                  3+ years experience
-                </small>
-
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star-half-stroke text-amber-300 text-sm"></i>
-                  <i class="fa-regular fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-regular fa-star text-amber-300 text-sm"></i>
-
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (2.5)
-                  </small>
-                </div>
-
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={Facial}
-                  alt="Dr. James Thompson"
-                  className="object-cover object-top rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-gray-700/75 px-4 py-1 rounded-full absolute top-4 right-4">
-                  MON-WED: 10AM
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. James Thompson
-                </p>
-
-                <p className="font-[600] text-md text-teal-800">Optometry</p>
-
-                <small className="text-sm text-black opacity-65">
-                  15+ years experience
-                </small>
-
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-regular fa-star text-amber-300 text-sm"></i>
-
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (4.0)
-                  </small>
-                </div>
-
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl group/card hover:shadow-md hover:-translate-y-1 transition-all ease-in duration-200">
-              <div className="overflow-hidden rounded-t-xl relative">
-                <img
-                  loading="lazy"
-                  src={undefine}
-                  alt="Dr. Lisa Anderson"
-                  className="object-cover object-[1%_23%] rounded-t-xl w-full h-70 group-hover/card:scale-[1.02] transition-all ease-in duration-200"
-                />
-                <p class="text-cloud-white text-xs font-bold bg-gray-700/75 px-4 py-1 rounded-full absolute top-4 right-4">
-                  NEXT-WEEK: 11AM
-                </p>
-              </div>
-              <div className="px-7 py-5 flex flex-col">
-                <p className="font-normal text-xl text-cyprus my-3">
-                  Dr. Lisa Anderson
-                </p>
-
-                <p className="font-[600] text-md text-teal-800">Neurology</p>
-
-                <small className="text-sm text-black opacity-65">
-                  13+ years experience
-                </small>
-
-                <div className="my-5">
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star text-amber-300 text-sm"></i>
-                  <i class="fa-solid fa-star-half-stroke text-amber-300 text-sm"></i>
-
-                  <small className="text-sm text-black opacity-65 px-2">
-                    (4.5)
-                  </small>
-                </div>
-
-                <div>
-                  <a
-                    href="#_"
-                    className="relative inline-block overflow-hidden bg-teal-800 rounded-xl py-4 px-7 text-cloud-white group mr-4"
-                  >
-                    <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                    <span className="relative z-10 font-bold">
-                      Book Appointment
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+            <DoctorsCards
+              image={undefine}
+              alt="Dr. Lisa Anderson"
+              name="Dr. Lisa Anderson"
+              role="Neurologist"
+              experience="13+ years experience"
+              status="NEXT-WEEK: 11AM"
+              ratings={4.5}
+            />
+          </motion.div>
 
           <div className="flex flex-col py-25">
-            <p className="text-3xl text-cyprus text-center">
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 150 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                },
+              }}
+              initial="hidden"
+              whileInView="show"
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="text-3xl text-cyprus text-center dark:text-teal-700"
+            >
               Your Health is Our Priority
-            </p>
-            <small className="text-[16px] text-center text-black opacity-75 py-2">
+            </motion.p>
+
+            <motion.small
+              variants={{
+                hidden: { opacity: 0, y: 150 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                },
+              }}
+              initial="hidden"
+              whileInView="show"
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="text-[16px] text-center text-black opacity-75 py-2 dark:text-cloud-white"
+            >
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
               eiusmod tempor incididunt ut labore et <br /> dolore magna aliqua.
               Ut enim ad minim veniam, quis nostrud exercitation ullamco
               laboris.
-            </small>
-            <div className="flex justify-center mt-5">
-              <a
-                href="#_"
-                className="relative inline-block overflow-hidden bg-teal-800 rounded-full py-4 px-7 text-cloud-white group mr-4 hover:-translate-y-1 transition-all ease-in-out duration-300"
-              >
-                <span className="absolute z-0 w-64 h-64 mt-15 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-cyprus left-0 top-0"></span>
-                <span className="relative z-10 font-bold">
-                  Book Appointment
-                </span>
-              </a>
+            </motion.small>
 
-              <a
-                href="#_"
-                className="relative inline-block overflow-hidden border-1 border-cyprus rounded-full py-4 px-7 text-cyprus group hover:border-teal-800 hover:text-cloud-white hover:-translate-y-1 transition-all ease-in-out duration-300"
-              >
-                <span className="absolute z-0 w-64 h-64 mt-14 rounded-full group-hover:-mt-25 transition-all ease-linear duration-300 bg-teal-800 -left-5 top-0"></span>
-                <span className="relative z-10 font-bold">Find A Doctor</span>
-              </a>
-            </div>
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 150 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                },
+              }}
+              initial="hidden"
+              whileInView="show"
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="flex justify-center mt-5 gap-5"
+            >
+              <ButtonC text="Book Appointment" to="/login" />
+
+              <ButtonB
+                text="Find A Doctor"
+                className="text-cyprus hover:text-cloud-white hover:border-teal-800 dark:text-cloud-white dark:border-teal-700"
+              />
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-3 gap-7">
-            <div className="bg-white shadow-lg flex flex-col items-center rounded-xl p-5 group/cad hover:shadow-2xl hover:-translate-y-2 transition-all ease-in duration-300">
-              <div className="py-5">
-                <i class="fa-solid fa-heart-pulse text-4xl text-cyprus group-hover/cad:bg-cyprus group-hover/cad:text-cloud-white transition-all ease-in duration-300 bg-teal-100 p-5 rounded-full"></i>
-              </div>
+          <motion.div
+            variants={parentVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-3 gap-7"
+          >
+            <ServicesCards
+              iconClass="fa-solid fa-heart-pulse"
+              title="24/7 Emergency Care"
+              description="Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo."
+              to="/services"
+              link="Learn More"
+            />
 
-              <p className="text-cyprus font-mono text-xl py-2 font-medium">
-                24/7 Emergency Care
-              </p>
+            <ServicesCards
+              iconClass="fa-regular fa-calendar-check"
+              title="Easy Online Booking"
+              description="Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur."
+              to="/login"
+              link="Book Now"
+            />
 
-              <small className="text-[16px] text-center text-black opacity-75 py-2">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo.
-              </small>
+            <ServicesCards
+              iconClass="fa-solid fa-user-doctor"
+              title="Expert Medical Team"
+              description="Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                qui officia deserunt mollit anim."
+              to="/"
+              link="Meet Our Doctors"
+            />
+          </motion.div>
 
-              <a
-                href="/"
-                className="text-teal-600 font-semibold group/link hover:text-cyprus transition-all ease-in duration-200 my-4"
-              >
-                Learn More{" "}
-                <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-2 transition-all ease-in duration-200"></i>
-              </a>
-            </div>
-
-            <div className="bg-white shadow-lg flex flex-col items-center rounded-xl p-5 group/cad hover:shadow-2xl hover:-translate-y-2 transition-all ease-in duration-300">
-              <div className="py-5">
-                <i class="fa-regular fa-calendar-check text-4xl text-cyprus group-hover/cad:bg-cyprus group-hover/cad:text-cloud-white transition-all ease-in duration-300 bg-teal-100 p-5 rounded-full"></i>
-              </div>
-
-              <p className="text-cyprus font-mono text-xl py-2 font-medium">
-                Easy Online Booking
-              </p>
-
-              <small className="text-[16px] text-center text-black opacity-75 py-2">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur.
-              </small>
-
-              <a
-                href="/"
-                className="text-teal-600 font-semibold group/link hover:text-cyprus transition-all ease-in duration-200 my-4"
-              >
-                Book Now{" "}
-                <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-2 transition-all ease-in duration-200"></i>
-              </a>
-            </div>
-
-            <div className="bg-white shadow-lg flex flex-col items-center rounded-xl p-5 group/cad hover:shadow-2xl hover:-translate-y-2 transition-all ease-in duration-300">
-              <div className="py-5">
-                <i class="fa-solid fa-user-doctor text-4xl text-cyprus group-hover/cad:bg-cyprus group-hover/cad:text-cloud-white transition-all ease-in duration-300 bg-teal-100 p-5 rounded-full"></i>
-              </div>
-
-              <p className="text-cyprus font-mono text-xl py-2 font-medium">
-                Expert Medical Team
-              </p>
-
-              <small className="text-[16px] text-center text-black opacity-75 py-2">
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim.
-              </small>
-
-              <a
-                href="/"
-                className="text-teal-600 font-semibold group/link hover:text-cyprus transition-all ease-in duration-200 my-4"
-              >
-                Meet Our Doctors{" "}
-                <i class="fa-solid fa-arrow-right fa-sm group-hover/link:translate-x-2 transition-all ease-in duration-200"></i>
-              </a>
-            </div>
-          </div>
-
-          <div className="bg-linear-to-r from-teal-800 to-cyprus rounded-xl p-8 flex justify-between my-20">
-            <div className="flex items-center">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="bg-linear-to-r from-teal-800 to-cyprus rounded-xl p-4 sm:p-8 flex flex-col sm:flex-row gap-5 justify-between my-20"
+          >
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 150 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                },
+              }}
+              initial="hidden"
+              whileInView="show"
+              transition={{ duration: 0.9, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="flex items-center"
+            >
               <i class="fa-solid fa-phone text-cloud-white bg-teal-700/75 text-3xl p-4 mx-3 rounded-full"></i>
               <div className="mx-2">
                 <p className="text-2xl text-cloud-white font-medium">
@@ -1187,181 +871,203 @@ function Home() {
                   Call our 24/7 emergency hotline for immediate assistance
                 </p>
               </div>
-            </div>
-            <div>
+            </motion.div>
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 150 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                },
+              }}
+              initial="hidden"
+              whileInView="show"
+              transition={{ duration: 1.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+            >
               <a
-                href="#_"
+                href="tel:+234 (555)987-6543"
                 className="inline-block bg-cloud-white text-lg font-bold rounded-full py-4 px-3 shadow-teal-800 text-cyprus hover:-translate-y-1 hover:bg-teal-100 hover:shadow-lg transition-all ease-in-out duration-300"
               >
                 <i class="fa-solid fa-phone px-3"></i>
                 Call +234 (555)987-6543
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </section>
 
-        <section className="flex flex-col bg-white px-80">
-          <h1 className="text-cyprus text-center text-3xl font-bold headings relative">
+        <section className="flex flex-col bg-white px-2 sm:px-80 py-10">
+          <motion.h1
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-cyprus text-center text-3xl font-bold headings relative"
+          >
             Emergency Info
-          </h1>
+          </motion.h1>
 
-          <small className="text-[16px] text-center text-black opacity-75 mt-12">
+          <motion.small
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-[16px] text-center text-black opacity-75 mt-12"
+          >
             Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
             consectetur velit
-          </small>
+          </motion.small>
 
-          <div className="bg-linear-to-r from-red-500 to-red-700 rounded-xl p-5 flex items-center justify-between mt-20 mb-10 shadow-red-500 shadow-lg">
-            <div className="flex items-center">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="bg-linear-to-r from-red-500 to-red-700 rounded-xl gap-5 p-5 flex flex-col sm:flex-row justify-between mt-20 mb-10 shadow-red-500 shadow-lg"
+          >
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 150 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                },
+              }}
+              initial="hidden"
+              whileInView="show"
+              transition={{ duration: 0.9, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="flex items-center"
+            >
               <i class="fa-solid fa-triangle-exclamation text-cloud-white text-5xl mx-3"></i>
               <div className="mx-2">
                 <p className="text-3xl text-cloud-white py-2 font-bold">
                   Medical Emergency?
                 </p>
                 <p className="text-cloud-white text-lg">
-                  If you are experiencing a life-threatening emergency, call{" "}
-                  <br /> 911 immediately or go to your nearest emergency room.
+                  If you are experiencing a life-threatening emergency, call 911
+                  immediately or go to your nearest emergency room.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 150 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                },
+              }}
+              initial="hidden"
+              whileInView="show"
+              transition={{ duration: 1.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="flex items-center"
+            >
               <a
-                href="#_"
-                className="inline-block bg-cloud-white text-lg font-bold rounded-full py-2 px-3 shadow-red-800 text-red-700 hover:-translate-y-1 hover:shadow-lg transition-all ease-in-out duration-300"
+                href="tel:+2349126626571"
+                className="flex items-center gap-3 bg-cloud-white text-red-700 text-lg font-bold rounded-full py-3 px-6 shadow-red-800 shadow-md hover:-translate-y-1 hover:shadow-xl transition-all ease-in-out duration-300"
               >
-                <i class="fa-solid fa-phone px-2"></i>
-                Call 911
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
+                  <i className="fa-solid fa-phone text-red-700 text-xl"></i>
+                </div>
+
+                <div className="text-left leading-tight">
+                  Call <br /> 911
+                </div>
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div className="grid grid-cols-2 gap-7">
-            <div className="bg-white inset-shadow-2xs shadow-lg border-l-4 border-l-red-500 flex flex-col items-center rounded-xl p-5 hover:shadow-2xl hover:-translate-y-1 transition-all ease-in duration-300">
-              <div className="py-5">
-                <i class="fa-regular fa-hospital text-4xl text-red-500"></i>
-              </div>
+          <motion.div
+            variants={parentVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-7 mb-7"
+          >
+            <HelpCards
+              iconClass="fa-regular fa-hospital text-red-500"
+              title="Emergency Room"
+              call="+234 (555) 987-6543"
+              location="1245 Healthcare Blvd, Medical City, CA 90210"
+              open="Open 24/7"
+              className="border-l-red-500"
+            />
 
-              <p className="text-cyprus text-2xl py-2 font-medium">
-                Emergency Room
-              </p>
+            <HelpCards
+              iconClass="fa-regular fa-clock"
+              title="Urgent Care"
+              call="+234 (555) 987-6543"
+              location="892 Wellness Ave, Health District, CA 90211"
+              open="Mon-Sun: 7:00 AM - 10:00 PM"
+            />
+          </motion.div>
 
-              <small className="font-[550] text-center text-cyprus py-2">
-                <i class="fa-solid fa-phone px-2"></i> +234 (555) 987-6543
-              </small>
+          <motion.div
+            variants={parentVariant}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-7"
+          >
+            <HelpCards
+              iconClass="fa-solid fa-headset"
+              title="Nurse Helpline"
+              call="+234 (555) 456-7890"
+              location="24/7 medical advice and guidance"
+              open="Available 24/7"
+            />
 
-              <small className="text-[15px] text-center text-teal-800 py-2">
-                <i class="fa-solid fa-location-dot px-2 text-cyprus"></i>1245
-                Healthcare Blvd, Medical City, CA 90210
-              </small>
+            <HelpCards
+              iconClass="fa-solid fa-heart-pulse"
+              title="Poison Control"
+              call="+234-800-222-1222"
+              location="National poison control hotline"
+              open="Available 24/7"
+            />
+          </motion.div>
 
-              <small className="text-sm font-[550] text-center text-cyprus/60 py-2">
-                Open 24/7
-              </small>
-
-              <a
-                href="#_"
-                className="inline-block bg-teal-800 rounded-full py-2 px-4 my-2 text-cloud-white hover:-translate-y-1 hover:bg-cyprus transition-all ease-in-out duration-300"
-              >
-                Call Now
-              </a>
-            </div>
-
-            <div className="bg-white inset-shadow-2xs shadow-lg border-l-4 border-l-cyprus flex flex-col items-center rounded-xl p-5 hover:shadow-2xl hover:-translate-y-1 transition-all ease-in duration-300">
-              <div className="py-5">
-                <i class="fa-regular fa-clock text-4xl text-cyprus"></i>
-              </div>
-
-              <p className="text-cyprus text-2xl py-2 font-medium">
-                Urgent Care
-              </p>
-
-              <small className="font-[550] text-center text-cyprus py-2">
-                <i class="fa-solid fa-phone px-2"></i> +234 (555) 987-6543
-              </small>
-
-              <small className="text-[15px] text-center text-teal-800 py-2">
-                <i class="fa-solid fa-location-dot px-2 text-cyprus"></i>892
-                Wellness Ave, Health District, CA 90211
-              </small>
-
-              <small className="text-sm font-[550] text-center text-cyprus/60 py-2">
-                Mon-Sun: 7:00 AM - 10:00 PM
-              </small>
-
-              <a
-                href="#_"
-                className="inline-block bg-teal-800 rounded-full py-2 px-4 my-2 text-cloud-white hover:-translate-y-1 hover:bg-cyprus transition-all ease-in-out duration-300"
-              >
-                Call Now
-              </a>
-            </div>
-
-            <div className="bg-white inset-shadow-2xs shadow-lg border-l-4 border-l-cyprus flex flex-col items-center rounded-xl p-5 hover:shadow-2xl hover:-translate-y-1 transition-all ease-in duration-300">
-              <div className="py-5">
-                <i class="fa-solid fa-headset text-4xl text-cyprus"></i>
-              </div>
-
-              <p className="text-cyprus text-2xl py-2 font-medium">
-                Nurse Helpline
-              </p>
-
-              <small className="font-[550] text-center text-cyprus py-2">
-                <i class="fa-solid fa-phone px-2"></i> +234 (555) 456-7890
-              </small>
-
-              <small className="text-[15px] text-center text-teal-800 py-2">
-                <i class="fa-solid fa-location-dot px-2 text-cyprus"></i>24/7
-                medical advice and guidance
-              </small>
-
-              <small className="text-sm font-[550] text-center text-cyprus/60 py-2">
-                Available 24/7
-              </small>
-
-              <a
-                href="#_"
-                className="inline-block bg-teal-800 rounded-full py-2 px-4 my-2 text-cloud-white hover:-translate-y-1 hover:bg-cyprus transition-all ease-in-out duration-300"
-              >
-                Call Now
-              </a>
-            </div>
-
-            <div className="bg-white inset-shadow-2xs shadow-lg border-l-4 border-l-cyprus flex flex-col items-center rounded-xl p-5 hover:shadow-2xl hover:-translate-y-1 transition-all ease-in duration-300">
-              <div className="py-5">
-                <i class="fa-solid fa-heart-pulse text-4xl text-cyprus"></i>
-              </div>
-
-              <p className="text-cyprus text-2xl py-2 font-medium">
-                Poison Control
-              </p>
-
-              <small className="font-[550] text-center text-cyprus py-2">
-                <i class="fa-solid fa-phone px-2"></i> +234-800-222-1222
-              </small>
-
-              <small className="text-[15px] text-center text-teal-800 py-2">
-                <i class="fa-solid fa-location-dot px-2 text-cyprus"></i>
-                National poison control hotline
-              </small>
-
-              <small className="text-sm font-[550] text-center text-cyprus/60 py-2">
-                Available 24/7
-              </small>
-
-              <a
-                href="#_"
-                className="inline-block bg-teal-800 rounded-full py-2 px-4 my-2 text-cloud-white hover:-translate-y-1 hover:bg-cyprus transition-all ease-in-out duration-300"
-              >
-                Call Now
-              </a>
-            </div>
-          </div>
-
-          <div className="bg-white inset-shadow-2xs shadow-xl rounded-xl p-5 my-10">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 150 },
+              show: {
+                opacity: 1,
+                y: 0,
+              },
+            }}
+            initial="hidden"
+            whileInView="show"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="bg-white inset-shadow-2xs shadow-xl rounded-xl p-5 my-10"
+          >
             <p className="text-cyprus text-2xl text-center mt-6">
               When to Seek Emergency Care
             </p>
-            <div className="flex justify-around">
+            <div className="flex justify-around flex-col sm:flex-row">
               <ul>
                 <li className="text-black/80 leading-15">
                   <i class="fa-regular fa-circle-check text-green-600 pr-2"></i>{" "}
@@ -1400,14 +1106,11 @@ function Home() {
                 </li>
               </ul>
             </div>
-          </div>
-        </section> */}
+          </motion.div>
+        </section>
       </div>
     </>
   );
 }
 
 export default Home;
-
-// hover:shadow-md hover:inset-shadow-none
-// dark:hover:shadow-gray-950

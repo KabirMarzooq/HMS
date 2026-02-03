@@ -13,6 +13,8 @@
     * {
         box-sizing: border-box;
         font-family: sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
     body {
@@ -22,6 +24,7 @@
         background-position: center;
         background-size: cover;
         background-attachment: fixed;
+        position: relative;
     }
 }
 
@@ -29,7 +32,7 @@
 
     @layer utilities {
         .headings {
-            @apply relative after:content-[''] after:absolute after:top-[80px] sm:after:top-[60px] after:left-[47%] after:w-[5%] after:h-[2px] after:bg-[#004643] dark:after:bg-cloud-white;
+            @apply relative after:content-[''] after:absolute after:top-[50px] after:left-[47%] after:w-[5%] after:h-[2px] after:bg-[#004643] dark:after:bg-cloud-white;
         }
     }
 
@@ -81,4 +84,61 @@
         border-right: 1px solid #00464381;
         border-left: 1px solid #00464381;
     }
+
+    @keyframes scrollX {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .scroll-container:hover .scroll-content {
+        animation-play-state: paused !important;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    /* Chrome, Safari, Edge */
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px #0f172a inset;
+        -webkit-text-fill-color: #fff;
+        /* changes text color */
+        /* set this to your input's background color */
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* Firefox */
+    input:-moz-autofill {
+        box-shadow: 0 0 0px 1000px #0f172a inset;
+        /* same as input background */
+    }
+
 }
