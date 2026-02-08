@@ -141,4 +141,22 @@
         /* same as input background */
     }
 
+    /* 1. Prevent the background from changing color */
+    /* 2. Prevent the text from changing color */
+    .auth-page-container input:-webkit-autofill,
+    .auth-page-container input:-webkit-autofill:hover,
+    .auth-page-container input:-webkit-autofill:focus,
+    .auth-page-container input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px white inset !important;
+        /* Change 'white' to your input background color if different */
+        -webkit-text-fill-color: black !important;
+        /* Forces text to stay black */
+        transition: background-color 5000s ease-in-out 0s;
+        /* A hack to prevent the color from ever showing up */
+    }
+
+    /* Optional: If you have a dark mode or specific gray inputs */
+    .auth-page-container input.bg-gray-50:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+    }
 }

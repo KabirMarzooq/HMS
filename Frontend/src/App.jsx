@@ -17,6 +17,8 @@ import Pharmacy from "./sections/Pharmacy";
 import Settings from "./sections/Settings";
 import Support from "./sections/Support";
 import Book from "./sections/Book";
+import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   useEffect(() => {
@@ -28,6 +30,7 @@ export default function App() {
 
   return (
     <>
+      <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
@@ -39,16 +42,18 @@ export default function App() {
         <Route path="/login" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
 
-        <Route path="/" element={<Dashboard />}>
-          <Route path="dashboard" index element={<DashboardSection />} />
-          <Route path="appointments" element={<Appointments />} />
-          <Route path="billing" element={<Billing />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="pharmacy" element={<Pharmacy />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="support" element={<Support />} />
-          <Route path="bookAppointment" element={<Book />} />
-          {/* ... other pages */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Dashboard />}>
+            <Route path="dashboard" index element={<DashboardSection />} />
+            <Route path="appointments" element={<Appointments />} />
+            <Route path="billing" element={<Billing />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="pharmacy" element={<Pharmacy />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="support" element={<Support />} />
+            <Route path="bookAppointment" element={<Book />} />
+            {/* ... other pages */}
+          </Route>
         </Route>
       </Routes>
 

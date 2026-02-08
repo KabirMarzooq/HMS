@@ -32,15 +32,51 @@ const ROLE_NAV_ITEMS = {
     { label: "Patients", path: "/patients", icon: Users },
     { label: "Appointments", path: "/appointments", icon: Calendar },
   ],
+  Admin: [
+    { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { label: "All Users", path: "/users", icon: Users },
+    { label: "System Logs", path: "/logs", icon: Monitor },
+  ],
+  Receptionist: [
+    { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { label: "Schedule", path: "/appointments", icon: Calendar },
+    { label: "Front Desk", path: "/reception", icon: Users },
+  ],
   // Add more roles here easily
 };
 
 export default function DashboardLayout() {
   const [isOpen, setIsOpen] = useState(false);
   const [dark, setDark] = useState(false);
-  const [userRole, setUserRole] = useState("Patient"); // This will come from your DB later
-  const userName = "Kabir Marzooq";
+  const [user, setUser] = useState(null);
   const location = useLocation();
+
+  useEffect(() => {
+    // Grab the user string from localStorage we saved during login
+    const savedUser = localStorage.getItem("oncura_user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  if (!user) return null; // Or a loading spinner
+
+  // Now use the real data!
+  const userRole = user.role; // e.g., "Doctor" or "Patient"
+  const userName = user.name || "User";
+
+  const normalizedRole =
+    userRole.charAt(0).toUpperCase() + userRole.slice(1).toLowerCase();
+
+  // Dynamic Role Mapping (ensure your ROLE_NAV_ITEMS keys match DB roles)
+  const navItems = ROLE_NAV_ITEMS[normalizedRole] || ROLE_NAV_ITEMS["Patient"];
+
+  const handleLogout = () => {
+    localStorage.removeItem("oncura_token");
+    localStorage.removeItem("oncura_user");
+    // Use window.location to force a full refresh and clear state
+    window.location.href = "/login";
+  };
 
   // Handle Initials
   const initials = userName
@@ -83,8 +119,8 @@ export default function DashboardLayout() {
             <span className="text-2xl font-bold italic">Oncura+</span>
           </div>
 
-          <nav className="flex-1 space-y-3">
-            {ROLE_NAV_ITEMS[userRole].map((item) => (
+          <nav className="flex-1 space-y-3 overflow-y-auto pr-2 custom-scrollbar">
+            {navItems.map((item) => (
               <NavLink
                 key={item.label}
                 to={item.path}
@@ -101,7 +137,7 @@ export default function DashboardLayout() {
           </nav>
 
           {/* Bottom Nav Section */}
-          <div className="pt-6 mt-6 border-t border-white/10 space-y-2">
+          <div className="pt-10 mt-10 border-t border-white/10 space-y-2">
             {[
               { label: "Profile", path: "/profile", icon: Users },
               { label: "Settings", path: "/settings", icon: Settings },
@@ -120,7 +156,11 @@ export default function DashboardLayout() {
                 {item.label}
               </NavLink>
             ))}
-            <button className="flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 w-full rounded-lg mt-4 transition-all">
+
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 w-full rounded-lg mt-4 transition-all"
+            >
               <LogOut size={18} />
               Logout
             </button>
@@ -154,6 +194,7 @@ export default function DashboardLayout() {
 
               <NavLink
                 to="/bookAppointment"
+                tooltip="Book Appointment"
                 className={({ isActive }) => `
                   flex items-center gap-2 px-4 py-2.5 rounded-2xl font-medium transition-all duration-300 ease-in-out shadow-md active:scale-95 whitespace-nowrap
                   ${isActive ? "border border-white/50 bg-white/5 text-white" : "text-gray-400 hover:text-white bg-[#003333]"}
