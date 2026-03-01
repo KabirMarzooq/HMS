@@ -17,30 +17,73 @@ import {
   ChevronRight,
   Bell,
   Monitor,
+  Box,
 } from "lucide-react";
 
 // --- Role Configuration ---
 const ROLE_NAV_ITEMS = {
   Patient: [
-    { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-    { label: "Appointments", path: "/appointments", icon: Calendar },
-    { label: "Pharmacy", path: "/pharmacy", icon: Pill },
-    { label: "Billings", path: "/billing", icon: CreditCard },
+    {
+      label: "My Appointments",
+      path: "/dashboard/my-appointments",
+      icon: Calendar,
+      title: "View appointments"
+    },
+    { label: "Pharmacy", path: "/dashboard/pharmacy", icon: Pill, title: "Access pharmacy services" },
+    { label: "Billings", path: "/dashboard/billing", icon: CreditCard, title: "Manage billing and payments" },
+    {
+      label: "Medical Reports",
+      path: "/dashboard/medical-reports",
+      icon: Activity,
+      title: "View medical reports"
+    },
   ],
   Doctor: [
-    { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-    { label: "Patients", path: "/patients", icon: Users },
-    { label: "Appointments", path: "/appointments", icon: Calendar },
+    { label: "Patients", path: "/dashboard/patients", icon: Users, title: "Manage patients" },
+    { label: "Appointments", path: "/dashboard/appointments", icon: Calendar, title: "Manage appointments" },
+    {
+      label: "Medical Records",
+      path: "/dashboard/medical-records",
+      icon: Activity,
+      title: "View medical records"
+    },
+    {
+      label: "My Appointments",
+      path: "/dashboard/my-appointments",
+      icon: Calendar,
+      title: "View your appointments"
+    },
   ],
   Admin: [
-    { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-    { label: "All Users", path: "/users", icon: Users },
-    { label: "System Logs", path: "/logs", icon: Monitor },
+    { label: "All Users", path: "/dashboard/users", icon: Users, title: "Manage all users" },
+    { label: "System Logs", path: "/dashboard/logs", icon: Monitor, title: "View system logs" },
+    {
+      label: "My Appointments",
+      path: "/dashboard/my-appointments",
+      icon: Calendar,
+      title: "View your appointments"
+    },
   ],
   Receptionist: [
-    { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-    { label: "Schedule", path: "/appointments", icon: Calendar },
-    { label: "Front Desk", path: "/reception", icon: Users },
+    { label: "Schedule", path: "/dashboard/appointments", icon: Calendar, title: "Manage schedule" },
+    { label: "Front Desk", path: "/dashboard/reception", icon: Users, title: "Manage front desk operations" },
+    {
+      label: "My Appointments",
+      path: "/dashboard/my-appointments",
+      icon: Calendar,
+      title: "View your appointments"
+    },
+  ],
+  Pharmacy: [
+    { label: "Prescriptions", path: "/dashboard/prescriptions", icon: Pill, title: "View prescriptions" },
+    { label: "Inventory", path: "/dashboard/inventory", icon: Box, title: "Manage inventory" },
+    { label: "Sales Records", path: "/dashboard/billing", icon: CreditCard, title: "View sales records" },
+    {
+      label: "My Appointments",
+      path: "/dashboard/my-appointments",
+      icon: Calendar,
+      title: "View your appointments"
+    },
   ],
   // Add more roles here easily
 };
@@ -109,7 +152,7 @@ export default function DashboardLayout() {
   fixed inset-y-0 left-0 z-50 w-64 bg-[#003333] text-white flex flex-col p-6 m-0 lg:m-4 
   lg:rounded-3xl shadow-2xl transition-transform duration-500 ease-in-out
   ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-  lg:static lg:block
+  lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]
 `}
         >
           <div className="flex items-center gap-3 mb-10 px-2">
@@ -119,7 +162,7 @@ export default function DashboardLayout() {
             <span className="text-2xl font-bold italic">Oncura+</span>
           </div>
 
-          <nav className="flex-1 space-y-3 overflow-y-auto pr-2 custom-scrollbar">
+          <nav className="flex-1 space-y-3 overflow-y-auto pr-2 custom-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {navItems.map((item) => (
               <NavLink
                 key={item.label}
@@ -129,6 +172,7 @@ export default function DashboardLayout() {
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
                   ${isActive ? "bg-white text-[#003333] shadow-lg" : "text-gray-300 hover:bg-white/10"}
                 `}
+                title={item.title}
               >
                 <item.icon size={20} />
                 <span className="font-medium">{item.label}</span>
@@ -139,9 +183,14 @@ export default function DashboardLayout() {
           {/* Bottom Nav Section */}
           <div className="pt-10 mt-10 border-t border-white/10 space-y-2">
             {[
-              { label: "Profile", path: "/profile", icon: Users },
-              { label: "Settings", path: "/settings", icon: Settings },
-              { label: "Support", path: "/support", icon: LifeBuoy },
+              { label: "Profile", path: "/dashboard/profile", icon: Users, title: "View your profile" },
+              {
+                label: "Settings",
+                path: "/dashboard/settings",
+                icon: Settings,
+                title: "Manage settings"
+              },
+              { label: "Support", path: "/dashboard/support", icon: LifeBuoy, title: "Get support" },
             ].map((item) => (
               <NavLink
                 key={item.label}
@@ -151,6 +200,7 @@ export default function DashboardLayout() {
                   flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-all
                   ${isActive ? "border border-white/50 bg-white/5" : "text-gray-400 hover:text-white"}
                 `}
+                title={item.title}
               >
                 <item.icon size={18} />
                 {item.label}
@@ -159,7 +209,7 @@ export default function DashboardLayout() {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 w-full rounded-lg mt-4 transition-all"
+              className="flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 w-full rounded-lg mt-4 transition-all cursor-pointer"
             >
               <LogOut size={18} />
               Logout
@@ -193,11 +243,11 @@ export default function DashboardLayout() {
               </div>
 
               <NavLink
-                to="/bookAppointment"
-                tooltip="Book Appointment"
+                to="/dashboard/bookAppointment"
+                title="Book Appointment"
                 className={({ isActive }) => `
-                  flex items-center gap-2 px-4 py-2.5 rounded-2xl font-medium transition-all duration-300 ease-in-out shadow-md active:scale-95 whitespace-nowrap
-                  ${isActive ? "border border-white/50 bg-white/5 text-white" : "text-gray-400 hover:text-white bg-[#003333]"}
+                  flex items-center gap-2 px-4 py-2.5 rounded-2xl font-medium transition-all duration-300 ease-in-out shadow-md active:scale-95 whitespace-nowrap bg-[#003333] border border-[#003333]
+                  ${isActive ? "border border-white/50 text-white" : "text-gray-400 hover:text-white"}
                 `}
               >
                 <span className="text-xl font-bold">+</span>

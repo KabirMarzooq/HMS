@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // 1. Role Enum (Matches your React "ROLES" array exactly)
-            $table->enum('role', ['patient', 'doctor', 'receptionist', 'admin'])
+            $table->enum('role', ['patient', 'doctor', 'receptionist', 'admin', 'pharmacy'])
                 ->default('patient')
                 ->after('email');
 

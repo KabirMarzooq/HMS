@@ -1,4 +1,4 @@
-export default function DashboardSection() {
+export default function MedicalRecords() {
     return(
         <>
         

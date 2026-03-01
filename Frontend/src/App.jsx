@@ -12,13 +12,17 @@ import { ScrollTop } from "./layouts/ScrollToTop";
 import Appointments from "./sections/Appointments";
 import Billing from "./sections/Billings";
 import Profile from "./sections/Profile";
-import DashboardSection from "./sections/DashboardSection";
+import MedicalRecords from "./sections/MedicalRecords";
 import Pharmacy from "./sections/Pharmacy";
 import Settings from "./sections/Settings";
 import Support from "./sections/Support";
-import Book from "./sections/Book";
+import BookAppointment from "./sections/BookAppointment";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
+import RoleHome from "./components/RoleHome";
+import Prescriptions from "./sections/Prescriptions";
+import Patients from "./sections/Patients";
+import MyAppointments from "./sections/MyAppointments";
 
 export default function App() {
   useEffect(() => {
@@ -43,15 +47,19 @@ export default function App() {
         <Route path="/signup" element={<SignUp />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Dashboard />}>
-            <Route path="dashboard" index element={<DashboardSection />} />
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<RoleHome />} />
             <Route path="appointments" element={<Appointments />} />
             <Route path="billing" element={<Billing />} />
+            <Route path="medical-records" element={<MedicalRecords />} />
             <Route path="profile" element={<Profile />} />
             <Route path="pharmacy" element={<Pharmacy />} />
             <Route path="settings" element={<Settings />} />
             <Route path="support" element={<Support />} />
-            <Route path="bookAppointment" element={<Book />} />
+            <Route path="bookAppointment" element={<BookAppointment />} />
+            <Route path="prescriptions" element={<Prescriptions />} />
+            <Route path="patients" element={<Patients />} />
+            <Route path="my-appointments" element={<MyAppointments />} />
             {/* ... other pages */}
           </Route>
         </Route>

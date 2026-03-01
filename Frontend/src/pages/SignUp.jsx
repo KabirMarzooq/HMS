@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 const ID_CONFIG = {
   admin: { length: 8, label: "Admin Authorization Key", name: "adminKey" },
   doctor: { length: 10, label: "Medical License ID", name: "licenseId" },
+  pharmacy: { length: 12, label: "Pharmacy License ID", name: "pharmacyKey" },
   receptionist: { length: 6, label: "Staff ID", name: "staffId" },
 };
 
@@ -57,6 +58,7 @@ function SignUp() {
         licenseId: data.licenseId,
         specialization: data.specialization,
       }),
+      ...(data.role === "pharmacy" && { pharmacyKey: data.pharmacyKey }),
       ...(data.role === "receptionist" && { staffId: data.staffId }),
       password: data.password,
       password_confirmation: data.password,
@@ -280,6 +282,7 @@ function SignUp() {
                 <option value="">Select Role</option>
                 <option value="patient">Patient</option>
                 <option value="doctor">Doctor</option>
+                <option value="pharmacy">Pharmacy</option>
                 <option value="receptionist">Receptionist</option>
                 <option value="admin">Admin</option>
               </select>
@@ -297,7 +300,7 @@ function SignUp() {
                 animate={{ opacity: 1, height: "auto" }}
                 className="space-y-4"
               >
-                {/* ID Field (License, Staff, or Admin Key) */}
+                {/* ID Field (License, Staff, Pharmacy Key or Admin Key) */}
                 <div className="relative">
                   <input
                     id="staffid"

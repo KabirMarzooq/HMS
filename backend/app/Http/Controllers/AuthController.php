@@ -21,13 +21,14 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'phone' => 'required|string|min:10',
-            'role' => 'required|in:patient,doctor,receptionist,admin',
+            'role' => 'required|in:patient,doctor,receptionist,admin,pharmacy',
 
             // Conditional Validation can be handled here or simply allowed as nullable strings
             'profile.specialization' => 'nullable|string',
             'profile.licenseId' => 'nullable|string',
             'profile.staffId' => 'nullable|string',
-            'adminKey' => 'nullable|string'
+            'adminKey' => 'nullable|string',
+            'pharmacyKey' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AppointmentController;
 
 // Public Auth Routes
 // Route::group(['prefix' => 'auth'], function () {
@@ -21,6 +22,16 @@ Route::middleware('auth:api')->group(function () {
         return response()->json(auth('api')->user());
     });
 
+    Route::post('/appointments', [AppointmentController::class, 'store']);
+
+
+    Route::get('/doctors', [AppointmentController::class, 'getDoctors']);
+
+    Route::get('/my-appointments', [AppointmentController::class, 'myAppointments']);
+
+    Route::patch('/appointments/{id}/cancel', [AppointmentController::class, 'cancel']);
+
+    Route::patch('/appointments/{id}/reschedule', [AppointmentController::class, 'reschedule']);
     // Add routes for appointments, medical records, etc. here
 
 });
@@ -32,10 +43,10 @@ Route::middleware(['auth:api', 'role:doctor'])->group(function () {
 
 // Only Admins can see these
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
-    Route::get('/admin/stats', [DashboardController::class, 'stats']);
+    // Route::get('/admin/stats', [DashboardController::class, 'stats']);
 });
 
 // Both Patients and Admins can see these
 Route::middleware(['auth:api', 'role:patient,admin'])->group(function () {
-    Route::get('/my-history', [MedicalRecordController::class, 'show']);
+    // Route::get('/my-history', [MedicalRecordController::class, 'show']);
 });
