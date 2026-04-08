@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import { Calendar, Clock, User, ChevronRight, X, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [selectedAppt, setSelectedAppt] = useState(null); // For the Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRescheduleMode, setIsRescheduleMode] = useState(false);
-  //   const [newSchedule, setNewSchedule] = useState({ date: "", time: "" });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,9 +56,11 @@ const MyAppointments = () => {
       });
       toast.success("Appointment rescheduled!");
       setIsRescheduleMode(false);
+       setIsModalOpen(false);
       fetchAppointments(); // Refresh the list
     } catch (err) {
-      toast.error("Failed to reschedule. Please try again.");
+      const errorMsg = err.response?.data?.message || "Failed to reschedule. Please try again.";
+      toast.error(errorMsg);
     }
   };
 
@@ -87,8 +89,8 @@ const MyAppointments = () => {
   }
 
   return (
-    <div className="p-6 min-h-screen bg-slate-900 text-white rounded-2xl">
-      <h2 className="text-2xl font-bold mb-6">My Appointments</h2>
+    <div className="p-6 min-h-screen bg-gray-100 dark:bg-slate-900 text-white rounded-2xl">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">My Appointments</h2>
 
       {appointments.length === 0 ? (
         <div className="text-center py-12">
@@ -184,6 +186,10 @@ const MyAppointments = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         appointment={selectedAppt}
+        onReschedule={() => {
+          setSelectedAppt(selectedAppt);
+          setIsRescheduleMode(true);
+        }}
       />
 
       <RescheduleModal
@@ -196,7 +202,28 @@ const MyAppointments = () => {
   );
 };
 
-const AppointmentDetailModal = ({ isOpen, onClose, appointment }) => {
+const AppointmentDetailModal = ({ isOpen, onClose, appointment, onReschedule }) => {
+  const navigate = useNavigate();
+
+   // ✅ "Try New Date" - Opens reschedule modal with same doctor
+  const handleTryNewDate = () => {
+    onReschedule(appointment);
+    onClose();
+  };
+
+  // ✅ "Find Similar Doctors" - Navigates to booking page with filters
+  const handleFindSimilarDoctors = () => {
+    navigate("/dashboard/bookAppointment", {
+      state: {
+        prefilledSpecialization: appointment.doctor?.specialization,
+        originalDate: appointment.appointment_date,
+        originalTime: appointment.appointment_time,
+      },
+    });
+    onClose();
+    toast.success("Searching for similar doctors...");
+  };
+
   if (!appointment) return null;
 
   return (
@@ -211,11 +238,11 @@ const AppointmentDetailModal = ({ isOpen, onClose, appointment }) => {
 
       {/* Slide Panel */}
       <div
-        className={`absolute right-0 top-0 h-full w-full max-w-md bg-slate-800 shadow-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"} p-8`}
+        className={`absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-slate-800 overflow-y-auto custom-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] shadow-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"} p-8`}
       >
         <button
           onClick={onClose}
-          className="absolute top-6 left-6 text-slate-400 hover:text-white cursor-pointer"
+          className="absolute top-6 left-6 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
         >
           <X size={24} />
         </button>
@@ -228,34 +255,92 @@ const AppointmentDetailModal = ({ isOpen, onClose, appointment }) => {
             Reference ID: #ONC-{appointment.id}
           </p>
 
-          <section className="mb-8">
-            <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-4">
-              Reason for Visit
-            </h4>
-            <div className="bg-slate-900/50 p-4 rounded-2xl text-slate-300 text-sm leading-relaxed italic">
-              "{appointment.additional_notes || "No additional notes provided."}
-              "
+          {/* Inside the Patient's View Details Sidebar */}
+          <div className="space-y-6">
+            {/* Status Header */}
+            <div
+              className={`p-4 rounded-2xl flex items-center gap-3 ${
+                appointment.status === "cancelled"
+                  ? "bg-red-500/10 text-red-500"
+                  : "bg-teal-500/10 text-teal-500"
+              }`}
+            >
+              <div
+                className={`w-2 h-2 rounded-full animate-pulse ${
+                  appointment.status === "cancelled"
+                    ? "bg-red-500"
+                    : "bg-teal-500"
+                }`}
+              />
+              <span className="font-bold uppercase text-xs tracking-widest">
+                Status: {appointment.status}
+              </span>
             </div>
-          </section>
 
-          <section>
-            <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-4">
-              Doctor Information
-            </h4>
-            <div className="flex items-center gap-4 bg-slate-700/30 p-4 rounded-2xl">
-              <div className="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center font-bold text-white">
-                {appointment.doctor?.name.charAt(0)}
-              </div>
-              <div>
-                <p className="font-bold">
-                  Dr. {appointment.doctor?.name.replace("Dr. ", "")}
+            {/* Display the Reason if Cancelled */}
+            {appointment.status?.toLowerCase() === "cancelled" && (
+              <div className="mt-4 space-y-3">
+                <div className="bg-red-500/10 border border-red-500/20 p-5 rounded-2xl text-sm">
+                  <h4 className="text-slate-500 text-[10px] font-bold uppercase mb-2">
+                    Reason for Cancellation
+                  </h4>
+                  <p className="text-slate-400 dark:text-white text-sm leading-relaxed">
+                    {appointment.cancellation_reason ||
+                      "The doctor did not provide a specific reason."}
+                  </p>
+                </div>
+                <p className="mt-4 text-xs text-slate-400 italic">
+                  Tip: You can book a new slot below.
                 </p>
-                <p className="text-xs text-teal-500 uppercase">
-                  {appointment.doctor?.specialization}
-                </p>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleTryNewDate}
+                    className="flex-1 py-3 bg-teal-500 hover:bg-teal-600 text-slate-900 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                  >
+                    Try New Date
+                  </button>
+                  <button
+                    onClick={handleFindSimilarDoctors}
+                    className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium rounded-xl transition-all cursor-pointer"
+                  >
+                    Find Similar Doctors
+                  </button>
+                </div>
               </div>
-            </div>
-          </section>
+            )}
+
+            <section className="mb-8">
+              <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-4">
+                Reason for Visit
+              </h4>
+              <div className="bg-slate-900/50 p-4 rounded-2xl text-slate-300 text-sm leading-relaxed italic">
+                "
+                {appointment.additional_notes ||
+                  "No additional notes provided."}
+                "
+              </div>
+            </section>
+
+            <section>
+              <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-4">
+                Doctor Information
+              </h4>
+              <div className="flex items-center gap-4 bg-slate-700/30 p-4 rounded-2xl">
+                <div className="w-12 h-12 bg-teal-500 rounded-full flex items-center justify-center font-bold text-white">
+                  {appointment.doctor?.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-bold">
+                    Dr. {appointment.doctor?.name.replace("Dr. ", "")}
+                  </p>
+                  <p className="text-xs text-teal-500 uppercase">
+                    {appointment.doctor?.specialization || "General"}
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
     </div>
@@ -280,7 +365,7 @@ const RescheduleModal = ({ isOpen, onClose, appointment, onConfirm }) => {
         <h3 className="text-xl font-bold mb-2">Reschedule Appointment</h3>
         <p className="text-slate-400 text-sm mb-6">
           Pick a new date and time for your visit with Dr.{" "}
-          {appointment.doctor?.name.replace("Dr. ", "")}
+          {appointment.doctor?.name.replace("Dr. ", "") || "Unknown Doctor"}
         </p>
 
         <div className="space-y-4">
@@ -290,6 +375,7 @@ const RescheduleModal = ({ isOpen, onClose, appointment, onConfirm }) => {
             </label>
             <input
               type="date"
+              min={new Date().toISOString().split('T')[0]}
               className="w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all"
               onChange={(e) =>
                 setTempSchedule({ ...tempSchedule, date: e.target.value })
@@ -321,7 +407,7 @@ const RescheduleModal = ({ isOpen, onClose, appointment, onConfirm }) => {
           <button
             onClick={() => onConfirm(appointment.id, tempSchedule)}
             disabled={!tempSchedule.date || !tempSchedule.time}
-            className="flex-1 py-3 rounded-2xl bg-teal-500 hover:bg-teal-600 text-slate-900 font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="flex-1 py-3 rounded-2xl bg-teal-500 hover:bg-teal-600 text-slate-900 font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
           >
             Confirm
           </button>

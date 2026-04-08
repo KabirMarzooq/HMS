@@ -9,7 +9,7 @@ export default function RoleHome() {
   // Define the "Home" path for each role
   const roleDefaults = {
     patient: "/dashboard/my-appointments",
-    doctor: "/dashboard/patients",
+    doctor: "/dashboard/overview",
     admin: "/dashboard/users",
     receptionist: "/dashboard/appointments",
     pharmacy: "/dashboard/prescriptions",

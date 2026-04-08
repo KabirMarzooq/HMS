@@ -101,4 +101,50 @@ class AppointmentController extends Controller
 
         return response()->json(['message' => 'Rescheduled successfully']);
     }
+
+    public function doctorAppointments(Request $request)
+    {
+        $doctorId = $request->user()->id;
+
+        $appointments = Appointment::where('doctor_id', $doctorId)
+            ->with('patient:id,name,email')
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->orderBy('appointment_date', 'asc')
+            ->orderBy('appointment_time', 'asc')
+            ->get();
+
+        return response()->json($appointments);
+    }
+
+
+    // Accept an appointment
+    public function acceptAppointment($id)
+    {
+        $appointment = Appointment::where('id', $id)
+            ->where('doctor_id', auth('api')->id()) // Ensure this doctor owns the appointment
+            ->firstOrFail();
+
+        $appointment->update(['status' => 'confirmed']);
+
+        return response()->json(['message' => 'Appointment confirmed successfully.']);
+    }
+
+    // Decline an appointment
+    public function declineAppointment(Request $request, $id)
+    {
+        $request->validate([
+            'cancellation_reason' => 'required|string|max:500'
+        ]);
+
+        $appointment = Appointment::where('id', $id)
+            ->where('doctor_id', auth('api')->id())
+            ->firstOrFail();
+
+        $appointment->update([
+            'status' => 'cancelled',
+            'cancellation_reason' => $request->cancellation_reason
+        ]);
+
+        return response()->json(['message' => 'Appointment declined.']);
+    }
 }

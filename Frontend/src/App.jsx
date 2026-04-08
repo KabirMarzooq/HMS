@@ -23,6 +23,8 @@ import RoleHome from "./components/RoleHome";
 import Prescriptions from "./sections/Prescriptions";
 import Patients from "./sections/Patients";
 import MyAppointments from "./sections/MyAppointments";
+import Overview from "./sections/Overview";
+import DoctorSchedule from "./sections/DoctorSchedule";
 
 export default function App() {
   useEffect(() => {
@@ -60,6 +62,8 @@ export default function App() {
             <Route path="prescriptions" element={<Prescriptions />} />
             <Route path="patients" element={<Patients />} />
             <Route path="my-appointments" element={<MyAppointments />} />
+            <Route path="overview" element={<Overview />} />
+            <Route path="schedule" element={<DoctorSchedule />} />
             {/* ... other pages */}
           </Route>
         </Route>

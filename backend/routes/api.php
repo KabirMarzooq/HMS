@@ -3,12 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
-
-// Public Auth Routes
-// Route::group(['prefix' => 'auth'], function () {
-//     Route::post('/register', [AuthController::class, 'register']);
-//     Route::post('/login', [AuthController::class, 'login']);
-// });
+use App\Http\Controllers\DashboardController;
 
 // routes/api.php
 Route::prefix('auth')->group(function () {
@@ -36,9 +31,16 @@ Route::middleware('auth:api')->group(function () {
 
 });
 
-// Only Doctors can see these
-Route::middleware(['auth:api', 'role:doctor'])->group(function () {
-    Route::get('/doctor/appointments', [AppointmentController::class, 'index']);
+// Doctor Protected Routes
+Route::middleware(['auth:api', 'role:doctor'])->prefix('doctor')->group(function () {
+ 
+    Route::get('/appointments', [AppointmentController::class, 'doctorAppointments']);
+
+    Route::get('/dashboard-overview', [DashboardController::class, 'getDoctorDashboard']);
+
+    // Status update endpoints
+    Route::patch('/appointments/{id}/accept', [AppointmentController::class, 'acceptAppointment']);
+    Route::patch('/appointments/{id}/decline', [AppointmentController::class, 'declineAppointment']);
 });
 
 // Only Admins can see these

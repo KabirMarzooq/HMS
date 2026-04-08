@@ -16,7 +16,8 @@ class Appointment extends Model
         'appointment_time',
         'reason',
         'additional_notes',
-        'status'
+        'status',
+        'cancellation_reason'
     ];
 
     // Helper to get the Patient info later

@@ -18,7 +18,9 @@ import {
   Bell,
   Monitor,
   Box,
+  CalendarDays,
 } from "lucide-react";
+import { useTheme } from "../layouts/ThemeContext";
 
 // --- Role Configuration ---
 const ROLE_NAV_ITEMS = {
@@ -27,62 +29,135 @@ const ROLE_NAV_ITEMS = {
       label: "My Appointments",
       path: "/dashboard/my-appointments",
       icon: Calendar,
-      title: "View appointments"
+      title: "View your appointments",
     },
-    { label: "Pharmacy", path: "/dashboard/pharmacy", icon: Pill, title: "Access pharmacy services" },
-    { label: "Billings", path: "/dashboard/billing", icon: CreditCard, title: "Manage billing and payments" },
+    {
+      label: "Pharmacy",
+      path: "/dashboard/pharmacy",
+      icon: Pill,
+      title: "Access pharmacy services",
+    },
+    {
+      label: "Billings",
+      path: "/dashboard/billing",
+      icon: CreditCard,
+      title: "Manage billing and payments",
+    },
     {
       label: "Medical Reports",
       path: "/dashboard/medical-reports",
       icon: Activity,
-      title: "View medical reports"
+      title: "View medical reports",
     },
   ],
   Doctor: [
-    { label: "Patients", path: "/dashboard/patients", icon: Users, title: "Manage patients" },
-    { label: "Appointments", path: "/dashboard/appointments", icon: Calendar, title: "Manage appointments" },
+    {
+      label: "Overview",
+      path: "/dashboard/overview",
+      icon: LayoutDashboard,
+      title: "View dashboard overview",
+    },
+    {
+      label: "Schedule",
+      path: "/dashboard/schedule",
+      icon: CalendarDays,
+      title: "Manage appointments",
+    },
+    {
+      label: "My Patients",
+      path: "/dashboard/patients",
+      icon: Users,
+      title: "Manage patients",
+    },
+    {
+      label: "Prescriptions",
+      path: "/dashboard/prescriptions",
+      icon: Pill,
+      title: "View prescriptions",
+    },
     {
       label: "Medical Records",
       path: "/dashboard/medical-records",
       icon: Activity,
-      title: "View medical records"
+      title: "View medical records",
     },
     {
       label: "My Appointments",
       path: "/dashboard/my-appointments",
       icon: Calendar,
-      title: "View your appointments"
+      title: "View your personal appointments",
     },
   ],
   Admin: [
-    { label: "All Users", path: "/dashboard/users", icon: Users, title: "Manage all users" },
-    { label: "System Logs", path: "/dashboard/logs", icon: Monitor, title: "View system logs" },
+    {
+      label: "All Users",
+      path: "/dashboard/users",
+      icon: Users,
+      title: "Manage all users",
+    },
+    {
+      label: "System Logs",
+      path: "/dashboard/logs",
+      icon: Monitor,
+      title: "View system logs",
+    },
     {
       label: "My Appointments",
       path: "/dashboard/my-appointments",
       icon: Calendar,
-      title: "View your appointments"
+      title: "View your personal appointments",
     },
   ],
   Receptionist: [
-    { label: "Schedule", path: "/dashboard/appointments", icon: Calendar, title: "Manage schedule" },
-    { label: "Front Desk", path: "/dashboard/reception", icon: Users, title: "Manage front desk operations" },
+    {
+      label: "Schedule",
+      path: "/dashboard/appointments",
+      icon: Calendar,
+      title: "Manage schedule",
+    },
+    {
+      label: "Front Desk",
+      path: "/dashboard/reception",
+      icon: Users,
+      title: "Manage front desk operations",
+    },
+    {
+      label: "Prescriptions",
+      path: "/dashboard/prescriptions",
+      icon: Pill,
+      title: "View prescriptions",
+    },
     {
       label: "My Appointments",
       path: "/dashboard/my-appointments",
       icon: Calendar,
-      title: "View your appointments"
+      title: "View your personal appointments",
     },
   ],
   Pharmacy: [
-    { label: "Prescriptions", path: "/dashboard/prescriptions", icon: Pill, title: "View prescriptions" },
-    { label: "Inventory", path: "/dashboard/inventory", icon: Box, title: "Manage inventory" },
-    { label: "Sales Records", path: "/dashboard/billing", icon: CreditCard, title: "View sales records" },
+    {
+      label: "Prescriptions",
+      path: "/dashboard/prescriptions",
+      icon: Pill,
+      title: "View prescriptions",
+    },
+    {
+      label: "Inventory",
+      path: "/dashboard/inventory",
+      icon: Box,
+      title: "Manage inventory",
+    },
+    {
+      label: "Sales Records",
+      path: "/dashboard/billing",
+      icon: CreditCard,
+      title: "View sales records",
+    },
     {
       label: "My Appointments",
       path: "/dashboard/my-appointments",
       icon: Calendar,
-      title: "View your appointments"
+      title: "View your personal appointments",
     },
   ],
   // Add more roles here easily
@@ -90,9 +165,9 @@ const ROLE_NAV_ITEMS = {
 
 export default function DashboardLayout() {
   const [isOpen, setIsOpen] = useState(false);
-  const [dark, setDark] = useState(false);
   const [user, setUser] = useState(null);
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     // Grab the user string from localStorage we saved during login
@@ -121,18 +196,23 @@ export default function DashboardLayout() {
     window.location.href = "/login";
   };
 
-  // Handle Initials
-  const initials = userName
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  // Handle Initials - First and Last name with safety checks
+  const getInitials = (name) => {
+    if (!name || typeof name !== "string") return "?";
+
+    const nameParts = name.trim().split(" ").filter(Boolean); // Remove empty strings
+
+    if (nameParts.length === 0) return "?";
+    if (nameParts.length === 1) return nameParts[0][0].toUpperCase();
+
+    return (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+  };
+
+  const initials = getInitials(userName);
 
   return (
-    <div
-      className={`${dark ? "dark" : ""} font-sans transition-colors duration-300`}
-    >
-      <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex">
+    <div className="font-sans transition-colors duration-300">
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex transition-colors duration-300">
         {/* Mobile Toggle Button - Only visible on small screens */}
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -183,14 +263,24 @@ export default function DashboardLayout() {
           {/* Bottom Nav Section */}
           <div className="pt-10 mt-10 border-t border-white/10 space-y-2">
             {[
-              { label: "Profile", path: "/dashboard/profile", icon: Users, title: "View your profile" },
+              {
+                label: "Profile",
+                path: "/dashboard/profile",
+                icon: Users,
+                title: "View your profile",
+              },
               {
                 label: "Settings",
                 path: "/dashboard/settings",
                 icon: Settings,
-                title: "Manage settings"
+                title: "Manage settings",
               },
-              { label: "Support", path: "/dashboard/support", icon: LifeBuoy, title: "Get support" },
+              {
+                label: "Support",
+                path: "/dashboard/support",
+                icon: LifeBuoy,
+                title: "Get support",
+              },
             ].map((item) => (
               <NavLink
                 key={item.label}
@@ -238,7 +328,7 @@ export default function DashboardLayout() {
                 <input
                   type="search"
                   placeholder="Search anything..."
-                  className="pl-11 pr-4 py-2.5 w-80 text-white rounded-2xl bg-white dark:bg-slate-900 border-none shadow-sm focus:ring-2 focus:ring-teal-500 transition-all outline-none"
+                  className="pl-11 pr-4 py-2.5 w-80 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-slate-900 border-none shadow-sm focus:ring-2 focus:ring-teal-500 transition-all outline-none"
                 />
               </div>
 
@@ -258,25 +348,28 @@ export default function DashboardLayout() {
             <div className="flex items-center gap-6">
               {/* Theme Toggle Button */}
               <button
-                onClick={() => setDark(!dark)}
-                className="relative w-14 h-7 flex items-center bg-gray-200 dark:bg-teal-900 rounded-full p-1 transition-colors duration-500 shadow-inner"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="relative w-14 h-7 flex items-center bg-gray-200 dark:bg-teal-900 rounded-full p-1 transition-colors duration-500 shadow-inner cursor-pointer"
+                aria-label="Toggle theme"
               >
                 <motion.div
                   layout
                   transition={{ type: "spring", stiffness: 700, damping: 30 }}
-                  className="bg-white dark:bg-teal-400 w-5 h-5 rounded-full flex items-center justify-center shadow-md"
+                  className={`bg-white dark:bg-teal-400 w-5 h-5 rounded-full flex items-center justify-center shadow-md ${
+                    theme === "dark" ? "ml-auto" : ""
+                  }`}
                 >
-                  {dark ? (
+                  {theme === "dark" ? (
                     <Moon size={12} className="text-teal-900" />
                   ) : (
                     <Sun size={12} className="text-yellow-500" />
                   )}
                 </motion.div>
                 <div className="absolute inset-0 flex justify-between items-center px-2 pointer-events-none">
-                  {!dark && (
+                  {theme !== "dark" && (
                     <Moon size={10} className="ml-auto text-gray-400" />
                   )}
-                  {dark && <Sun size={10} className="text-teal-200" />}
+                  {theme === "dark" && <Sun size={10} className="text-teal-200" />}
                 </div>
               </button>
 
