@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserSettingsController;
 
 // routes/api.php
 Route::prefix('auth')->group(function () {
@@ -16,6 +17,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/user-profile', function () {
         return response()->json(auth('api')->user());
     });
+
+    Route::patch('/user/update-email', [UserSettingsController::class, 'updateEmail']);
+    Route::patch('/user/update-password', [UserSettingsController::class, 'updatePassword']);
+    Route::delete('/user/delete-account', [UserSettingsController::class, 'deleteAccount']);
 
     Route::post('/appointments', [AppointmentController::class, 'store']);
 
@@ -33,7 +38,7 @@ Route::middleware('auth:api')->group(function () {
 
 // Doctor Protected Routes
 Route::middleware(['auth:api', 'role:doctor'])->prefix('doctor')->group(function () {
- 
+
     Route::get('/appointments', [AppointmentController::class, 'doctorAppointments']);
 
     Route::get('/dashboard-overview', [DashboardController::class, 'getDoctorDashboard']);

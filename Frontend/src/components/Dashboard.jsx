@@ -376,6 +376,7 @@ export default function DashboardLayout() {
               <div className="flex items-center gap-4 border-l pl-6 border-gray-200 dark:border-slate-800">
                 <div className="text-right">
                   <p className="text-sm font-bold dark:text-white">
+                    {user.role?.toLowerCase() === "doctor" && "Dr. "}
                     {userName}
                   </p>
                   <p className="text-xs text-gray-500">{userRole}</p>

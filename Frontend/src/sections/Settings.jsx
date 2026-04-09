@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   User,
   Lock,
@@ -12,65 +12,146 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useTheme } from "../layouts/ThemeContext";
-// import { useAuth } from "../context/AuthContext"; // Assuming you have an AuthContext
+import api from "../services/api"; // ✅ Import api
+import toast from "react-hot-toast"; // ✅ Import toast
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("overview");
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate(); // ✅ For redirecting after account deletion
 
-  // Mock Data (This would come from your global state/context)
+  // ✅ Fetch user data from backend
   const [doctor, setDoctor] = useState({
-    firstName: "John",
-    lastName: "Smith",
-    email: "dr.smith@oncura.com",
-    specialty: "Cardiology",
-    license: "MED-849201",
-    profileImage: null, // Set to null to test the initials fallback
+    firstName: "",
+    lastName: "",
+    email: "",
+    role: "",
+    phone: "",
+    specialty: "",
+    license: "",
+    profileImage: null,
   });
 
-  // Inside your Settings Component...
-//   const { logout } = useAuth(); // To log user out after deletion
+  const [loading, setLoading] = useState(true);
 
+  // ✅ Fetch user profile on component mount
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await api.get("/user-profile");
+        const user = response.data;
+
+        setDoctor({
+          firstName: user.name?.split(" ")[0] || "",
+          lastName: user.name?.split(" ").slice(1).join(" ") || "",
+          email: user.email || "",
+          role: user.role || "",
+          phone: user.phone || "",
+          specialty: user.specialization || "",
+          license: user.license_id || user.staff_id || "",
+          profileImage: null,
+        });
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+        toast.error("Failed to load profile data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  // ✅ Update Email Handler
   const handleUpdateEmail = async (e) => {
     e.preventDefault();
     const newEmail = e.target.newEmail.value;
+
+    if (!newEmail || newEmail === doctor.email) {
+      toast.error("Please enter a different email");
+      return;
+    }
+
     try {
-      await api.patch("/user/update-email", { email: newEmail });
-      toast.success("Email updated successfully!");
-      // Update local state if necessary
+      const response = await api.patch("/user/update-email", {
+        email: newEmail,
+      });
+      toast.success(response.data.message || "Email updated successfully!");
+      setDoctor({ ...doctor, email: newEmail });
+      e.target.reset();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update email");
+      const errorMsg = err.response?.data?.message || "Failed to update email";
+      toast.error(errorMsg);
     }
   };
 
+  // ✅ Update Password Handler
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
     const currentPassword = e.target.currentPassword.value;
     const newPassword = e.target.newPassword.value;
+
+    if (!currentPassword || !newPassword) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast.error("New password must be at least 6 characters");
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      toast.error("New password must be different from current password");
+      return;
+    }
+
     try {
-      await api.patch("/user/update-password", {
+      const response = await api.patch("/user/update-password", {
         currentPassword,
         newPassword,
       });
-      toast.success("Password updated successfully!");
+      toast.success(response.data.message || "Password updated successfully!");
       e.target.reset();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update password");
+      const errorMsg =
+        err.response?.data?.message || "Failed to update password";
+      toast.error(errorMsg);
     }
   };
 
+  // ✅ Delete Account Handler
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
-      "Are you absolutely sure? This action is permanent and will delete all your clinical data.",
+      "⚠️ ARE YOU ABSOLUTELY SURE?\n\nThis action is PERMANENT and IRREVERSIBLE.\n\n✓ All your appointments will be deleted\n✓ All your patient/doctor records will be removed\n✓ You will be logged out immediately\n\nType 'DELETE' in the next prompt to confirm.",
     );
+
     if (!confirmed) return;
 
+    const finalConfirmation = prompt(
+      "Type 'DELETE' (in capital letters) to permanently delete your account:",
+    );
+
+    if (finalConfirmation !== "DELETE") {
+      toast.error("Account deletion cancelled");
+      return;
+    }
+
     try {
-      await api.delete("/user/delete-account");
-      toast.success("Account deleted. We're sorry to see you go.");
-      logout(); // Redirects to login and clears tokens
+      const response = await api.delete("/user/delete-account");
+      toast.success(response.data.message || "Account deleted successfully");
+
+      // Clear token and redirect to login
+      localStorage.removeItem("oncura_token");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err) {
-      toast.error("Failed to delete account. Please contact support.");
+      const errorMsg =
+        err.response?.data?.message ||
+        "Failed to delete account. Please contact support.";
+      toast.error(errorMsg);
     }
   };
 
@@ -105,6 +186,17 @@ export default function Settings() {
       icon: <Palette size={18} />,
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500 mx-auto mb-4"></div>
+          <p className="text-slate-400">Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 transition-colors duration-300 max-w-6xl mx-auto">
@@ -163,14 +255,18 @@ export default function Settings() {
 
                 <div className="flex-1 space-y-4 w-full">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {/* Full Name - conditionally add Dr. prefix */}
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
                         Full Name
                       </p>
                       <p className="font-semibold text-slate-900 dark:text-white">
-                        Dr. {doctor.firstName || "-"} {doctor.lastName || "-"}
+                        {doctor.role?.toLowerCase() === "doctor" && "Dr. "}
+                        {doctor.firstName || "-"} {doctor.lastName || "-"}
                       </p>
                     </div>
+
+                    {/* Email Address */}
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
                         Email Address
@@ -179,22 +275,50 @@ export default function Settings() {
                         {doctor.email || "-"}
                       </p>
                     </div>
+
+                    {/* Role */}
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
-                        Specialty
+                        Role
                       </p>
                       <span className="px-3 py-1 bg-teal-50 dark:bg-slate-800 border border-teal-100 dark:border-slate-700 text-teal-600 dark:text-teal-400 rounded-lg text-xs font-bold inline-block">
-                        {doctor.specialty || "Unspecified"}
+                        {doctor.role || "User"}
                       </span>
                     </div>
+
+                    {/* Phone Number */}
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
-                        Medical License #
+                        Phone Number
                       </p>
-                      <p className="font-semibold text-slate-900 dark:text-slate-300 font-mono text-sm">
-                        {doctor.license || "-"}
+                      <p className="font-semibold text-slate-900 dark:text-slate-300">
+                        {doctor.phone || "-"}
                       </p>
                     </div>
+
+                    {/* Specialty - Only for Doctors */}
+                    {doctor.role?.toLowerCase() === "doctor" && (
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
+                          Specialty
+                        </p>
+                        <span className="px-3 py-1 bg-teal-50 dark:bg-slate-800 border border-teal-100 dark:border-slate-700 text-teal-600 dark:text-teal-400 rounded-lg text-xs font-bold inline-block">
+                          {doctor.specialty || "Unspecified"}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Medical License - Only for Doctors */}
+                    {doctor.role?.toLowerCase() === "doctor" && (
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
+                          Medical License ID
+                        </p>
+                        <p className="font-semibold text-slate-900 dark:text-slate-300 font-mono text-sm">
+                          {doctor.license || "-"}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-4 mt-2 border-t border-slate-200 dark:border-slate-700">
@@ -218,7 +342,7 @@ export default function Settings() {
               </h3>
 
               <div className="space-y-8">
-                {/* CHANGE PASSWORD SECTION */}
+                {/* ✅ CHANGE PASSWORD SECTION */}
                 <form onSubmit={handleUpdatePassword} className="space-y-4">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">
                     Change Password
@@ -230,13 +354,15 @@ export default function Settings() {
                       placeholder="Current Password"
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-teal-500"
                       required
+                      minLength={6}
                     />
                     <input
                       name="newPassword"
                       type="password"
-                      placeholder="New Password"
+                      placeholder="New Password (min 6 characters)"
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-teal-500"
                       required
+                      minLength={6}
                     />
                   </div>
                   <button
@@ -249,11 +375,17 @@ export default function Settings() {
 
                 <hr className="border-slate-100 dark:border-slate-700" />
 
-                {/* CHANGE EMAIL SECTION */}
+                {/* ✅ CHANGE EMAIL SECTION */}
                 <form onSubmit={handleUpdateEmail} className="space-y-4">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">
                     Change Email Address
                   </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Current email:{" "}
+                    <span className="font-bold text-teal-600">
+                      {doctor.email}
+                    </span>
+                  </p>
                   <div className="flex flex-col md:flex-row gap-4">
                     <input
                       name="newEmail"
@@ -329,7 +461,7 @@ export default function Settings() {
                   </div>
                 </div>
 
-                {/* DANGER ZONE (ACCOUNT DELETION) */}
+                {/* ✅ DANGER ZONE (ACCOUNT DELETION) */}
                 <div className="bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/20 p-6 rounded-3xl">
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-500 rounded-2xl">
@@ -340,12 +472,13 @@ export default function Settings() {
                         Danger Zone
                       </h4>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-4">
-                        Deleting your account is permanent. All patient history,
-                        schedules, and profile data will be removed from our
-                        servers immediately.
+                        Deleting your account is permanent. All appointment
+                        history, schedules, and profile data will be removed
+                        from our servers immediately.
                       </p>
                       <button
                         onClick={handleDeleteAccount}
+                        type="button"
                         className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-red-500/20 cursor-pointer"
                       >
                         Delete Oncura+ Account
@@ -569,7 +702,7 @@ export default function Settings() {
 
               <hr className="border-slate-100 dark:border-slate-700" />
 
-              {/* 2. Language & Regional Settings */}
+              {/* Language & Regional Settings */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Language Dropdown */}
                 <div>
@@ -660,7 +793,7 @@ export default function Settings() {
   );
 }
 
-// Reusable custom Toggle component to match the UI
+// Reusable custom Toggle component
 const Toggle = ({ enabled, onChange }) => {
   return (
     <button

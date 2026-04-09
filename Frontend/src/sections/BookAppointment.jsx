@@ -178,7 +178,7 @@ export default function BookAppointment() {
                 </div>
                 <div>
                   <p className="font-bold text-slate-800 dark:text-white">
-                    {doc.name}
+                    Dr. {doc.name}
                   </p>
                   <p className="text-sm text-gray-500 capitalize">
                     {doc.specialization}

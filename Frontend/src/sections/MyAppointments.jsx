@@ -79,43 +79,43 @@ const MyAppointments = () => {
 
   if (loading) {
     return (
-      <div className="p-6 min-h-screen bg-slate-900 text-white flex items-center justify-center">
+      <div className="p-6 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500 mx-auto mb-4"></div>
-          <p className="text-slate-400">Loading appointments...</p>
+          <p className="text-slate-900 dark:text-slate-400">Loading appointments...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 min-h-screen bg-gray-100 dark:bg-slate-900 text-white rounded-2xl">
+    <div className="p-4 min-h-screen bg-gray-100 dark:bg-slate-900 text-white rounded-2xl">
       <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">My Appointments</h2>
 
       {appointments.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-slate-400 text-lg">No appointments found</p>
-          <p className="text-slate-500 text-sm mt-2">
+          <p className="text-slate-800 dark:text-slate-400 text-lg">No appointments found</p>
+          <p className="text-slate-900 dark:text-slate-500 text-sm mt-2">
             Book your first appointment to get started
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {appointments.map((appt) => (
             <div
               key={appt.id}
-              className="bg-slate-800 rounded-3xl p-5 border border-slate-700 relative overflow-hidden flex flex-col"
+              className="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-200 dark:border-slate-700 relative overflow-hidden flex flex-col shadow-sm hover:shadow-md transition-all duration-300"
             >
               <div className="flex justify-between items-start mb-4 gap-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-teal-500/10 rounded-2xl flex-shrink-0 flex items-center justify-center text-teal-500">
+                  <div className="w-12 h-12 bg-teal-500/10 rounded-2xl flex-shrink-0 flex items-center justify-center text-teal-500 dark:text-teal-400">
                     <User size={24} />
                   </div>
 
                   {/* Name and Specialization */}
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-lg leading-tight break-words">
-                      Dr. {appt.doctor?.name.replace("Dr. ", "")}
+                    <h3 className="font-semibold text-lg text-slate-900 dark:text-white leading-tight break-words">
+                      Dr. {appt.doctor?.name}
                     </h3>
                     <p className="text-slate-400 text-sm truncate">
                       {appt.doctor?.specialization}
@@ -131,11 +131,11 @@ const MyAppointments = () => {
                 </span>
               </div>
               <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3 text-slate-300 text-sm">
+                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm">
                   <Calendar size={16} className="text-teal-500" />
                   {appt.appointment_date}
                 </div>
-                <div className="flex items-center gap-3 text-slate-300 text-sm">
+                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm">
                   <Clock size={16} className="text-teal-500" />
                   {appt.appointment_time}
                 </div>
@@ -365,7 +365,7 @@ const RescheduleModal = ({ isOpen, onClose, appointment, onConfirm }) => {
         <h3 className="text-xl font-bold mb-2">Reschedule Appointment</h3>
         <p className="text-slate-400 text-sm mb-6">
           Pick a new date and time for your visit with Dr.{" "}
-          {appointment.doctor?.name.replace("Dr. ", "") || "Unknown Doctor"}
+          {appointment.doctor?.name || "Unknown Doctor"}
         </p>
 
         <div className="space-y-4">
