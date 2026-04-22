@@ -55,8 +55,10 @@ function SignUp() {
       role: data.role,
       ...(data.role === "admin" && { adminKey: data.adminKey }),
       ...(data.role === "doctor" && {
-        licenseId: data.licenseId,
-        specialization: data.specialization,
+        profile: {
+          licenseId: data.licenseId,
+          specialization: data.specialization,
+        },
       }),
       ...(data.role === "pharmacy" && { pharmacyKey: data.pharmacyKey }),
       ...(data.role === "receptionist" && { staffId: data.staffId }),
@@ -88,7 +90,7 @@ function SignUp() {
       >
         {/* Left Side: Branding */}
         <div className="hidden md:flex relative flex-col justify-between text-white bg-[url('/Ui.jfif')] bg-cover bg-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-teal-200/60 to-white/80 dark:from-cyprus/80 dark:via-teal-900/85 dark:to-black/90 z-0"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-teal-200/50 to-teal-200/50 dark:from-cyprus/80 dark:via-teal-900/85 dark:to-black/90 z-0"></div>
 
           <div className="z-10 text-center mt-40">
             <div className="mx-auto w-24 h-24 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl flex items-center justify-center animate-bounce">

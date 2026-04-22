@@ -12,7 +12,7 @@ export default function RoleHome() {
     doctor: "/dashboard/overview",
     admin: "/dashboard/users",
     receptionist: "/dashboard/appointments",
-    pharmacy: "/dashboard/prescriptions",
+    pharmacy: "/dashboard/all-prescriptions",
   };
 
   // Redirect to the role's default, or fallback to logout/login

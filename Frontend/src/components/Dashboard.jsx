@@ -32,14 +32,14 @@ const ROLE_NAV_ITEMS = {
       title: "View your appointments",
     },
     {
-      label: "Pharmacy",
+      label: "Prescriptions",
       path: "/dashboard/pharmacy",
       icon: Pill,
       title: "Access pharmacy services",
     },
     {
-      label: "Billings",
-      path: "/dashboard/billing",
+      label: "Bills and Receipts",
+      path: "/dashboard/bills&receipts",
       icon: CreditCard,
       title: "Manage billing and payments",
     },
@@ -96,10 +96,28 @@ const ROLE_NAV_ITEMS = {
       title: "Manage all users",
     },
     {
+      label: "Schedules",
+      path: "/dashboard/appointments",
+      icon: Calendar,
+      title: "Manage schedule",
+    },
+    {
+      label: "Bills and Receipts",
+      path: "/dashboard/bills-and-receipts",
+      icon: CreditCard,
+      title: "Manage billing and payments",
+    },
+    {
       label: "System Logs",
       path: "/dashboard/logs",
       icon: Monitor,
       title: "View system logs",
+    },
+    {
+      label: "Report Requests",
+      path: "/dashboard/report-requests",
+      icon: Activity,
+      title: "View report requests",
     },
     {
       label: "My Appointments",
@@ -110,22 +128,28 @@ const ROLE_NAV_ITEMS = {
   ],
   Receptionist: [
     {
-      label: "Schedule",
+      label: "Schedules",
       path: "/dashboard/appointments",
       icon: Calendar,
       title: "Manage schedule",
     },
     {
-      label: "Front Desk",
-      path: "/dashboard/reception",
-      icon: Users,
-      title: "Manage front desk operations",
+      label: "Bills and Receipts",
+      path: "/dashboard/bills-and-receipts",
+      icon: CreditCard,
+      title: "Manage billing and payments",
     },
     {
       label: "Prescriptions",
-      path: "/dashboard/prescriptions",
+      path: "/dashboard/all-prescriptions",
       icon: Pill,
       title: "View prescriptions",
+    },
+    {
+      label: "Patient Records",
+      path: "/dashboard/patient-records",
+      icon: Activity,
+      title: "View medical reports",
     },
     {
       label: "My Appointments",
@@ -137,7 +161,7 @@ const ROLE_NAV_ITEMS = {
   Pharmacy: [
     {
       label: "Prescriptions",
-      path: "/dashboard/prescriptions",
+      path: "/dashboard/all-prescriptions",
       icon: Pill,
       title: "View prescriptions",
     },
@@ -149,7 +173,7 @@ const ROLE_NAV_ITEMS = {
     },
     {
       label: "Sales Records",
-      path: "/dashboard/billing",
+      path: "/dashboard/bills&receipts",
       icon: CreditCard,
       title: "View sales records",
     },
@@ -250,7 +274,11 @@ export default function DashboardLayout() {
                 onClick={() => setIsOpen(false)}
                 className={({ isActive }) => `
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
-                  ${isActive ? "bg-white text-[#003333] shadow-lg" : "text-gray-300 hover:bg-white/10"}
+                  ${
+                    isActive
+                      ? "bg-white text-[#003333] shadow-lg"
+                      : "text-gray-300 hover:bg-white/10"
+                  }
                 `}
                 title={item.title}
               >
@@ -288,7 +316,11 @@ export default function DashboardLayout() {
                 onClick={() => setIsOpen(false)}
                 className={({ isActive }) => `
                   flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-all
-                  ${isActive ? "border border-white/50 bg-white/5" : "text-gray-400 hover:text-white"}
+                  ${
+                    isActive
+                      ? "border border-white/50 bg-white/5"
+                      : "text-gray-400 hover:text-white"
+                  }
                 `}
                 title={item.title}
               >
@@ -337,7 +369,11 @@ export default function DashboardLayout() {
                 title="Book Appointment"
                 className={({ isActive }) => `
                   flex items-center gap-2 px-4 py-2.5 rounded-2xl font-medium transition-all duration-300 ease-in-out shadow-md active:scale-95 whitespace-nowrap bg-[#003333] border border-[#003333]
-                  ${isActive ? "border border-white/50 text-white" : "text-gray-400 hover:text-white"}
+                  ${
+                    isActive
+                      ? "border border-white/50 text-white"
+                      : "text-gray-400 hover:text-white"
+                  }
                 `}
               >
                 <span className="text-xl font-bold">+</span>
@@ -348,7 +384,7 @@ export default function DashboardLayout() {
             <div className="flex items-center gap-6">
               {/* Theme Toggle Button */}
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="relative w-14 h-7 flex items-center bg-gray-200 dark:bg-teal-900 rounded-full p-1 transition-colors duration-500 shadow-inner cursor-pointer"
                 aria-label="Toggle theme"
               >
@@ -369,7 +405,9 @@ export default function DashboardLayout() {
                   {theme !== "dark" && (
                     <Moon size={10} className="ml-auto text-gray-400" />
                   )}
-                  {theme === "dark" && <Sun size={10} className="text-teal-200" />}
+                  {theme === "dark" && (
+                    <Sun size={10} className="text-teal-200" />
+                  )}
                 </div>
               </button>
 

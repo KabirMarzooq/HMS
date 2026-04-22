@@ -9,8 +9,8 @@ import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./components/Dashboard";
 import { ScrollTop } from "./layouts/ScrollToTop";
-import Appointments from "./sections/Appointments";
-import Billing from "./sections/Billings";
+import AdminSchedule from "./sections/Appointments";
+import BillsReceipts from "./sections/Billings";
 import Profile from "./sections/Profile";
 import MedicalRecords from "./sections/MedicalRecords";
 import Pharmacy from "./sections/Pharmacy";
@@ -21,10 +21,18 @@ import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoleHome from "./components/RoleHome";
 import Prescriptions from "./sections/Prescriptions";
-import Patients from "./sections/Patients";
+import MyPatients from "./sections/Patients";
 import MyAppointments from "./sections/MyAppointments";
 import Overview from "./sections/Overview";
 import DoctorSchedule from "./sections/DoctorSchedule";
+import MedicalReport from "./sections/MedicalReports";
+import Users from "./sections/Users";
+import AdminReportRequests from "./sections/AdminReportRequests";
+import SystemLogs from "./sections/SystemLogs";
+import AllMedicalReports from "./sections/AllReports";
+import AllPrescriptions from "./sections/AllPrescriptions";
+import BillsandReceipts from "./sections/BillsandReceipts";
+import Inventory from "./sections/Inventory";
 
 export default function App() {
   useEffect(() => {
@@ -51,19 +59,27 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />}>
             <Route index element={<RoleHome />} />
-            <Route path="appointments" element={<Appointments />} />
-            <Route path="billing" element={<Billing />} />
+            <Route path="appointments" element={<AdminSchedule />} />
+            <Route path="bills&receipts" element={<BillsReceipts />} />
             <Route path="medical-records" element={<MedicalRecords />} />
+            <Route path="medical-reports" element={<MedicalReport />} />
             <Route path="profile" element={<Profile />} />
             <Route path="pharmacy" element={<Pharmacy />} />
             <Route path="settings" element={<Settings />} />
             <Route path="support" element={<Support />} />
             <Route path="bookAppointment" element={<BookAppointment />} />
             <Route path="prescriptions" element={<Prescriptions />} />
-            <Route path="patients" element={<Patients />} />
+            <Route path="patients" element={<MyPatients />} />
             <Route path="my-appointments" element={<MyAppointments />} />
             <Route path="overview" element={<Overview />} />
             <Route path="schedule" element={<DoctorSchedule />} />
+            <Route path="users" element={<Users />} />
+            <Route path="report-requests" element={<AdminReportRequests />} />
+            <Route path="logs" element={<SystemLogs />} />
+            <Route path="patient-records" element={<AllMedicalReports />} />
+            <Route path="all-prescriptions" element={<AllPrescriptions />} />
+            <Route path="bills-and-receipts" element={<BillsandReceipts />} />
+            <Route path="Inventory" element={<Inventory />} />
             {/* ... other pages */}
           </Route>
         </Route>

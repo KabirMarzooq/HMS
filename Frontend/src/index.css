@@ -25,16 +25,45 @@
         background-attachment: fixed;
         position: relative;
     }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: inherit !important;
+        transition: background-color 5000s ease-in-out 0s;
+        box-shadow: inset 0 0 20px 20px transparent !important;
+    }
+
+    .dark input:-webkit-autofill {
+        -webkit-text-fill-color: white !important;
+    }
+
+    .auth-page-container input:-webkit-autofill,
+    .auth-page-container input:-webkit-autofill:hover,
+    .auth-page-container input:-webkit-autofill:focus,
+    .auth-page-container input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px white inset !important;
+        -webkit-text-fill-color: black !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .auth-page-container input.bg-gray-50:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+    }
 }
 
 @layer utilities {
 
-    @layer utilities {
-        .headings {
-            @apply relative after:content-[''] after:absolute after:top-[50px] after:left-[47%] after:w-[5%] after:h-[2px] after:bg-[#004643] dark:after:bg-cloud-white;
-        }
+    .headings {
+        @apply relative after:content-[''] after:absolute after:top-[50px] after:left-[47%] after:w-[5%] after:h-[2px] after:bg-[#004643] dark:after:bg-cloud-white;
     }
 
+    /* Navbar Underline Animations */
+    .nav-link {
+        position: relative;
+    }
 
     .active::before {
         content: '';
@@ -44,12 +73,6 @@
         width: 100%;
         height: 2px;
         background-color: #004643;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        .active::before {
-            background-color: #FAFAFA;
-        }
     }
 
     .nav-link:not(.active)::before {
@@ -67,12 +90,13 @@
         width: 100%;
     }
 
-    @media (prefers-color-scheme: dark) {
-        .nav-link:not(.active)::before {
-            background-color: #FAFAFA;
-        }
+    /* Dark Mode Overrides for Navbar */
+    html.dark .active::before,
+    html.dark .nav-link:not(.active)::before {
+        background-color: #FAFAFA;
     }
 
+    /* Medinfo Cards */
     .medinfo {
         transition: all ease 0.5s;
     }
@@ -84,38 +108,7 @@
         border-left: 1px solid #00464381;
     }
 
-    @keyframes scrollX {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    @keyframes float {
-        0% {
-            transform: translateY(0px);
-        }
-
-        50% {
-            transform: translateY(-8px);
-        }
-
-        100% {
-            transform: translateY(0px);
-        }
-    }
-
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
-    }
-
-    .scroll-container:hover .scroll-content {
-        animation-play-state: paused !important;
-    }
-
+    /* Scrollbar Hiding */
     .scrollbar-hide::-webkit-scrollbar {
         display: none;
     }
@@ -125,37 +118,37 @@
         scrollbar-width: none;
     }
 
-    /* Chrome, Safari, Edge */
-    input:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px #0f172a inset;
-        -webkit-text-fill-color: #fff;
-        /* changes text color */
-        /* set this to your input's background color */
-        transition: background-color 5000s ease-in-out 0s;
+    .scroll-container:hover .scroll-content {
+        animation-play-state: paused !important;
     }
 
-    /* Firefox */
-    input:-moz-autofill {
-        box-shadow: 0 0 0px 1000px #0f172a inset;
-        /* same as input background */
+    /* Animations */
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+}
+
+/* Define Keyframes outside layers for best compatibility in v4 */
+@keyframes scrollX {
+    0% {
+        transform: translateX(0);
     }
 
-    /* 1. Prevent the background from changing color */
-    /* 2. Prevent the text from changing color */
-    .auth-page-container input:-webkit-autofill,
-    .auth-page-container input:-webkit-autofill:hover,
-    .auth-page-container input:-webkit-autofill:focus,
-    .auth-page-container input:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 1000px white inset !important;
-        /* Change 'white' to your input background color if different */
-        -webkit-text-fill-color: black !important;
-        /* Forces text to stay black */
-        transition: background-color 5000s ease-in-out 0s;
-        /* A hack to prevent the color from ever showing up */
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
     }
 
-    /* Optional: If you have a dark mode or specific gray inputs */
-    .auth-page-container input.bg-gray-50:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0 1000px #f9fafb inset !important;
+    50% {
+        transform: translateY(-8px);
+    }
+
+    100% {
+        transform: translateY(0px);
     }
 }

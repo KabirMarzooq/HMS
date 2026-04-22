@@ -3,6 +3,13 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+// app/Providers/AppServiceProvider.php
+use App\Models\Appointment;
+use App\Models\User;
+use App\Models\Prescription;
+use App\Observers\AppointmentObserver;
+use App\Observers\UserObserver;
+use App\Observers\PrescriptionObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Appointment::observe(AppointmentObserver::class);
+        User::observe(UserObserver::class);
+        Prescription::observe(PrescriptionObserver::class);
     }
 }

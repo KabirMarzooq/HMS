@@ -7,13 +7,12 @@ import {
   Search,
   Filter,
   MoreVertical,
+  User,
 } from "lucide-react";
-// import axios from "axios";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
 export default function Overview() {
-  // 1. State for Data and Search
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -23,46 +22,36 @@ export default function Overview() {
     messageCount: 0,
   });
   const [patients, setPatients] = useState([]);
+  const [hoveredPatientId, setHoveredPatientId] = useState(null);
+
+  // New state for appointments (Incoming from your Laravel controller)
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-    let isMounted = true; // ✅ Prevent state updates if component unmounts
+    let isMounted = true;
 
     const fetchDashboardData = async () => {
       try {
         const response = await api.get("/doctor/dashboard-overview");
-
-        // ✅ Only update state if component is still mounted
         if (isMounted) {
-          // ✅ Safely access nested data with optional chaining
           setStats(response.data?.stats || {});
           setPatients(response.data?.patients || []);
+          // Assuming your Laravel API returns an 'appointments' array for today
+          setAppointments(response.data?.appointments || []);
         }
       } catch (error) {
         console.error("Dashboard Fetch Error:", error);
-
         if (isMounted) {
-          // ✅ More specific error messages based on status
-          if (error.response?.status === 401) {
-            toast.error("Session expired. Please login again.");
-          } else if (error.response?.status === 403) {
-            toast.error("Access denied. Check your permissions.");
-          } else {
-            toast.error(
-              error.response?.data?.message || "Failed to load dashboard data",
-            );
-          }
+          toast.error(
+            error.response?.data?.message || "Failed to load dashboard data"
+          );
         }
       } finally {
-        // ✅ Only update loading state if still mounted
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchDashboardData();
-
-    // ✅ Cleanup function to prevent memory leaks
     return () => {
       isMounted = false;
     };
@@ -71,129 +60,158 @@ export default function Overview() {
   if (loading)
     return <div className="p-6 text-slate-400">Loading Dashboard...</div>;
 
-  // 2. Logic to filter patients based on search input
-  const filteredPatients = patients.filter((patient) =>
-    patient.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  const filteredPatients = patients.filter((apt) =>
+    (apt.patient_name || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="p-6">
-      {/* 3. Hero Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="p-6 space-y-8">
+      {/* 1. Hero Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           label="Total Patients"
           value={stats.totalPatients}
-          icon={<Users size={24} />}
+          icon={<Users />}
           color="text-teal-500"
           bg="bg-teal-500/10"
         />
         <StatCard
           label="Today's Appts"
           value={stats.todayCount}
-          icon={<Calendar size={24} />}
+          icon={<Calendar />}
           color="text-blue-500"
           bg="bg-blue-500/10"
         />
         <StatCard
           label="Pending Requests"
           value={stats.pendingCount}
-          icon={<Clock size={24} />}
+          icon={<Clock />}
           color="text-amber-500"
           bg="bg-amber-500/10"
         />
         <StatCard
           label="New Messages"
           value={stats.messageCount}
-          icon={<MessageSquare size={24} />}
+          icon={<MessageSquare />}
           color="text-purple-500"
           bg="bg-purple-500/10"
         />
       </div>
 
-      {/* 4. Search and Filter Bar */}
-      <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-6">
-        <div className="relative w-full md:max-w-md">
-          <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
-            size={18}
-          />
-          <input
-            type="text"
-            placeholder="Search patients by name..."
-            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl py-3 pl-12 pr-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all shadow-sm dark:shadow-none"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      {/* 2. Main Content Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* LEFT COLUMN: Patient List & Search (Span 2) */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+            <div className="relative w-full">
+              <Search
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
+                size={18}
+              />
+              <input
+                type="text"
+                placeholder="Search patients..."
+                className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl py-3 pl-12 pr-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all shadow-sm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-sm">
+              <Filter size={18} /> Filter
+            </button>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+            <table className="w-full text-left">
+              <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
+                <tr>
+                  <th className="p-5 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                    Patient
+                  </th>
+                  <th className="p-5 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                    Last Visit
+                  </th>
+                  <th className="p-5 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                    Condition
+                  </th>
+                  <th className="p-5 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                {filteredPatients.map((apt) => (
+                  <tr
+                    key={apt.id}
+                    onMouseEnter={() => setHoveredPatientId(apt.id)}
+                    onMouseLeave={() => setHoveredPatientId(null)}
+                    className={`transition-colors cursor-pointer ${
+                      hoveredPatientId === apt.id
+                        ? "bg-teal-50 dark:bg-teal-900/20"
+                        : "hover:bg-slate-50 dark:hover:bg-slate-700/30"
+                    }`}
+                  >
+                    <td className="p-5">
+                      <p className="font-semibold text-slate-900 dark:text-white">
+                        {apt.patient?.name || apt.patient_name || "Unknown"}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        #{apt.patient_id?.toString().padStart(4, "0")}
+                      </p>
+                    </td>
+
+                    <td className="p-5 text-slate-600 dark:text-slate-300 text-sm">
+                      {apt.appointment_date || "New Patient"}
+                    </td>
+
+                    {/* CONDITION COLUMN: Shows the reason for visit */}
+                    <td className="p-5">
+                      <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {apt.reason || "NIL"}
+                      </span>
+                    </td>
+
+                    {/* STATUS COLUMN: Uses the same StatusBadge component */}
+                    <td className="p-5">
+                      <StatusBadge status={apt.status || "pending"} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <button className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-sm dark:shadow-none">
-          <Filter size={18} /> Filter by Status
-        </button>
-      </div>
+        {/* RIGHT COLUMN: The Daily Timeline View */}
+        <div className="lg:col-span-1">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm h-full flex flex-col">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-bold text-slate-900 dark:text-white">
+                Daily Timeline
+              </h3>
+              <span className="text-xs font-bold text-teal-600 dark:text-teal-500 uppercase tracking-wider">
+                Today
+              </span>
+            </div>
 
-      {/* 5. Patient List Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm transition-colors duration-300">
-        <table className="w-full text-left">
-          <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
-            <tr>
-              <th className="p-5 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-                Patient
-              </th>
-              <th className="p-5 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-                Last Visit
-              </th>
-              <th className="p-5 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest">
-                Condition
-              </th>
-              <th className="p-5 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest text-right">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-            {filteredPatients.map((patient) => (
-              <tr
-                key={patient.id}
-                className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group"
-              >
-                <td className="p-5 flex items-center gap-4">
-                  <div className="w-10 h-10 bg-teal-500 rounded-full flex items-center justify-center font-bold text-white uppercase">
-                    {patient.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 dark:text-white">
-                      {patient.name}
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-500">
-                      #{patient.id.toString().padStart(4, "0")}
-                    </p>
-                  </div>
-                </td>
-                <td className="p-5 text-slate-600 dark:text-slate-300 text-sm">
-                  {patient.last_appointment_date || "New Patient"}
-                </td>
-                <td className="p-5">
-                  <span className="px-3 py-1 bg-teal-50 dark:bg-slate-900 rounded-full text-xs text-teal-600 dark:text-teal-500 border border-teal-100 dark:border-teal-500/20">
-                    {patient.latest_symptom || "General Checkup"}
-                  </span>
-                </td>
-                <td className="p-5 text-right">
-                  <button className="text-slate-400 hover:text-teal-600 dark:text-slate-500 dark:hover:text-teal-500 p-2 transition-colors cursor-pointer">
-                    <MoreVertical size={20} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide relative min-h-[500px]">
+              {/* This is the heart of the timeline */}
+              <DailyTimeline
+                appointments={appointments}
+                hoveredId={hoveredPatientId}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-// Helper component for the Stats Cards to keep the main return clean
+// --- HELPER COMPONENTS ---
+
 const StatCard = ({ label, value, icon, color, bg }) => (
-  <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 flex items-center gap-5 transition-colors duration-300">
+  <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 flex items-center gap-5 transition-all shadow-sm">
     <div
       className={`w-14 h-14 ${bg} ${color} rounded-2xl flex items-center justify-center`}
     >
@@ -209,3 +227,159 @@ const StatCard = ({ label, value, icon, color, bg }) => (
     </div>
   </div>
 );
+
+const DailyTimeline = ({ appointments, hoveredId }) => {
+  const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+
+  // No appointments — just show the empty state message
+  if (appointments.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-full min-h-[400px]">
+        <div className="text-center space-y-2">
+          <Calendar
+            className="mx-auto text-slate-300 dark:text-slate-600"
+            size={36}
+          />
+          <p className="text-slate-400 dark:text-slate-500 text-sm italic">
+            No appointments scheduled for today.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative">
+      {hours.map((hour) => (
+        <div
+          key={hour}
+          className="relative h-20 border-t border-slate-100 dark:border-slate-700/50 flex"
+        >
+          <span className="absolute -top-3 left-0 text-[10px] font-bold text-slate-400 dark:text-slate-500 bg-white dark:bg-slate-800 pr-2">
+            {hour > 12
+              ? `${hour - 12} PM`
+              : hour === 12
+              ? "12 PM"
+              : `${hour} AM`}
+          </span>
+        </div>
+      ))}
+
+      <div className="absolute top-0 left-12 right-0 bottom-0">
+        {appointments.map((apt, index) => {
+          const [hourStr, minStr] = apt.appointment_time.split(":");
+          const hour = parseInt(hourStr);
+          const minutes = parseInt(minStr);
+          const topOffset = (hour - 8) * 80 + minutes * (80 / 60);
+          const isEven = index % 2 === 0;
+          const isHighlighted = hoveredId === apt.patient_id;
+
+          return (
+            <div
+              key={apt.id || index}
+              style={{
+                top: `${topOffset}px`,
+                height: "70px",
+                width: "90%",
+                left: isEven ? "0" : "10%",
+              }}
+              className={`absolute p-3 border-l-4 rounded-r-xl flex flex-col justify-center transition-all duration-300 ${
+                isHighlighted
+                  ? "bg-teal-500 text-white scale-105 z-20 shadow-lg border-teal-600"
+                  : "bg-teal-500/10 border-teal-500 text-teal-700 dark:text-teal-400"
+              }`}
+            >
+              <p
+                className={`text-xs font-bold leading-tight truncate ${
+                  isHighlighted
+                    ? "text-white"
+                    : "text-teal-700 dark:text-teal-400"
+                }`}
+              >
+                {apt.patient_name}
+              </p>
+              <div
+                className={`flex items-center gap-1 text-[10px] font-medium ${
+                  isHighlighted
+                    ? "text-white/80"
+                    : "text-teal-600/70 dark:text-teal-500/70"
+                }`}
+              >
+                <Clock size={10} /> {apt.appointment_time}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Now indicator — only shows during an active appointment window */}
+        <NowLine appointments={appointments} />
+      </div>
+    </div>
+  );
+};
+
+const NowLine = ({ appointments }) => {
+  const [nowTop, setNowTop] = useState(null);
+
+  useEffect(() => {
+    const calculate = () => {
+      const now = new Date();
+      const currentH = now.getHours();
+      const currentM = now.getMinutes();
+      const currentTotalMins = currentH * 60 + currentM;
+
+      // Check if current time falls within any appointment's 1-hour window
+      const isActive = appointments.some((apt) => {
+        const [h, m] = apt.appointment_time.split(":").map(Number);
+        const aptStart = h * 60 + m;
+        const aptEnd = aptStart + 60; // 1 hour after
+        return currentTotalMins >= aptStart && currentTotalMins <= aptEnd;
+      });
+
+      if (isActive && currentH >= 8 && currentH <= 18) {
+        const top = (currentH - 8) * 80 + currentM * (80 / 60);
+        setNowTop(top);
+      } else {
+        setNowTop(null); // Hide if not in any active window
+      }
+    };
+
+    calculate();
+    const interval = setInterval(calculate, 60000);
+    return () => clearInterval(interval);
+  }, [appointments]);
+
+  if (nowTop === null) return null;
+
+  return (
+    <div
+      className="absolute left-0 right-0 border-t-2 border-red-500 z-10 flex items-center"
+      style={{ top: `${nowTop}px` }}
+    >
+      <div className="w-2 h-2 bg-red-500 rounded-full -ml-1 shadow-sm shadow-red-500/50" />
+    </div>
+  );
+};
+
+const StatusBadge = ({ status }) => {
+  const styles = {
+    pending:
+      "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400 border-amber-200 dark:border-amber-500/30",
+    confirmed:
+      "bg-teal-100 text-teal-700 dark:bg-teal-500/20 dark:text-teal-400 border-teal-200 dark:border-teal-500/30",
+    cancelled:
+      "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400 border-red-200 dark:border-red-500/30",
+  };
+
+  // Default to pending if no status is provided
+  const normalizedStatus = status?.toLowerCase() || "pending";
+  const currentStyle = styles[normalizedStatus] || styles.pending;
+
+  return (
+    <span
+      className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${currentStyle}`}
+    >
+      {normalizedStatus}
+    </span>
+  );
+};

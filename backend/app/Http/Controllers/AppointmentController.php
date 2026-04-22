@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Appointment;
+use App\Http\Controllers\BillingController;
+use Illuminate\Support\Facades\Log;
 
 class AppointmentController extends Controller
 {
@@ -121,10 +123,20 @@ class AppointmentController extends Controller
     public function acceptAppointment($id)
     {
         $appointment = Appointment::where('id', $id)
-            ->where('doctor_id', auth('api')->id()) // Ensure this doctor owns the appointment
+            ->where('doctor_id', auth('api')->id())
             ->firstOrFail();
 
         $appointment->update(['status' => 'confirmed']);
+
+        // ── Auto-generate consultation invoice ──────────────────────────────
+        // This creates the ₦15,000 + 7% bill the patient needs to pay
+        try {
+            BillingController::generateConsultationInvoice($appointment);
+        } catch (\Exception $e) {
+            // Log but don't fail the acceptance if billing has an issue
+            Log::error('Invoice generation failed: ' . $e->getMessage());
+        }
+        // ────────────────────────────────────────────────────────────────────
 
         return response()->json(['message' => 'Appointment confirmed successfully.']);
     }
