@@ -100,4 +100,35 @@ class MedicalRecordController extends Controller
 
         return response()->json($profile);
     }
+
+    public function adminShow($patientId)
+    {
+        // Get patient basic info + profile
+        $patient = User::where('id', $patientId)
+            ->with('patientProfile')
+            ->firstOrFail();
+
+        // ALL records for this patient across ALL doctors
+        $records = MedicalRecord::where('patient_id', $patientId)
+            ->with('doctor:id,name,specialization')
+            ->orderBy('visit_date', 'desc')
+            ->get();
+
+        // ALL prescriptions for this patient across ALL doctors
+        $prescriptions = \App\Models\Prescription::where('patient_id', $patientId)
+            ->with('doctor:id,name')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'patient' => [
+                'id'      => $patient->id,
+                'name'    => $patient->name,
+                'email'   => $patient->email,
+                'profile' => $patient->patientProfile,
+            ],
+            'records'       => $records,
+            'prescriptions' => $prescriptions,
+        ]);
+    }
 }

@@ -23,25 +23,52 @@ class PrescriptionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'patient_id' => 'required|exists:users,id',
-            'medication' => 'required|string',
-            'dosage' => 'required|string',
-            'frequency' => 'required|string',
-            'duration' => 'required|string',
-            'instructions' => 'nullable|string',
+            'patient_id'          => 'required|exists:users,id',
+            'instructions'        => 'nullable|string',
+            'drugs'               => 'required|array|min:1',
+            'drugs.*.drug_id'     => 'required|exists:drugs,id',
+            'drugs.*.drug_name'   => 'required|string',
+            'drugs.*.quantity'    => 'required|integer|min:1',
+            'drugs.*.unit_price'  => 'required|numeric|min:0',
+            'drugs.*.total'       => 'required|numeric|min:0',
         ]);
 
+        $doctorId = Auth::id();
+
+        // Build a readable medication string for backward compatibility
+        $medicationSummary = collect($validated['drugs'])
+            ->map(fn($d) => "{$d['drug_name']} x{$d['quantity']}")
+            ->join(', ');
+
+        // Create the prescription
         $prescription = Prescription::create([
-            'doctor_id' => Auth::id(),
-            'patient_id' => $validated['patient_id'],
-            'medication' => $validated['medication'],
-            'dosage' => $validated['dosage'],
-            'frequency' => $validated['frequency'],
-            'duration' => $validated['duration'],
+            'doctor_id'    => $doctorId,
+            'patient_id'   => $validated['patient_id'],
+            'medication'   => $medicationSummary,
+            'dosage'       => '—',
+            'frequency'    => '—',
+            'duration'     => '—',
             'instructions' => $validated['instructions'],
         ]);
 
-        return response()->json($prescription, 201);
+        // Save individual drug items
+        foreach ($validated['drugs'] as $drug) {
+            $prescription->items()->create([
+                'drug_id'    => $drug['drug_id'],
+                'drug_name'  => $drug['drug_name'],
+                'quantity'   => $drug['quantity'],
+                'unit_price' => $drug['unit_price'],
+                'total'      => $drug['total'],
+            ]);
+        }
+
+        // Generate prescription invoice
+        BillingController::generatePrescriptionInvoice(
+            $prescription,
+            $validated['drugs']
+        );
+
+        return response()->json($prescription->load('items'), 201);
     }
 
     public function allPrescriptions()

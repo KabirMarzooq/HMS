@@ -16,12 +16,24 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\Admin\AdminScheduleController;
 use App\Http\Controllers\Admin\AdminSystemLogController;
+use App\Http\Controllers\ReceptionBillingController;
+use App\Http\Controllers\DrugController;
 
 // routes/api.php
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+
+    // ✅ Add these password reset routes
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
 });
+
+Route::post('/webhook/paystack', [PaystackController::class, 'webhook']);
 
 // Protected routes (Must send Bearer Token)
 Route::middleware('auth:api')->group(function () {
@@ -44,8 +56,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::patch('/appointments/{id}/reschedule', [AppointmentController::class, 'reschedule']);
     // Add routes for appointments, medical records, etc. here
-
-    Route::post('/webhook/paystack', [PaystackController::class, 'webhook']);
 });
 
 // Doctor Protected Routes
@@ -112,11 +122,27 @@ Route::middleware(['auth:api', 'role:admin'])->prefix('admin')->group(function (
 // Both Receptionist and Admins can see these
 Route::middleware(['auth:api', 'role:receptionist,admin'])->group(function () {
     Route::get('/schedules', [AdminScheduleController::class, 'index']);
-    
-    Route::get('/patients', [PatientController::class, 'index']);
-    Route::get('/patients/{id}/medical-record', [MedicalRecordController::class, 'show']);
+
+    Route::get('/patients', [PatientController::class, 'allPatients']);
+    Route::get('/patients/{id}/medical-record', [MedicalRecordController::class, 'adminShow']);
+});
+
+Route::middleware(['auth:api', 'role:receptionist,admin,pharmacy'])->prefix('reception')->group(function () {
+    Route::get('/bills', [ReceptionBillingController::class, 'allBills']);
+    Route::get('/bills/{id}', [ReceptionBillingController::class, 'showInvoice']);
+    Route::get('/receipts/{id}', [ReceptionBillingController::class, 'showReceipt']);
+    Route::post('/bills/{id}/cash-payment', [ReceptionBillingController::class, 'markCashPaid']);
+    Route::post('/payment/initialize', [ReceptionBillingController::class, 'initializeCardPayment']);
 });
 
 Route::middleware(['auth:api', 'role:admin,receptionist,pharmacy'])->group(function () {
     Route::get('/prescriptions', [PrescriptionController::class, 'allPrescriptions']);
+});
+
+Route::middleware(['auth:api', 'role:pharmacy,admin,doctor'])->prefix('pharmacy')->group(function () {
+    Route::get('/drugs', [DrugController::class, 'index']);
+    Route::post('/drugs', [DrugController::class, 'store']);
+    Route::patch('/drugs/{id}', [DrugController::class, 'update']);
+    Route::patch('/drugs/{id}/restock', [DrugController::class, 'restock']);
+    Route::delete('/drugs/{id}', [DrugController::class, 'destroy']);
 });

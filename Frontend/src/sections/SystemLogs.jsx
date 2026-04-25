@@ -198,14 +198,14 @@ export default function SystemLogs() {
             <button
               disabled={!meta.prev_page_url}
               onClick={() => fetchLogs(meta.current_page - 1)}
-              className="px-4 py-2 text-xs font-bold border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-white dark:hover:bg-slate-800 disabled:opacity-50 transition-all"
+              className="px-4 py-2 text-xs font-bold border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-white dark:hover:bg-slate-800 disabled:opacity-50 transition-all cursor-pointer"
             >
               Previous
             </button>
             <button
               disabled={!meta.next_page_url}
               onClick={() => fetchLogs(meta.current_page + 1)}
-              className="px-4 py-2 text-xs font-bold bg-teal-500 text-white rounded-xl hover:bg-teal-600 disabled:opacity-50 transition-all shadow-lg shadow-teal-500/20"
+              className="px-4 py-2 text-xs font-bold bg-teal-500 text-white rounded-xl hover:bg-teal-600 disabled:opacity-50 transition-all shadow-lg shadow-teal-500/20 cursor-pointer"
             >
               Next
             </button>

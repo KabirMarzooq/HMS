@@ -5,6 +5,21 @@ const api = axios.create({
     baseURL: 'http://backend.test/api', // Your Laravel API URL
 });
 
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+
+    failedQueue = [];
+};
+
 // This "Interceptor" attaches the token to EVERY request automatically
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('oncura_token');
@@ -17,12 +32,74 @@ api.interceptors.request.use((config) => {
 // This "Interceptor" catches 401 (Expired Token) and kicks user to login
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem('oncura_token');
-            toast.error("Session expired. Please login again.");
-            window.location.href = "/login";
+    async (error) => {
+        const originalRequest = error.config;
+
+        // If error is 401 and we haven't tried to refresh yet
+        if (error.response?.status === 401 && !originalRequest._retry) {
+
+            if (isRefreshing) {
+                // If already refreshing, queue this request
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                }).then(token => {
+                    originalRequest.headers.Authorization = `Bearer ${token}`;
+                    return api(originalRequest);
+                }).catch(err => {
+                    return Promise.reject(err);
+                });
+            }
+
+            originalRequest._retry = true;
+            isRefreshing = true;
+
+            const token = localStorage.getItem('oncura_token');
+
+            if (!token) {
+                // No token, redirect to login
+                localStorage.removeItem('oncura_token');
+                window.location.href = '/login';
+                return Promise.reject(error);
+            }
+
+            try {
+                // Try to refresh the token
+                const response = await axios.post(
+                    'http://backend.test/api/auth/refresh',
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const newToken = response.data.access_token;
+                localStorage.setItem('oncura_token', newToken);
+
+                // Update the failed request with new token
+                originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+                // Process all queued requests
+                processQueue(null, newToken);
+                isRefreshing = false;
+
+                // Retry the original request
+                return api(originalRequest);
+
+            } catch (refreshError) {
+                // Refresh failed, logout user
+                processQueue(refreshError, null);
+                isRefreshing = false;
+
+                localStorage.removeItem('oncura_token');
+                toast.error("Session expired. Please login again.");
+                window.location.href = "/login";
+
+                return Promise.reject(refreshError);
+            }
         }
+
         return Promise.reject(error);
     }
 );

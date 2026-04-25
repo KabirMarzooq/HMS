@@ -21,6 +21,8 @@ import {
   CalendarDays,
 } from "lucide-react";
 import { useTheme } from "../layouts/ThemeContext";
+import api from "../services/api";
+import { stopTokenRefresh } from "../utils/tokenRefresh";
 
 // --- Role Configuration ---
 const ROLE_NAV_ITEMS = {
@@ -173,7 +175,7 @@ const ROLE_NAV_ITEMS = {
     },
     {
       label: "Sales Records",
-      path: "/dashboard/bills&receipts",
+      path: "/dashboard/bills-and-receipts",
       icon: CreditCard,
       title: "View sales records",
     },
@@ -213,11 +215,22 @@ export default function DashboardLayout() {
   // Dynamic Role Mapping (ensure your ROLE_NAV_ITEMS keys match DB roles)
   const navItems = ROLE_NAV_ITEMS[normalizedRole] || ROLE_NAV_ITEMS["Patient"];
 
-  const handleLogout = () => {
-    localStorage.removeItem("oncura_token");
-    localStorage.removeItem("oncura_user");
-    // Use window.location to force a full refresh and clear state
-    window.location.href = "/login";
+  const handleLogout = async () => {
+    try {
+      // Call backend to invalidate token
+      await api.post("/auth/logout");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      // Stop token refresh
+      stopTokenRefresh();
+
+      // Clear local storage
+      localStorage.removeItem("oncura_token");
+
+      // Redirect to login
+      window.location.href = "/login";
+    }
   };
 
   // Handle Initials - First and Last name with safety checks

@@ -28,6 +28,7 @@ class User extends Authenticatable implements JWTSubject
         'specialization',
         'license_id',
         'staff_id',
+        'last_login_at',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -49,6 +50,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_login_at' => 'datetime',
         ];
     }
 

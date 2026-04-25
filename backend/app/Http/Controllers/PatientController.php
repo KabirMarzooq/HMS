@@ -23,4 +23,18 @@ class PatientController extends Controller
 
         return response()->json($patients);
     }
+
+    public function allPatients(Request $request)
+    {
+        $search = $request->query('search');
+
+        $patients = User::where('role', 'patient')
+            ->when($search, fn($q) => $q->where('name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%'))
+            ->select('id', 'name', 'email', 'phone')
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($patients);
+    }
 }

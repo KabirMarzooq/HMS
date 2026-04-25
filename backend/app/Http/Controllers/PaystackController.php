@@ -158,6 +158,18 @@ class PaystackController extends Controller
                     'issued_at'      => now(),
                 ]);
 
+                // Decrement stock for prescription invoices
+                if ($invoice->type === 'prescription') {
+                    $items = \App\Models\InvoiceItem::where('invoice_id', $invoice->id)
+                        ->whereNot('description', 'like', '%Service Charge%')
+                        ->get();
+
+                    foreach ($items as $item) {
+                        \App\Models\Drug::where('name', $item->description)
+                            ->decrement('stock_quantity', $item->quantity);
+                    }
+                }
+
                 Log::info("Invoice #{$invoice->invoice_number} marked as paid via Paystack.");
             });
         }

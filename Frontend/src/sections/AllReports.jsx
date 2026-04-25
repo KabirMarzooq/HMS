@@ -32,7 +32,7 @@ export default function AllMedicalReports() {
     // Shared endpoint — accessible by admin and receptionist
     api
       .get("/patients")
-      .then((res) => setPatients(res.data?.data || res.data))
+      .then((res) => setPatients(res.data))
       .catch(() => toast.error("Failed to load patients."))
       .finally(() => setLoading(false));
   }, []);

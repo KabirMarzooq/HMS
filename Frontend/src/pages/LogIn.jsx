@@ -1,11 +1,20 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+
+// Demo accounts array for easy mapping
+const DEMO_ACCOUNTS = [
+  { role: "Patient", email: "markabir8@gmail.com", pass: "marzooQ8#" },
+  { role: "Doctor", email: "drsmith@oncura.com", pass: "SecurePassword123" },
+  { role: "Admin", email: "spongebob@gmail.com", pass: "spongebob" },
+  { role: "Receptionist", email: "patrick841@gmail.com", pass: "patrick841" },
+  { role: "Pharmacy", email: "sandy345@yahoomail.com", pass: "sandy345" },
+];
 
 function LogIn() {
   const {
@@ -17,6 +26,7 @@ function LogIn() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -43,6 +53,52 @@ function LogIn() {
   return (
     /* Added auth-page-container for the autofill fix */
     <div className="auth-page-container min-h-screen flex justify-center items-center p-2">
+      <div
+        className={`fixed top-20 right-0 z-[60] flex transition-transform duration-500 ease-in-out ${
+          isDemoOpen ? "translate-x-0" : "translate-x-[320px]"
+        }`}
+      >
+        {/* Toggle Button */}
+        <button
+          onClick={() => setIsDemoOpen(!isDemoOpen)}
+          className={`bg-cyprus text-white p-3 rounded-l-xl shadow-2xl border border-r-0 border-white/20 h-fit mt-10 hover:bg-teal-800 transition-colors cursor-pointer flex items-center justify-center ${
+            !isDemoOpen ? "animate-pulse" : ""
+          }`}
+          title="View Demo Credentials"
+        >
+          {isDemoOpen ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
+        </button>
+
+        {/* Sliding Panel */}
+        <div className="w-[320px] bg-cyprus text-white p-6 shadow-2xl border border-r-0 border-white/20 rounded-bl-2xl rounded-tl-2xl h-[calc(100vh-160px)] overflow-y-auto custom-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <h3 className="text-xl font-bold mb-6 text-teal-400 border-b border-white/10 pb-3">
+            DEMO CREDENTIALS
+          </h3>
+          <div className="space-y-4">
+            {DEMO_ACCOUNTS.map((acc, index) => (
+              <div
+                key={index}
+                className="bg-white/10 p-4 rounded-xl border border-white/5 hover:border-teal-500/50 transition-colors"
+              >
+                <p className="text-[10px] font-bold uppercase tracking-widest text-teal-300 mb-2">
+                  {acc.role}
+                </p>
+                <div className="space-y-1 text-sm font-medium">
+                  <p className="flex flex-col">
+                    <span className="text-gray-400 text-xs">Email:</span>
+                    <span className="break-all">{acc.email}</span>
+                  </p>
+                  <p className="flex flex-col mt-2">
+                    <span className="text-gray-400 text-xs">Password:</span>
+                    <span className="tracking-wider">{acc.pass}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

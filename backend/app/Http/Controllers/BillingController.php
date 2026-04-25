@@ -7,6 +7,7 @@ use App\Models\InvoiceItem;
 use App\Models\Payment;
 use App\Models\Receipt;
 use App\Models\Appointment;
+use App\Models\Prescription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +54,50 @@ class BillingController extends Controller
                 'total_price' => $subtotal,
             ]);
 
+            InvoiceItem::create([
+                'invoice_id'  => $invoice->id,
+                'description' => 'Platform Service Charge (7%)',
+                'quantity'    => 1,
+                'unit_price'  => $serviceCharge,
+                'total_price' => $serviceCharge,
+            ]);
+
+            return $invoice;
+        });
+    }
+
+    public static function generatePrescriptionInvoice(Prescription $prescription, array $drugs): Invoice
+    {
+        $subtotal      = collect($drugs)->sum('total');
+        $serviceCharge = round($subtotal * self::SERVICE_CHARGE_RATE, 2);
+        $total         = $subtotal + $serviceCharge;
+
+        return DB::transaction(function () use ($prescription, $drugs, $subtotal, $serviceCharge, $total) {
+            $invoice = Invoice::create([
+                'invoice_number' => Invoice::generateInvoiceNumber(),
+                'patient_id'     => $prescription->patient_id,
+                'doctor_id'      => $prescription->doctor_id,
+                'type'           => 'prescription',
+                'subtotal'       => $subtotal,
+                'service_charge' => $serviceCharge,
+                'total_amount'   => $total,
+                'currency'       => 'NGN',
+                'status'         => 'unpaid',
+                'due_date'       => now()->addDays(3),
+            ]);
+
+            // One line item per drug
+            foreach ($drugs as $drug) {
+                InvoiceItem::create([
+                    'invoice_id'  => $invoice->id,
+                    'description' => $drug['drug_name'],
+                    'quantity'    => $drug['quantity'],
+                    'unit_price'  => $drug['unit_price'],
+                    'total_price' => $drug['total'],
+                ]);
+            }
+
+            // Service charge line item
             InvoiceItem::create([
                 'invoice_id'  => $invoice->id,
                 'description' => 'Platform Service Charge (7%)',
@@ -206,6 +251,18 @@ class BillingController extends Controller
                 'payment_method' => $request->payment_method ?? 'card',
                 'issued_at'      => now(),
             ]);
+
+            // Decrement stock for prescription invoices
+            if ($invoice->type === 'prescription') {
+                $items = \App\Models\InvoiceItem::where('invoice_id', $invoice->id)
+                    ->whereNot('description', 'like', '%Service Charge%')
+                    ->get();
+
+                foreach ($items as $item) {
+                    \App\Models\Drug::where('name', $item->description)
+                        ->decrement('stock_quantity', $item->quantity);
+                }
+            }
         });
 
         return response()->json(['message' => 'Invoice marked as paid and receipt generated.']);

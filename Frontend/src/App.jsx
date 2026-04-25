@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
+import { startTokenRefresh, stopTokenRefresh } from "./utils/tokenRefresh";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -7,6 +8,8 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import LogIn from "./pages/LogIn";
 import SignUp from "./pages/SignUp";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./components/Dashboard";
 import { ScrollTop } from "./layouts/ScrollToTop";
 import AdminSchedule from "./sections/Appointments";
@@ -31,10 +34,22 @@ import AdminReportRequests from "./sections/AdminReportRequests";
 import SystemLogs from "./sections/SystemLogs";
 import AllMedicalReports from "./sections/AllReports";
 import AllPrescriptions from "./sections/AllPrescriptions";
-import BillsandReceipts from "./sections/BillsandReceipts";
+import ReceptionBills from "./sections/BillsandReceipts";
 import Inventory from "./sections/Inventory";
 
 export default function App() {
+  useEffect(() => {
+    const token = localStorage.getItem("oncura_token");
+
+    if (token) {
+      startTokenRefresh();
+    }
+
+    return () => {
+      stopTokenRefresh();
+    };
+  }, []);
+
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
@@ -55,6 +70,8 @@ export default function App() {
 
         <Route path="/login" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />}>
@@ -78,7 +95,7 @@ export default function App() {
             <Route path="logs" element={<SystemLogs />} />
             <Route path="patient-records" element={<AllMedicalReports />} />
             <Route path="all-prescriptions" element={<AllPrescriptions />} />
-            <Route path="bills-and-receipts" element={<BillsandReceipts />} />
+            <Route path="bills-and-receipts" element={<ReceptionBills />} />
             <Route path="Inventory" element={<Inventory />} />
             {/* ... other pages */}
           </Route>
@@ -89,3 +106,10 @@ export default function App() {
     </>
   );
 }
+
+
+// Card Number:  4084 0840 8408 4081
+// Expiry:       any future date e.g. 12/26
+// CVV:          408
+// PIN:          0000
+// OTP:          123456

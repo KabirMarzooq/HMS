@@ -6,6 +6,8 @@ import {
   X,
   Calendar,
   User,
+  Trash2,
+  ChevronDown,
   FileText,
   Clipboard,
   History,
@@ -14,22 +16,40 @@ import {
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
+const inputClass =
+  "w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 outline-none focus:ring-2 focus:ring-teal-500 dark:text-white text-sm";
+
 export default function Prescriptions() {
   const [prescriptions, setPrescriptions] = useState([]);
   const [patients, setPatients] = useState([]);
+  const [drugs, setDrugs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Sidebar State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    patient_id: "",
-    medication: "",
-    dosage: "",
-    frequency: "",
-    duration: "",
-    instructions: "",
-  });
+  // const [formData, setFormData] = useState({
+  //   patient_id: "",
+  //   medication: "",
+  //   dosage: "",
+  //   frequency: "",
+  //   duration: "",
+  //   instructions: "",
+  // });
+
+  const [selectedPatient, setSelectedPatient] = useState("");
+  const [drugLines, setDrugLines] = useState([
+    {
+      drug_id: "",
+      drug_name: "",
+      quantity: 1,
+      unit_price: 0,
+      total: 0,
+      frequency: "",
+      duration: "",
+    },
+  ]);
+  const [instructions, setInstructions] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -37,39 +57,84 @@ export default function Prescriptions() {
 
   const fetchData = async () => {
     try {
-      const [prescRes, patientsRes] = await Promise.all([
+      const [prescRes, patientsRes, drugsRes] = await Promise.all([
         api.get("/doctor/prescriptions"),
-        api.get("/doctor/patients"), // Assuming this endpoint exists to populate the dropdown
+        api.get("/doctor/patients"),
+        api.get("/pharmacy/drugs"),
       ]);
       setPrescriptions(prescRes.data);
       setPatients(patientsRes.data);
-    } catch (err) {
+      setDrugs(drugsRes.data?.drugs || []);
+    } catch {
       toast.error("Failed to load records.");
     } finally {
       setLoading(false);
     }
   };
 
+  // Add/update a drug line
+  const setDrugLine = (index, field, value) => {
+    setDrugLines((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      // If drug selected, auto-fill price and recalculate total
+      if (field === "drug_id") {
+        const found = drugs.find((d) => d.id === parseInt(value));
+        if (found) {
+          updated[index].drug_name = found.name;
+          updated[index].unit_price = found.unit_price;
+          updated[index].total = found.unit_price * updated[index].quantity;
+        }
+      }
+      if (field === "quantity") {
+        updated[index].total = updated[index].unit_price * parseInt(value || 0);
+      }
+      return updated;
+    });
+  };
+
+  const addDrugLine = () =>
+    setDrugLines((prev) => [
+      ...prev,
+      { drug_id: "", drug_name: "", quantity: 1, unit_price: 0, total: 0 },
+    ]);
+
+  const removeDrugLine = (index) =>
+    setDrugLines((prev) => prev.filter((_, i) => i !== index));
+
+  const subtotal = drugLines.reduce((sum, l) => sum + (l.total || 0), 0);
+  const serviceCharge = Math.round(subtotal * 0.07 * 100) / 100;
+  const grandTotal = subtotal + serviceCharge;
+
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!formData.patient_id || !formData.medication) {
-      return toast.error("Please fill in required fields.");
-    }
+    if (!selectedPatient) return toast.error("Please select a patient.");
+    if (drugLines.some((l) => !l.drug_id || l.quantity < 1))
+      return toast.error("Please complete all drug lines.");
 
     try {
-      await api.post("/doctor/prescriptions", formData);
-      toast.success("Prescription Issued!");
-      setIsSidebarOpen(false);
-      setFormData({
-        patient_id: "",
-        medication: "",
-        dosage: "",
-        frequency: "",
-        duration: "",
-        instructions: "",
+      await api.post("/doctor/prescriptions", {
+        patient_id: selectedPatient,
+        instructions: instructions,
+        drugs: drugLines.map((l) => ({
+          drug_id: l.drug_id,
+          drug_name: l.drug_name,
+          quantity: l.quantity,
+          unit_price: l.unit_price,
+          total: l.total,
+          frequency: l.frequency,
+          duration: l.duration,
+        })),
       });
-      fetchData(); // Refresh list
-    } catch (err) {
+      toast.success("Prescription issued and bill generated!");
+      setIsSidebarOpen(false);
+      setSelectedPatient("");
+      setDrugLines([
+        { drug_id: "", drug_name: "", quantity: 1, unit_price: 0, total: 0 },
+      ]);
+      setInstructions("");
+      fetchData();
+    } catch {
       toast.error("Error issuing prescription.");
     }
   };
@@ -138,7 +203,9 @@ export default function Prescriptions() {
             </div>
 
             <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-1">
-              {p.medication}
+              {p.items?.length > 0
+                ? p.items.map((i) => i.drug_name).join(", ")
+                : p.medication}
             </h3>
             <p className="text-slate-500 text-xs font-medium mb-4 flex items-center gap-1">
               <User size={12} /> Patient:{" "}
@@ -146,22 +213,41 @@ export default function Prescriptions() {
             </p>
 
             <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-slate-400 font-bold uppercase">
-                  Dosage
-                </span>
-                <span className="text-slate-700 dark:text-slate-300 font-medium">
-                  {p.dosage}
-                </span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-slate-400 font-bold uppercase">
-                  Frequency
-                </span>
-                <span className="text-slate-700 dark:text-slate-300 font-medium">
-                  {p.frequency}
-                </span>
-              </div>
+              {p.items?.length > 0 ? (
+                p.items.map((item, i) => (
+                  <div
+                    key={i}
+                    className="text-xs border-b border-slate-100 dark:border-slate-700 last:border-0 pb-2 last:pb-0"
+                  >
+                    <p className="font-bold text-slate-700 dark:text-slate-300">
+                      {item.drug_name}
+                    </p>
+                    <div className="flex gap-4 mt-1 text-slate-400">
+                      <span>{item.frequency || "—"}</span>
+                      <span>{item.duration || "—"}</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-400 font-bold uppercase">
+                      Frequency
+                    </span>
+                    <span className="text-slate-700 dark:text-slate-300 font-medium">
+                      {p.frequency}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-400 font-bold uppercase">
+                      Duration
+                    </span>
+                    <span className="text-slate-700 dark:text-slate-300 font-medium">
+                      {p.duration}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         ))}
@@ -178,7 +264,7 @@ export default function Prescriptions() {
           onClick={() => setIsSidebarOpen(false)}
         />
         <div
-          className={`absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-slate-800 p-8 transform transition-transform duration-300 border-l border-slate-200 dark:border-slate-700 ${
+          className={`absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-slate-800 p-8 transform transition-transform duration-300 border-l border-slate-200 dark:border-slate-700 overflow-y-auto custom-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${
             isSidebarOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -194,107 +280,200 @@ export default function Prescriptions() {
             </button>
           </div>
 
-          <form onSubmit={handleCreate} className="space-y-5">
+          <form
+            onSubmit={handleCreate}
+            className="space-y-5 overflow-y-auto custom-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {/* Patient */}
             <div>
               <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">
                 Patient
               </label>
               <select
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 outline-none focus:ring-2 focus:ring-teal-500 dark:text-white"
-                value={formData.patient_id}
-                onChange={(e) =>
-                  setFormData({ ...formData, patient_id: e.target.value })
-                }
+                className={inputClass}
+                value={selectedPatient}
+                onChange={(e) => setSelectedPatient(e.target.value)}
               >
                 <option value="">Select a patient</option>
-                {patients.map((pat) => (
-                  <option key={pat.id} value={pat.id}>
-                    {pat.name}
+                {patients.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
                   </option>
                 ))}
               </select>
             </div>
 
+            {/* Drug Lines */}
             <div>
-              <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">
-                Medication Name
+              <label className="text-xs font-bold text-slate-400 uppercase mb-3 block">
+                Drugs
               </label>
-              <input
-                type="text"
-                placeholder="e.g. Paracetamol"
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 outline-none focus:ring-2 focus:ring-teal-500 dark:text-white"
-                value={formData.medication}
-                onChange={(e) =>
-                  setFormData({ ...formData, medication: e.target.value })
-                }
-              />
+              <div className="space-y-3">
+                {drugLines.map((line, index) => (
+                  <div
+                    key={index}
+                    className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-3 border border-slate-200 dark:border-slate-700 space-y-2"
+                  >
+                    {/* Drug selector */}
+                    <div className="flex gap-2 items-center">
+                      <select
+                        className={`${inputClass} flex-1 overflow-y-auto custom-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]`}
+                        value={line.drug_id}
+                        onChange={(e) =>
+                          setDrugLine(index, "drug_id", e.target.value)
+                        }
+                      >
+                        <option value="">Select drug...</option>
+                        {drugs.map((d) => (
+                          <option key={d.id} value={d.id}>
+                            {d.name} — ₦{Number(d.unit_price).toLocaleString()}
+                          </option>
+                        ))}
+                      </select>
+                      {drugLines.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeDrugLine(index)}
+                          className="p-2 text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl"
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Qty + Price + Total */}
+                    {line.drug_id && (
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                          <p className="text-slate-400 font-bold uppercase mb-1">
+                            Qty
+                          </p>
+                          <input
+                            type="number"
+                            min="1"
+                            className={inputClass}
+                            value={line.quantity}
+                            onChange={(e) =>
+                              setDrugLine(index, "quantity", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div>
+                          <p className="text-slate-400 font-bold uppercase mb-1">
+                            Unit Price
+                          </p>
+                          <p className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-300 font-medium">
+                            ₦{Number(line.unit_price).toLocaleString()}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-slate-400 font-bold uppercase mb-1">
+                            Total
+                          </p>
+                          <p className="p-3 bg-teal-50 dark:bg-teal-500/10 rounded-xl text-teal-600 dark:text-teal-400 font-bold">
+                            ₦{Number(line.total).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {line.drug_id && (
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <p className="text-slate-400 font-bold uppercase text-xs mb-1">
+                            Frequency
+                          </p>
+                          <input
+                            type="text"
+                            placeholder="e.g. Twice daily"
+                            className={inputClass}
+                            value={line.frequency}
+                            onChange={(e) =>
+                              setDrugLine(index, "frequency", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div>
+                          <p className="text-slate-400 font-bold uppercase text-xs mb-1">
+                            Duration
+                          </p>
+                          <input
+                            type="text"
+                            placeholder="e.g. 7 Days"
+                            className={inputClass}
+                            value={line.duration}
+                            onChange={(e) =>
+                              setDrugLine(index, "duration", e.target.value)
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={addDrugLine}
+                className="mt-3 flex items-center gap-2 text-teal-600 dark:text-teal-400 text-sm font-bold hover:underline"
+              >
+                <Plus size={15} /> Add another drug
+              </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">
-                  Dosage
-                </label>
-                <input
-                  type="text"
-                  placeholder="500mg"
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 outline-none focus:ring-2 focus:ring-teal-500 dark:text-white"
-                  value={formData.dosage}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dosage: e.target.value })
-                  }
-                />
+            {/* Invoice Summary */}
+            {subtotal > 0 && (
+              <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 space-y-2 text-sm">
+                <div className="flex justify-between text-slate-500">
+                  <span>Subtotal</span>
+                  <span>
+                    ₦
+                    {subtotal.toLocaleString("en-NG", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+                <div className="flex justify-between text-slate-500">
+                  <span>Service Charge (7%)</span>
+                  <span>
+                    ₦
+                    {serviceCharge.toLocaleString("en-NG", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+                <div className="flex justify-between font-black text-teal-600 dark:text-teal-400 border-t border-slate-200 dark:border-slate-700 pt-2">
+                  <span>Total</span>
+                  <span>
+                    ₦
+                    {grandTotal.toLocaleString("en-NG", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
               </div>
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">
-                  Frequency
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Twice daily"
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 outline-none focus:ring-2 focus:ring-teal-500 dark:text-white"
-                  value={formData.frequency}
-                  onChange={(e) =>
-                    setFormData({ ...formData, frequency: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">
-                  Duration
-                </label>
-                <input
-                  type="text"
-                  placeholder="7 Days"
-                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 outline-none focus:ring-2 focus:ring-teal-500 dark:text-white"
-                  value={formData.duration}
-                  onChange={(e) =>
-                    setFormData({ ...formData, duration: e.target.value })
-                  }
-                />
-              </div>
-            </div>
+            )}
 
+            {/* Instructions */}
             <div>
               <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">
                 Special Instructions
               </label>
               <textarea
                 rows="3"
-                placeholder="Take after meals..."
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 outline-none focus:ring-2 focus:ring-teal-500 dark:text-white resize-none"
-                value={formData.instructions}
-                onChange={(e) =>
-                  setFormData({ ...formData, instructions: e.target.value })
-                }
+                placeholder="Take after meals, avoid alcohol..."
+                className={`${inputClass} resize-none`}
+                value={instructions}
+                onChange={(e) => setInstructions(e.target.value)}
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-4 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-2xl transition-all shadow-lg shadow-teal-500/25 mt-4 cursor-pointer"
+              className="w-full py-4 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-2xl transition-all shadow-lg shadow-teal-500/25 cursor-pointer"
             >
-              Issue Prescription
+              Issue Prescription & Generate Bill
             </button>
           </form>
         </div>
