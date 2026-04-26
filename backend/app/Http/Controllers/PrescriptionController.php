@@ -13,7 +13,7 @@ class PrescriptionController extends Controller
     // Fetch prescriptions written by the logged-in doctor
     public function index()
     {
-        return Prescription::with('patient:id,name')
+        return Prescription::with(['patient:id,name', 'items'])
             ->where('doctor_id', Auth::id())
             ->latest()
             ->get();
@@ -31,6 +31,8 @@ class PrescriptionController extends Controller
             'drugs.*.quantity'    => 'required|integer|min:1',
             'drugs.*.unit_price'  => 'required|numeric|min:0',
             'drugs.*.total'       => 'required|numeric|min:0',
+            'drugs.*.frequency' => 'nullable|string',
+            'drugs.*.duration'  => 'nullable|string',
         ]);
 
         $doctorId = Auth::id();
@@ -45,9 +47,9 @@ class PrescriptionController extends Controller
             'doctor_id'    => $doctorId,
             'patient_id'   => $validated['patient_id'],
             'medication'   => $medicationSummary,
-            'dosage'       => '—',
-            'frequency'    => '—',
-            'duration'     => '—',
+            'dosage'       => null,
+            'frequency'    => null,
+            'duration'     => null,
             'instructions' => $validated['instructions'],
         ]);
 
@@ -59,6 +61,8 @@ class PrescriptionController extends Controller
                 'quantity'   => $drug['quantity'],
                 'unit_price' => $drug['unit_price'],
                 'total'      => $drug['total'],
+                'frequency'  => $drug['frequency'] ?? null,
+                'duration'   => $drug['duration'] ?? null,
             ]);
         }
 
