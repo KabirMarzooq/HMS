@@ -20,7 +20,7 @@ function ForgotPassword() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const currentOrigin = window.location.origin; 
+      const currentOrigin = window.location.origin;
       await api.post("/auth/forgot-password", {
         email: data.email,
         frontend_url: currentOrigin,
@@ -32,6 +32,7 @@ function ForgotPassword() {
     } catch (error) {
       const errorMsg =
         error.response?.data?.message ||
+        error.response?.data?.error ||
         "Failed to send reset link. Please try again.";
       toast.error(errorMsg);
     } finally {

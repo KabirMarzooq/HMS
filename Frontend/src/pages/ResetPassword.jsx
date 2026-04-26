@@ -70,6 +70,7 @@ function ResetPassword() {
     } catch (error) {
       const errorMsg =
         error.response?.data?.message ||
+        error.response?.data?.error ||
         "Failed to reset password. Please try again.";
       toast.error(errorMsg);
     } finally {

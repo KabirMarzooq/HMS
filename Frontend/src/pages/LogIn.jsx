@@ -17,6 +17,7 @@ const DEMO_ACCOUNTS = [
 ];
 
 function LogIn() {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -31,6 +32,7 @@ function LogIn() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    setIsLoading(true); 
     try {
       const response = await api.post("/auth/login", {
         email: data.email,
@@ -46,7 +48,13 @@ function LogIn() {
       toast.success("Welcome Back!");
       navigate("/dashboard");
     } catch (error) {
-      toast.error("Invalid credentials. Please try again.");
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Invalid credentials. Please try again.";
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -203,9 +211,10 @@ function LogIn() {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-cyprus to-teal-800 text-white font-bold py-4 rounded-2xl hover:opacity-90 transition-all shadow-lg active:scale-95 cursor-pointer focus:outline-offset-2 focus:outline-teal-700 duration-300 ease-in-out"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-cyprus to-teal-800 text-white font-bold py-4 rounded-2xl hover:opacity-90 transition-all shadow-lg active:scale-95 cursor-pointer focus:outline-offset-2 focus:outline-teal-700 duration-300 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Log In
+              {isLoading ? "Logging in..." : "Log In"}
             </button>
 
             <div className="flex items-center gap-3 my-6">

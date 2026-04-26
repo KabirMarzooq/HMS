@@ -35,8 +35,17 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        const isAuthEndpoint = originalRequest.url?.includes('/auth/login') || 
+                              originalRequest.url?.includes('/auth/register') ||
+                              originalRequest.url?.includes('/auth/forgot-password');
+
         // If error is 401 and we haven't tried to refresh yet
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
+
+            // const isAuthRoute = originalRequest.url?.includes('/auth/');
+            // if (isAuthRoute) {
+            //     return Promise.reject(error);
+            // }
 
             if (isRefreshing) {
                 // If already refreshing, queue this request
@@ -58,6 +67,7 @@ api.interceptors.response.use(
             if (!token) {
                 // No token, redirect to login
                 localStorage.removeItem('oncura_token');
+                localStorage.removeItem('oncura_user');
                 window.location.href = '/login';
                 return Promise.reject(error);
             }
@@ -93,6 +103,7 @@ api.interceptors.response.use(
                 isRefreshing = false;
 
                 localStorage.removeItem('oncura_token');
+                localStorage.removeItem('oncura_user');
                 toast.error("Session expired. Please login again.");
                 window.location.href = "/login";
 
