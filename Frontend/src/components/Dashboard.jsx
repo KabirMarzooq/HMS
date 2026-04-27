@@ -249,11 +249,11 @@ export default function DashboardLayout() {
 
   return (
     <div className="font-sans transition-colors duration-300">
-      <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 flex transition-colors duration-300">
+      <div className="min-h-[100dvh] w-full bg-[#F8FAFC] dark:bg-slate-950 flex flex-col md:flex-row transition-colors duration-300">
         {/* Mobile Toggle Button - Only visible on small screens */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden fixed left-0 top-1/4 -translate-y-1/2 z-[60] bg-[#003333] text-white p-2 rounded-r-xl shadow-lg border border-l-0 border-white/20 transition-all hover:bg-teal-700"
+          className="lg:hidden fixed left-0 top-1/3 -translate-y-1/2 z-[60] bg-[#003333] text-white p-2 rounded-r-xl shadow-lg border border-l-0 border-white/20 transition-all hover:bg-teal-700"
         >
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
@@ -362,8 +362,8 @@ export default function DashboardLayout() {
         {/* --- Main Content Area --- */}
         <main className="flex-1 flex flex-col">
           {/* Top Header */}
-          <header className="flex items-center justify-between p-8">
-            <div className="flex items-center gap-4">
+          <header className="h-20 px-1 md:px-8 flex items-center justify-between border-b border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 backdrop-blur-xl sticky top-0 z-20 w-full">
+            <div className="flex items-center sm:gap-4 gap-1">
               {/* Search Bar is here... */}
               <div className="relative group">
                 <Search
@@ -373,7 +373,7 @@ export default function DashboardLayout() {
                 <input
                   type="search"
                   placeholder="Search anything..."
-                  className="pl-11 pr-4 py-2.5 w-80 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-slate-900 border-none shadow-sm focus:ring-2 focus:ring-teal-500 transition-all outline-none"
+                  className="pl-11 pr-4 py-2.5 w-48 sm:w-80 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-slate-900 border-none shadow-sm focus:ring-2 focus:ring-teal-500 transition-all outline-none"
                 />
               </div>
 
@@ -398,7 +398,7 @@ export default function DashboardLayout() {
               {/* Theme Toggle Button */}
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="relative w-14 h-7 flex items-center bg-gray-200 dark:bg-teal-900 rounded-full p-1 transition-colors duration-500 shadow-inner cursor-pointer"
+                className="relative w-14 h-7 hidden sm:flex items-center bg-gray-200 dark:bg-teal-900 rounded-full p-1 transition-colors duration-500 shadow-inner cursor-pointer"
                 aria-label="Toggle theme"
               >
                 <motion.div
@@ -424,15 +424,15 @@ export default function DashboardLayout() {
                 </div>
               </button>
 
-              <div className="flex items-center gap-4 border-l pl-6 border-gray-200 dark:border-slate-800">
-                <div className="text-right">
+              <div className="flex items-center gap-3 sm:gap-4 sm:border-l pl-2 sm:pl-6 border-gray-200 dark:border-slate-800">
+                <div className="hidden sm:block text-right">
                   <p className="text-sm font-bold dark:text-white">
                     {user.role?.toLowerCase() === "doctor" && "Dr. "}
                     {userName}
                   </p>
                   <p className="text-xs text-gray-500">{userRole}</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full bg-teal-600 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white">
                   {initials}
                 </div>
               </div>
@@ -440,7 +440,7 @@ export default function DashboardLayout() {
           </header>
 
           {/* Page Content with Animation */}
-          <div className="px-8 pb-8 flex-1">
+          <div className="px-2 sm:px-4 md:px-8 pb-4 md:pb-8 pt-5 flex-1 min-w-0 w-full max-w-full">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}

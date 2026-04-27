@@ -68,7 +68,7 @@ export default function AdminReportRequests() {
     );
 
   return (
-    <div className="p-6">
+    <div className="p-3 sm:p-6">
       {/* Header */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
@@ -105,7 +105,7 @@ export default function AdminReportRequests() {
       </div>
 
       {/* Search + Filter */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="flex flex-col md:flex-row gap-4 mb-6"> 
         <div className="relative flex-1">
           <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
@@ -124,7 +124,7 @@ export default function AdminReportRequests() {
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
-              className={`px-4 py-2 rounded-2xl text-sm font-bold capitalize transition-all ${
+              className={`px-4 py-2 rounded-2xl text-sm font-bold capitalize transition-all cursor-pointer ${
                 filterStatus === status
                   ? "bg-teal-500 text-white shadow-lg shadow-teal-500/20"
                   : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-teal-300"

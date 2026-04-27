@@ -113,3 +113,5 @@ export default function App() {
 // CVV:          408
 // PIN:          0000
 // OTP:          123456
+
+// ngrok http 80 --host-header="backend.test"

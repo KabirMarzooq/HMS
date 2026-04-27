@@ -109,7 +109,7 @@ export default function Inventory() {
   const categories = data?.categories || [];
 
   return (
-    <div className="p-6">
+    <div className="p-2 sm:p-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
@@ -226,45 +226,47 @@ export default function Inventory() {
         </div>
       ) : (
         <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-          <table className="w-full text-left">
-            <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
-              <tr>
-                {[
-                  "Drug Name",
-                  "Category",
-                  "Unit Type",
-                  "Unit Price",
-                  "Stock Qty",
-                  "Low Stock Alert",
-                  "Status",
-                  "Actions",
-                ].map((h) => (
-                  <th
-                    key={h}
-                    className={`p-4 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest ${
-                      h === "Actions" ? "text-right" : ""
-                    }`}
-                  >
-                    {h}
-                  </th>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
+                <tr>
+                  {[
+                    "Drug Name",
+                    "Category",
+                    "Unit Type",
+                    "Unit Price",
+                    "Stock Qty",
+                    "Low Stock Alert",
+                    "Status",
+                    "Actions",
+                  ].map((h) => (
+                    <th
+                      key={h}
+                      className={`p-4 text-slate-500 dark:text-slate-400 font-bold uppercase text-[10px] tracking-widest ${
+                        h === "Actions" ? "text-right" : ""
+                      }`}
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                {drugs.map((drug) => (
+                  <DrugRow
+                    key={drug.id}
+                    drug={drug}
+                    onEdit={() => {
+                      setEditingDrug(drug);
+                      setIsFormOpen(true);
+                    }}
+                    onRestock={() => setIsRestockOpen(drug)}
+                    onDelete={() => setDeleteConfirm(drug)}
+                  />
                 ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-              {drugs.map((drug) => (
-                <DrugRow
-                  key={drug.id}
-                  drug={drug}
-                  onEdit={() => {
-                    setEditingDrug(drug);
-                    setIsFormOpen(true);
-                  }}
-                  onRestock={() => setIsRestockOpen(drug)}
-                  onDelete={() => setDeleteConfirm(drug)}
-                />
-              ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

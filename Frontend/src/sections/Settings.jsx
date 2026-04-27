@@ -123,13 +123,13 @@ export default function Settings() {
   // ✅ Delete Account Handler
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
-      "⚠️ ARE YOU ABSOLUTELY SURE?\n\nThis action is PERMANENT and IRREVERSIBLE.\n\n✓ All your appointments will be deleted\n✓ All your patient/doctor records will be removed\n✓ You will be logged out immediately\n\nType 'DELETE' in the next prompt to confirm.",
+      "⚠️ ARE YOU ABSOLUTELY SURE?\n\nThis action is PERMANENT and IRREVERSIBLE.\n\n✓ All your appointments will be deleted\n✓ All your patient/doctor records will be removed\n✓ You will be logged out immediately\n\nType 'DELETE' in the next prompt to confirm."
     );
 
     if (!confirmed) return;
 
     const finalConfirmation = prompt(
-      "Type 'DELETE' (in capital letters) to permanently delete your account:",
+      "Type 'DELETE' (in capital letters) to permanently delete your account:"
     );
 
     if (finalConfirmation !== "DELETE") {
@@ -199,7 +199,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="p-6 transition-colors duration-300 max-w-6xl mx-auto">
+    <div className="sm:p-6 transition-colors duration-300 max-w-6xl mx-auto">
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
           Settings
@@ -234,8 +234,8 @@ export default function Settings() {
         <div className="flex-1 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden min-h-[500px]">
           {/* TAB 1: PROFILE OVERVIEW */}
           {activeTab === "overview" && (
-            <div className="p-8 animate-in fade-in duration-300">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+            <div className="p-2 sm:p-8 animate-in fade-in duration-300">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white p-3 sm:p-0 sm:mb-6">
                 Profile Overview
               </h3>
 
@@ -492,8 +492,8 @@ export default function Settings() {
 
           {/* TAB 3: AVAILABILITY */}
           {activeTab === "availability" && (
-            <div className="p-8 animate-in fade-in duration-300">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
+            <div className="p-2 sm:p-8 animate-in fade-in duration-300">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white p-2 sm:p-0 sm:mb-6">
                 Practice Availability
               </h3>
 
@@ -526,7 +526,7 @@ export default function Settings() {
                     ].map((day) => (
                       <div
                         key={day}
-                        className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-transparent"
+                        className="flex items-center justify-between px-2 py-4 sm:p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-transparent"
                       >
                         <span className="w-24 text-sm font-bold text-slate-700 dark:text-slate-300">
                           {day}
@@ -554,7 +554,7 @@ export default function Settings() {
 
           {/* TAB 4: NOTIFICATIONS */}
           {activeTab === "notifications" && (
-            <div className="p-8 animate-in fade-in duration-300">
+            <div className="py-8 px-3 sm:p-8 animate-in fade-in duration-300">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
                 Notification Preferences
               </h3>
@@ -623,7 +623,7 @@ export default function Settings() {
 
           {/* TAB 5: APPEARANCE */}
           {activeTab === "appearance" && (
-            <div className="p-8 animate-in fade-in duration-300 space-y-10">
+            <div className="py-8 px-3 sm:p-8 animate-in fade-in duration-300 space-y-10">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
                 Appearance & Preferences
               </h3>
@@ -644,7 +644,11 @@ export default function Settings() {
                   >
                     <div className="w-16 h-12 bg-slate-100 rounded-lg mb-3 border border-slate-200" />
                     <span
-                      className={`text-sm font-bold ${theme === "light" ? "text-teal-600" : "text-slate-700 dark:text-slate-300"}`}
+                      className={`text-sm font-bold ${
+                        theme === "light"
+                          ? "text-teal-600"
+                          : "text-slate-700 dark:text-slate-300"
+                      }`}
                     >
                       Light Mode
                     </span>
@@ -664,7 +668,11 @@ export default function Settings() {
                   >
                     <div className="w-16 h-12 bg-slate-900 rounded-lg mb-3 border border-slate-700" />
                     <span
-                      className={`text-sm font-bold ${theme === "dark" ? "text-teal-500" : "text-slate-700 dark:text-slate-300"}`}
+                      className={`text-sm font-bold ${
+                        theme === "dark"
+                          ? "text-teal-500"
+                          : "text-slate-700 dark:text-slate-300"
+                      }`}
                     >
                       Dark Mode
                     </span>
@@ -684,7 +692,11 @@ export default function Settings() {
                   >
                     <div className="w-16 h-12 bg-gradient-to-br from-slate-100 to-slate-900 rounded-lg mb-3 border border-slate-400/30" />
                     <span
-                      className={`text-sm font-bold ${theme === "system" ? "text-teal-500" : "text-slate-700 dark:text-slate-300"}`}
+                      className={`text-sm font-bold ${
+                        theme === "system"
+                          ? "text-teal-500"
+                          : "text-slate-700 dark:text-slate-300"
+                      }`}
                     >
                       System
                     </span>

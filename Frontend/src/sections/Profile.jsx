@@ -97,7 +97,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="p-4 md:p-6 transition-colors duration-300 max-w-7xl mx-auto">
+    <div className="md:p-6 transition-colors duration-300 max-w-7xl mx-auto">
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
           Profile Center
