@@ -22,9 +22,6 @@ class Drug extends Model
         'low_stock_threshold' => 'integer',
     ];
 
-    /**
-     * Auto-calculated stock status based on quantity vs threshold
-     */
     public function getStockStatusAttribute(): string
     {
         if ($this->stock_quantity <= 0) {

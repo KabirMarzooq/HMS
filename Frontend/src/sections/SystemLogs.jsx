@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Search, ShieldAlert, User, Calendar, Monitor } from "lucide-react";
+import { Search, Calendar, Monitor } from "lucide-react";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
@@ -57,7 +57,6 @@ export default function SystemLogs() {
 
   return (
     <div className="p-2">
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">

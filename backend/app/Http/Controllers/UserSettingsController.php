@@ -55,14 +55,12 @@ class UserSettingsController extends Controller
 
         $user = $request->user();
 
-        // Verify current password
         if (!Hash::check($request->currentPassword, $user->password)) {
             return response()->json([
                 'message' => 'Current password is incorrect'
             ], 401);
         }
 
-        // Update password
         $user->password = Hash::make($request->newPassword);
         $user->save();
 
@@ -78,7 +76,6 @@ class UserSettingsController extends Controller
     {
         $user = $request->user();
 
-        // Optional: Require password confirmation for extra security
         $validator = Validator::make($request->all(), [
             'password' => 'nullable|string',
         ]);
@@ -90,7 +87,6 @@ class UserSettingsController extends Controller
             ], 422);
         }
 
-        // If password is provided, verify it
         if ($request->has('password')) {
             if (!Hash::check($request->password, $user->password)) {
                 return response()->json([
@@ -100,14 +96,11 @@ class UserSettingsController extends Controller
         }
 
         try {
-            // Delete related data first (cascading deletes)
-            // Appointments where user is a patient
+            
             Appointment::where('patient_id', $user->id)->delete();
 
-            // Appointments where user is a doctor
             Appointment::where('doctor_id', $user->id)->delete();
 
-            // Delete the user account
             $user->delete();
 
             return response()->json([

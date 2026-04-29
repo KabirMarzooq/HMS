@@ -24,7 +24,6 @@ function ResetPassword() {
   const token = searchParams.get("token");
   const email = searchParams.get("email");
 
-  // Password strength indicator
   const password = watch("password", "");
   const getPasswordStrength = (pwd) => {
     if (!pwd) return { strength: 0, label: "", color: "" };
@@ -63,7 +62,6 @@ function ResetPassword() {
       setResetSuccess(true);
       toast.success("Password reset successfully!");
 
-      // Redirect to login after 3 seconds
       setTimeout(() => {
         navigate("/login");
       }, 3000);
@@ -78,7 +76,6 @@ function ResetPassword() {
     }
   };
 
-  // Success screen
   if (resetSuccess) {
     return (
       <div className="min-h-screen flex justify-center items-center p-4 bg-gradient-to-br from-slate-50 to-teal-50">
@@ -115,7 +112,6 @@ function ResetPassword() {
     );
   }
 
-  // Invalid token screen
   if (!token || !email) {
     return (
       <div className="min-h-screen flex justify-center items-center p-4 bg-gradient-to-br from-slate-50 to-teal-50">
@@ -155,7 +151,6 @@ function ResetPassword() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden"
       >
-        {/* Header */}
         <div className="bg-gradient-to-r from-cyprus to-teal-800 p-8 text-white text-center">
           <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-4 border border-white/30">
             <Lock size={32} />
@@ -166,10 +161,8 @@ function ResetPassword() {
           </p>
         </div>
 
-        {/* Form */}
         <div className="p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            {/* New Password */}
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -204,7 +197,6 @@ function ResetPassword() {
               )}
             </div>
 
-            {/* Password Strength Indicator */}
             {password && (
               <div className="space-y-2">
                 <div className="flex gap-1">
@@ -228,7 +220,6 @@ function ResetPassword() {
               </div>
             )}
 
-            {/* Confirm Password */}
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -261,7 +252,6 @@ function ResetPassword() {
               )}
             </div>
 
-            {/* Password Requirements */}
             <div className="bg-slate-50 rounded-2xl p-4 space-y-2">
               <p className="text-xs font-semibold text-slate-700">
                 Password must contain:

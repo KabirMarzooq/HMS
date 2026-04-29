@@ -13,7 +13,6 @@ import {
   X,
   ChevronRight,
   Calendar,
-  Clock,
   Stethoscope,
   ClipboardList,
   ArrowLeft,
@@ -23,7 +22,6 @@ import {
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
-// ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 export default function MedicalRecords() {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -118,7 +116,6 @@ export default function MedicalRecords() {
   );
 }
 
-// ─── PATIENT RECORD (the full EHR folder) ────────────────────────────────────
 function PatientRecord({ patient, onBack }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -169,9 +166,8 @@ function PatientRecord({ patient, onBack }) {
         <ArrowLeft size={16} /> All Patients
       </button>
 
-      {/* ── FOLDER COVER (Patient Header) ── */}
+      {/* FOLDER COVER (Patient Header) */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm">
-        {/* Top row: avatar + name + action */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-teal-500 rounded-2xl flex items-center justify-center font-bold text-white text-2xl uppercase">
@@ -203,7 +199,6 @@ function PatientRecord({ patient, onBack }) {
           </div>
         </div>
 
-        {/* Critical Alerts */}
         {(profile?.allergies || profile?.chronic_conditions) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
             {profile?.allergies && (
@@ -241,7 +236,6 @@ function PatientRecord({ patient, onBack }) {
           </div>
         )}
 
-        {/* No alerts placeholder */}
         {!profile?.allergies && !profile?.chronic_conditions && (
           <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 mb-6 text-slate-400 text-sm">
             <ShieldAlert size={16} />
@@ -249,7 +243,6 @@ function PatientRecord({ patient, onBack }) {
           </div>
         )}
 
-        {/* Key Metrics Row */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <MetricChip
             icon={<Droplets size={14} />}
@@ -288,7 +281,6 @@ function PatientRecord({ patient, onBack }) {
         </div>
       </div>
 
-      {/* ── TABS ── */}
       <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 pb-0">
         {tabs.map((tab) => (
           <button
@@ -311,7 +303,6 @@ function PatientRecord({ patient, onBack }) {
         ))}
       </div>
 
-      {/* ── TAB CONTENT ── */}
       {activeTab === "overview" && (
         <VisitTimeline records={records} patientName={data?.patient?.name} />
       )}
@@ -319,7 +310,6 @@ function PatientRecord({ patient, onBack }) {
         <PrescriptionsList prescriptions={prescriptions} />
       )}
 
-      {/* ── ADD VISIT FORM (slide-over) ── */}
       <AddVisitForm
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
@@ -344,7 +334,6 @@ function PatientRecord({ patient, onBack }) {
   );
 }
 
-// ─── VISIT TIMELINE ───────────────────────────────────────────────────────────
 function VisitTimeline({ records, patientName }) {
   if (records.length === 0) {
     return (
@@ -362,21 +351,17 @@ function VisitTimeline({ records, patientName }) {
 
   return (
     <div className="relative space-y-0">
-      {/* Vertical line */}
       <div className="absolute left-6 top-6 bottom-6 w-px bg-slate-200 dark:bg-slate-700" />
 
       {records.map((record, index) => (
         <div key={record.id} className="relative flex gap-6 pb-6">
-          {/* Timeline dot */}
           <div className="relative z-10 flex-shrink-0">
             <div className="w-12 h-12 bg-white dark:bg-slate-800 border-2 border-teal-500 rounded-2xl flex items-center justify-center shadow-sm">
               <Stethoscope size={18} className="text-teal-500" />
             </div>
           </div>
 
-          {/* Visit Card */}
           <div className="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all">
-            {/* Date & Doctor */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
               <div className="flex items-center gap-2">
                 <Calendar size={14} className="text-slate-400" />
@@ -394,7 +379,6 @@ function VisitTimeline({ records, patientName }) {
               </span>
             </div>
 
-            {/* Chief Complaint */}
             <div className="bg-teal-50 dark:bg-teal-500/10 border border-teal-100 dark:border-teal-500/20 rounded-2xl px-4 py-3 mb-4">
               <p className="text-xs font-bold text-teal-600 uppercase tracking-wider mb-1">
                 Chief Complaint
@@ -404,7 +388,6 @@ function VisitTimeline({ records, patientName }) {
               </p>
             </div>
 
-            {/* Vitals */}
             {(record.blood_pressure ||
               record.temperature_c ||
               record.heart_rate ||
@@ -445,7 +428,6 @@ function VisitTimeline({ records, patientName }) {
               </div>
             )}
 
-            {/* Diagnosis & Notes */}
             <div className="space-y-3">
               {record.diagnosis && (
                 <div>
@@ -484,7 +466,6 @@ function VisitTimeline({ records, patientName }) {
   );
 }
 
-// ─── PRESCRIPTIONS TAB ────────────────────────────────────────────────────────
 function PrescriptionsList({ prescriptions }) {
   if (prescriptions.length === 0) {
     return (
@@ -552,7 +533,6 @@ function PrescriptionsList({ prescriptions }) {
   );
 }
 
-// ─── ADD VISIT FORM (slide-over) ──────────────────────────────────────────────
 function AddVisitForm({ isOpen, onClose, patientId, onSaved }) {
   const [form, setForm] = useState({
     visit_date: new Date().toISOString().split("T")[0],
@@ -632,7 +612,6 @@ function AddVisitForm({ isOpen, onClose, patientId, onSaved }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Visit Date */}
           <FormField label="Visit Date">
             <input
               type="date"
@@ -642,7 +621,6 @@ function AddVisitForm({ isOpen, onClose, patientId, onSaved }) {
             />
           </FormField>
 
-          {/* Chief Complaint */}
           <FormField label="Chief Complaint *">
             <input
               type="text"
@@ -653,7 +631,6 @@ function AddVisitForm({ isOpen, onClose, patientId, onSaved }) {
             />
           </FormField>
 
-          {/* Vitals Grid */}
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
               Vitals
@@ -699,7 +676,6 @@ function AddVisitForm({ isOpen, onClose, patientId, onSaved }) {
             </div>
           </div>
 
-          {/* Diagnosis */}
           <FormField label="Diagnosis">
             <textarea
               rows={3}
@@ -710,7 +686,6 @@ function AddVisitForm({ isOpen, onClose, patientId, onSaved }) {
             />
           </FormField>
 
-          {/* Notes */}
           <FormField label="Notes">
             <textarea
               rows={2}
@@ -721,7 +696,6 @@ function AddVisitForm({ isOpen, onClose, patientId, onSaved }) {
             />
           </FormField>
 
-          {/* Action Taken */}
           <FormField label="Action Taken">
             <input
               type="text"
@@ -831,7 +805,6 @@ function EditProfileForm({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Critical Alerts */}
           <div>
             <p className="text-xs font-bold text-red-500 uppercase tracking-wider mb-3 flex items-center gap-1">
               <ShieldAlert size={13} /> Critical Alerts
@@ -858,7 +831,6 @@ function EditProfileForm({
             </div>
           </div>
 
-          {/* Key Metrics */}
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
               Key Metrics
@@ -900,9 +872,6 @@ function EditProfileForm({
                   onChange={(e) => set("date_of_birth", e.target.value)}
                 />
               </FormField>
-              {/* <FormField label="Blood Type already set above">
-                {/* placeholder to keep grid aligned 
-              </FormField> */}
               <FormField label="Height (cm)">
                 <input
                   type="number"
@@ -924,7 +893,6 @@ function EditProfileForm({
             </div>
           </div>
 
-          {/* Contact Info */}
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
               Contact Info
@@ -964,7 +932,6 @@ function EditProfileForm({
   );
 }
 
-// ─── SMALL HELPER COMPONENTS ──────────────────────────────────────────────────
 const inputClass =
   "w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-teal-500 text-sm";
 
@@ -1001,7 +968,7 @@ const VitalChip = ({ icon, label, value, color }) => (
   </div>
 );
 
-// Helper: calculate age from date string
+// calculating age from date string
 const calcAge = (dob) => {
   const diff = Date.now() - new Date(dob).getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));

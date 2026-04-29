@@ -46,7 +46,6 @@ const Support = () => {
 
   return (
     <div className="p-4 md:p-8 min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300 rounded-2xl">
-      {/* 1. HEADER */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
           Help & Support
@@ -57,7 +56,6 @@ const Support = () => {
       </div>
 
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* 2. EMERGENCY BANNER */}
         <div className="flex items-start gap-4 p-5 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 shadow-sm">
           <div className="text-red-600 dark:text-red-500 mt-1 flex-shrink-0">
             <AlertTriangle size={24} />
@@ -75,9 +73,7 @@ const Support = () => {
           </div>
         </div>
 
-        {/* 3. CONTACT CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Live Chat */}
           <button className="flex flex-col items-center text-center p-6 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-teal-500 dark:hover:border-teal-500 transition-all group cursor-pointer shadow-sm">
             <div className="w-12 h-12 rounded-full bg-teal-50 dark:bg-teal-500/10 flex items-center justify-center text-teal-600 dark:text-teal-400 mb-4 group-hover:scale-110 transition-transform">
               <MessageCircle size={24} />
@@ -90,7 +86,6 @@ const Support = () => {
             </p>
           </button>
 
-          {/* Email */}
           <a
             href="mailto:support@oncura.com"
             className="flex flex-col items-center text-center p-6 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-teal-500 dark:hover:border-teal-500 transition-all group shadow-sm"
@@ -106,7 +101,6 @@ const Support = () => {
             </p>
           </a>
 
-          {/* Phone */}
           <div className="flex flex-col items-center text-center p-6 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
             <div className="w-12 h-12 rounded-full bg-teal-50 dark:bg-teal-500/10 flex items-center justify-center text-teal-600 dark:text-teal-400 mb-4">
               <Phone size={24} />
@@ -123,7 +117,6 @@ const Support = () => {
           </div>
         </div>
 
-        {/* 4. FAQ SECTION */}
         <div className="mt-12">
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
             Frequently Asked Questions
@@ -150,7 +143,6 @@ const Support = () => {
                   </div>
                 </button>
 
-                {/* Accordion Content */}
                 {openFaqIndex === index && (
                   <div className="px-5 pb-5 pt-1 text-slate-600 dark:text-slate-400 text-sm leading-relaxed border-t border-slate-100 dark:border-slate-700/50 mt-2">
                     {faq.answer}
@@ -161,7 +153,6 @@ const Support = () => {
           </div>
         </div>
 
-        {/* 5. BOTTOM LINK (Tech Support) */}
         <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex justify-center">
           <button
             onClick={() => setIsBugModalOpen(true)}

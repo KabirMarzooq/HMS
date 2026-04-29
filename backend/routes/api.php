@@ -25,7 +25,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
 
-    // ✅ Add these password reset routes
+    // Password reset routes
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
@@ -35,7 +35,7 @@ Route::prefix('auth')->group(function () {
 
 Route::post('/webhook/paystack', [PaystackController::class, 'webhook']);
 
-// Protected routes (Must send Bearer Token)
+// Protected routes Must send Bearer Token
 Route::middleware('auth:api')->group(function () {
     Route::get('/user-profile', function () {
         return response()->json(auth('api')->user());
@@ -55,7 +55,6 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/appointments/{id}/cancel', [AppointmentController::class, 'cancel']);
 
     Route::patch('/appointments/{id}/reschedule', [AppointmentController::class, 'reschedule']);
-    // Add routes for appointments, medical records, etc. here
 });
 
 // Doctor Protected Routes
@@ -69,12 +68,6 @@ Route::middleware(['auth:api', 'role:doctor'])->prefix('doctor')->group(function
     Route::get('/patients', [PatientController::class, 'index']);
     Route::post('/prescriptions', [PrescriptionController::class, 'store']);
 
-    // Route::get('/patients', function() {
-    //     // You might want to filter this to only show patients 
-    //     // who have had appointments with this specific doctor
-    //     return \App\Models\User::where('role', 'patient')->get(['id', 'name']);
-    // });
-
     Route::get('/patients/{id}/medical-record', [MedicalRecordController::class, 'show']);
     Route::post('/medical-records', [MedicalRecordController::class, 'store']);
     Route::patch('/patients/{id}/profile', [MedicalRecordController::class, 'updateProfile']);
@@ -85,7 +78,7 @@ Route::middleware(['auth:api', 'role:doctor'])->prefix('doctor')->group(function
     Route::get('/revenue', [BillingController::class, 'doctorRevenue']);
 });
 
-// Patient Routes
+// Patient Protected Routes
 Route::middleware(['auth:api', 'role:patient'])->prefix('patient')->group(function () {
     Route::get('/prescriptions', [PatientPrescriptionController::class, 'index']);
     Route::post('/prescriptions/{id}/refill', [PatientPrescriptionController::class, 'requestRefill']);
@@ -95,7 +88,6 @@ Route::middleware(['auth:api', 'role:patient'])->prefix('patient')->group(functi
     Route::get('/bills/{id}', [BillingController::class, 'showInvoice']);
     Route::get('/receipts/{id}', [BillingController::class, 'showReceipt']);
 
-    // Phase 1 test only — remove when Paystack webhook is live in Phase 2:
     Route::post('/bills/{id}/mark-paid', [BillingController::class, 'markPaid']);
     Route::post('/payment/initialize', [PaystackController::class, 'initializePayment']);
     Route::get('/payment/verify/{reference}', [PaystackController::class, 'verifyPayment']);
@@ -105,7 +97,7 @@ Route::middleware(['auth:api', 'role:patient'])->prefix('patient')->group(functi
     Route::get('/report-requests/{id}/report', [MedicalReportRequestController::class, 'getReport']);
 });
 
-// Only Admins can see these
+// Admin Protected Routes
 Route::middleware(['auth:api', 'role:admin'])->prefix('admin')->group(function () {
 
     Route::get('/users', [AdminUserController::class, 'index']);
@@ -119,7 +111,7 @@ Route::middleware(['auth:api', 'role:admin'])->prefix('admin')->group(function (
     Route::patch('/report-requests/{id}/reject', [AdminMedicalReportController::class, 'reject']);
 });
 
-// Both Receptionist and Admins can see these
+// Both Receptionist and Admins Routes
 Route::middleware(['auth:api', 'role:receptionist,admin'])->group(function () {
     Route::get('/schedules', [AdminScheduleController::class, 'index']);
 
@@ -127,6 +119,7 @@ Route::middleware(['auth:api', 'role:receptionist,admin'])->group(function () {
     Route::get('/patients/{id}/medical-record', [MedicalRecordController::class, 'adminShow']);
 });
 
+// Receptionist, Pharmacy and Admins Routes
 Route::middleware(['auth:api', 'role:receptionist,admin,pharmacy'])->prefix('reception')->group(function () {
     Route::get('/bills', [ReceptionBillingController::class, 'allBills']);
     Route::get('/bills/{id}', [ReceptionBillingController::class, 'showInvoice']);

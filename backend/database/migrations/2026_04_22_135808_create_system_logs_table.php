@@ -16,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('role')->nullable();
-            $table->string('action');           // e.g. "appointment.declined"
-            $table->string('target_type')->nullable(); // e.g. "Appointment"
+            $table->string('action');           
+            $table->string('target_type')->nullable(); 
             $table->unsignedBigInteger('target_id')->nullable();
             $table->text('description');
             $table->string('ip_address')->nullable();

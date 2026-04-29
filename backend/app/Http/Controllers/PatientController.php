@@ -13,7 +13,6 @@ class PatientController extends Controller
         $doctorId = $request->user()->id;
 
         // Only return patients who have had appointments with THIS doctor
-        // More useful than returning every patient in the system
         $patients = Appointment::where('doctor_id', $doctorId)
             ->with('patient:id,name')
             ->get()

@@ -22,7 +22,6 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        // 1. Validate the incoming JSON payload
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
@@ -30,7 +29,6 @@ class AuthController extends Controller
             'phone' => 'required|string|min:10',
             'role' => 'required|in:patient,doctor,receptionist,admin,pharmacy',
 
-            // Conditional Validation can be handled here or simply allowed as nullable strings
             'profile.specialization' => 'nullable|string',
             'profile.licenseId' => 'nullable|string',
             'profile.staffId' => 'nullable|string',
@@ -42,15 +40,12 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        // 2. Security Check: Verify Admin Key
         if ($request->role === 'admin') {
             if ($request->adminKey !== env('ADMIN_SECRET')) {
                 return response()->json(['error' => 'Invalid Admin Key. Access Denied.'], 403);
             }
         }
 
-        // 3. Create the User
-        // Note: We extract 'profile' data from the nested React payload
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -58,13 +53,11 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'role' => $request->role,
 
-            // Mapping React "profile" fields to Database columns
             'specialization' => $request->input('profile.specialization'),
             'license_id' => $request->input('profile.licenseId'),
             'staff_id' => $request->input('profile.staffId'),
         ]);
 
-        // 4. Generate JWT Token
         $token = auth('api')->login($user);
 
         return response()->json([
@@ -232,7 +225,7 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // Check if token exists and is not expired (valid for 60 minutes)
+        // Check if token exists and is not expired it is valid for 60 minutes
         $passwordReset = DB::table('password_reset_tokens')
             ->where('email', $request->email)
             ->where('token', $request->token)

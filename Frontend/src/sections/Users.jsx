@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   Search,
   MoreVertical,
-  User,
   Mail,
   Phone,
   Calendar,
   Clock,
-  Filter,
   Trash2,
-  Edit,
 } from "lucide-react";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
@@ -54,9 +51,9 @@ export default function Users() {
       case "doctor":
         return "bg-teal-500/10 text-teal-500 border-teal-500/20";
       case "pharmacy":
-        return "bg-amber-500/10 text-amber-500 border-amber-500/20"; // Warm Amber
+        return "bg-amber-500/10 text-amber-500 border-amber-500/20";
       case "receptionist":
-        return "bg-rose-500/10 text-rose-500 border-rose-500/20"; // Soft Rose
+        return "bg-rose-500/10 text-rose-500 border-rose-500/20";
       default:
         return "bg-blue-500/10 text-blue-500 border-blue-500/20";
     }

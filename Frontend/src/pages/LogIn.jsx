@@ -59,14 +59,12 @@ function LogIn() {
   };
 
   return (
-    /* Added auth-page-container for the autofill fix */
     <div className="auth-page-container min-h-screen flex justify-center items-center p-2">
       <div
         className={`fixed top-20 right-0 z-[60] flex transition-transform duration-500 ease-in-out ${
           isDemoOpen ? "translate-x-0" : "translate-x-[320px]"
         }`}
       >
-        {/* Toggle Button */}
         <button
           onClick={() => setIsDemoOpen(!isDemoOpen)}
           className={`bg-cyprus text-white p-3 rounded-l-xl shadow-2xl border border-r-0 border-white/20 h-fit mt-10 hover:bg-teal-800 transition-colors cursor-pointer flex items-center justify-center ${
@@ -77,7 +75,6 @@ function LogIn() {
           {isDemoOpen ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
         </button>
 
-        {/* Sliding Panel */}
         <div className="w-[320px] bg-cyprus text-white p-6 shadow-2xl border border-r-0 border-white/20 rounded-bl-2xl rounded-tl-2xl h-[calc(100vh-160px)] overflow-y-auto custom-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <h3 className="text-xl font-bold mb-6 text-teal-400 border-b border-white/10 pb-3">
             DEMO CREDENTIALS
@@ -129,7 +126,6 @@ function LogIn() {
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Email Field with Floating Label */}
             <div className="relative my-4">
               <input
                 type="email"
@@ -142,7 +138,7 @@ function LogIn() {
                 })}
                 id="email"
                 name="email"
-                placeholder=" " /* Required for floating label logic */
+                placeholder=" " 
                 className="peer w-full p-4 pt-6 border border-gray-200 rounded-2xl 
                            focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 
                            transition-all placeholder-transparent"
@@ -163,7 +159,6 @@ function LogIn() {
               )}
             </div>
 
-            {/* Password Field with Floating Label and Eye Toggle */}
             <div className="relative my-4">
               <input
                 type={showPassword ? "text" : "password"}
@@ -257,7 +252,6 @@ function LogIn() {
           </form>
         </div>
 
-        {/* Right Side Image/Branding */}
         <div className="hidden md:flex relative items-center justify-center text-white bg-[url('/Ui.jfif')] bg-cover bg-center">
           <div className="absolute inset-0 bg-gradient-to-br from-cyprus/70 via-teal-900/85 to-black/90" />
           <div className="relative z-10 text-center px-8 flex flex-col h-full justify-between py-12">

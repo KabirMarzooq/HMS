@@ -6,8 +6,6 @@ import {
   MessageSquare,
   Search,
   Filter,
-  MoreVertical,
-  User,
 } from "lucide-react";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
@@ -24,7 +22,7 @@ export default function Overview() {
   const [patients, setPatients] = useState([]);
   const [hoveredPatientId, setHoveredPatientId] = useState(null);
 
-  // New state for appointments (Incoming from your Laravel controller)
+  // State for appointments Incoming from your Laravel controller
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
@@ -66,7 +64,6 @@ export default function Overview() {
 
   return (
     <div className="p-6 space-y-8">
-      {/* 1. Hero Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           label="Total Patients"
@@ -98,9 +95,7 @@ export default function Overview() {
         />
       </div>
 
-      {/* 2. Main Content Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* LEFT COLUMN: Patient List & Search (Span 2) */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
             <div className="relative w-full">
@@ -164,14 +159,12 @@ export default function Overview() {
                       {apt.appointment_date || "New Patient"}
                     </td>
 
-                    {/* CONDITION COLUMN: Shows the reason for visit */}
                     <td className="p-5">
                       <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                         {apt.reason || "NIL"}
                       </span>
                     </td>
 
-                    {/* STATUS COLUMN: Uses the same StatusBadge component */}
                     <td className="p-5">
                       <StatusBadge status={apt.status || "pending"} />
                     </td>
@@ -182,7 +175,7 @@ export default function Overview() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: The Daily Timeline View */}
+        {/* The Daily Timeline View */}
         <div className="lg:col-span-1">
           <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm h-full flex flex-col">
             <div className="flex justify-between items-center mb-6">
@@ -195,7 +188,6 @@ export default function Overview() {
             </div>
 
             <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide relative min-h-[500px]">
-              {/* This is the heart of the timeline */}
               <DailyTimeline
                 appointments={appointments}
                 hoveredId={hoveredPatientId}
@@ -208,7 +200,6 @@ export default function Overview() {
   );
 }
 
-// --- HELPER COMPONENTS ---
 
 const StatCard = ({ label, value, icon, color, bg }) => (
   <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 flex items-center gap-5 transition-all shadow-sm">
@@ -231,7 +222,7 @@ const StatCard = ({ label, value, icon, color, bg }) => (
 const DailyTimeline = ({ appointments, hoveredId }) => {
   const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
 
-  // No appointments — just show the empty state message
+  // If no appointments — just show the empty state message
   if (appointments.length === 0) {
     return (
       <div className="flex items-center justify-center h-full min-h-[400px]">

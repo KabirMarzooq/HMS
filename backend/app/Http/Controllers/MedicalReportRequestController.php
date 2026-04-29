@@ -65,25 +65,21 @@ class MedicalReportRequestController extends Controller
     {
         $patientId = Auth::id();
 
-        // Ensure this request belongs to this patient and is approved
         $reportRequest = MedicalReportRequest::where('id', $requestId)
             ->where('patient_id', $patientId)
             ->where('status', 'approved')
             ->firstOrFail();
 
-        // Patient basic info + profile
         $patient = User::where('id', $patientId)
             ->with('patientProfile')
             ->firstOrFail();
 
-        // Visit records within the approved date range
         $records = MedicalRecord::where('patient_id', $patientId)
             ->whereBetween('visit_date', [$reportRequest->date_from, $reportRequest->date_to])
             ->with('doctor:id,name,specialization')
             ->orderBy('visit_date', 'desc')
             ->get();
 
-        // Prescriptions within the approved date range
         $prescriptions = Prescription::where('patient_id', $patientId)
             ->whereBetween('created_at', [
                 $reportRequest->date_from,

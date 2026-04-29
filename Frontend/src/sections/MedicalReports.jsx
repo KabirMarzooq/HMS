@@ -24,7 +24,6 @@ import {
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
-// ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 export default function MedicalReport() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,7 +61,7 @@ export default function MedicalReport() {
       </div>
     );
 
-  // If viewing a report, show the full report view
+  // If you are viewing a report, show the full report view
   if (viewingReport) {
     return (
       <ReportView data={viewingReport} onBack={() => setViewingReport(null)} />
@@ -73,7 +72,6 @@ export default function MedicalReport() {
 
   return (
     <div className="p-6">
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
@@ -84,7 +82,6 @@ export default function MedicalReport() {
           </p>
         </div>
 
-        {/* Only show button if no pending request exists */}
         {!pendingRequest && (
           <button
             onClick={() => setIsFormOpen(true)}
@@ -139,7 +136,7 @@ export default function MedicalReport() {
         </div>
       )}
 
-      {/* Request History List */}
+      {/* The Request History List */}
       {requests.length > 0 && (
         <div className="space-y-4">
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">
@@ -155,7 +152,7 @@ export default function MedicalReport() {
         </div>
       )}
 
-      {/* Request Form Slide-over */}
+      {/* The Request Form Slide-over */}
       <RequestForm
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
@@ -168,7 +165,6 @@ export default function MedicalReport() {
   );
 }
 
-// ─── REQUEST CARD ─────────────────────────────────────────────────────────────
 function RequestCard({ request, onView }) {
   const statusConfig = {
     pending: {
@@ -196,7 +192,6 @@ function RequestCard({ request, onView }) {
   return (
     <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 hover:shadow-md transition-all">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Left: icon + details */}
         <div className="flex items-start gap-4">
           <div className="w-11 h-11 bg-teal-500/10 rounded-2xl flex items-center justify-center flex-shrink-0">
             <FileText size={20} className="text-teal-600" />
@@ -238,7 +233,6 @@ function RequestCard({ request, onView }) {
             <p className="text-xs text-slate-400 mt-1 italic">
               Reason: {request.reason}
             </p>
-            {/* Rejection reason */}
             {request.status === "rejected" && request.rejection_reason && (
               <div className="mt-2 flex items-start gap-2 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl px-3 py-2">
                 <XCircle
@@ -254,7 +248,6 @@ function RequestCard({ request, onView }) {
           </div>
         </div>
 
-        {/* Right: View button (only if approved) */}
         {request.status === "approved" && (
           <button
             onClick={onView}
@@ -268,7 +261,6 @@ function RequestCard({ request, onView }) {
   );
 }
 
-// ─── REQUEST FORM SLIDE-OVER ──────────────────────────────────────────────────
 function RequestForm({ isOpen, onClose, onSubmitted }) {
   const [form, setForm] = useState({
     date_from: "",
@@ -333,7 +325,6 @@ function RequestForm({ isOpen, onClose, onSubmitted }) {
           </button>
         </div>
 
-        {/* Info banner */}
         <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-2xl p-4 mb-6">
           <AlertCircle
             size={16}
@@ -347,7 +338,6 @@ function RequestForm({ isOpen, onClose, onSubmitted }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Date Range */}
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
               Date Range of Records
@@ -378,7 +368,6 @@ function RequestForm({ isOpen, onClose, onSubmitted }) {
             </div>
           </div>
 
-          {/* Reason */}
           <div>
             <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">
               Reason for Request
@@ -405,7 +394,6 @@ function RequestForm({ isOpen, onClose, onSubmitted }) {
   );
 }
 
-// ─── REPORT VIEW (shown when approved request is clicked) ─────────────────────
 function ReportView({ data, onBack }) {
   const printRef = useRef();
 
@@ -466,7 +454,6 @@ function ReportView({ data, onBack }) {
 
   return (
     <div className="p-6">
-      {/* Top Actions */}
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={onBack}
@@ -482,12 +469,10 @@ function ReportView({ data, onBack }) {
         </button>
       </div>
 
-      {/* The printable report */}
       <div
         ref={printRef}
         className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-8 shadow-sm"
       >
-        {/* Report Header */}
         <div className="flex justify-between items-start border-b-2 border-teal-500 pb-5 mb-6">
           <div>
             <h1 className="text-2xl font-black text-teal-700 dark:text-teal-400 tracking-tight">
@@ -795,7 +780,6 @@ function ReportView({ data, onBack }) {
   );
 }
 
-// ─── SMALL HELPERS ────────────────────────────────────────────────────────────
 const inputClass =
   "w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-teal-500 text-sm";
 

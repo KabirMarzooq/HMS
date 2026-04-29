@@ -2,7 +2,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const api = axios.create({
-    baseURL: 'http://backend.test/api', // Your Laravel API URL
+    baseURL: 'http://backend.test/api', // Laravel API URL
 });
 
 let isRefreshing = false;
@@ -20,7 +20,7 @@ const processQueue = (error, token = null) => {
     failedQueue = [];
 };
 
-// This "Interceptor" attaches the token to EVERY request automatically
+// This Interceptor attaches the token to EVERY request automatically
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('oncura_token');
     if (token) {
@@ -29,7 +29,7 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// This "Interceptor" catches 401 (Expired Token) and kicks user to login
+// This Interceptor catches 401 Expired Token and sends user to login
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -39,16 +39,11 @@ api.interceptors.response.use(
                               originalRequest.url?.includes('/auth/register') ||
                               originalRequest.url?.includes('/auth/forgot-password');
 
-        // If error is 401 and we haven't tried to refresh yet
+        // If the error is a 401 and we haven't tried to refresh yet
         if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
 
-            // const isAuthRoute = originalRequest.url?.includes('/auth/');
-            // if (isAuthRoute) {
-            //     return Promise.reject(error);
-            // }
-
             if (isRefreshing) {
-                // If already refreshing, queue this request
+                // If it is already refreshing, queue this request
                 return new Promise((resolve, reject) => {
                     failedQueue.push({ resolve, reject });
                 }).then(token => {
@@ -65,7 +60,7 @@ api.interceptors.response.use(
             const token = localStorage.getItem('oncura_token');
 
             if (!token) {
-                // No token, redirect to login
+                // If no token, redirect to login
                 localStorage.removeItem('oncura_token');
                 localStorage.removeItem('oncura_user');
                 window.location.href = '/login';
@@ -87,7 +82,7 @@ api.interceptors.response.use(
                 const newToken = response.data.access_token;
                 localStorage.setItem('oncura_token', newToken);
 
-                // Update the failed request with new token
+                // Update the failed request with the new token
                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
                 // Process all queued requests
@@ -98,7 +93,7 @@ api.interceptors.response.use(
                 return api(originalRequest);
 
             } catch (refreshError) {
-                // Refresh failed, logout user
+                // If refresh failed, logout the user
                 processQueue(refreshError, null);
                 isRefreshing = false;
 

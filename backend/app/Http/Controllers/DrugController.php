@@ -28,7 +28,6 @@ class DrugController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Alert counts for the banner
         $lowStock    = $drugs->where('stock_status', 'low_stock')->count();
         $outOfStock  = $drugs->where('stock_status', 'out_of_stock')->count();
         $categories  = Drug::distinct()->pluck('category')->sort()->values();

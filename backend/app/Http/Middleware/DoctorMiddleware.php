@@ -9,7 +9,7 @@ class DoctorMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        // Check if user is authenticated AND is a doctor
+        // Checking if user is authenticated AND is a doctor
         if (auth('api')->check() && auth('api')->user()->role === 'doctor') {
             return $next($request);
         }

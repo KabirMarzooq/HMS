@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X, Send, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-// import api from "../services/api"; // Uncomment when your backend route is ready
+// import api from "../services/api";
 
 const BugReportModal = ({ isOpen, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,7 +18,7 @@ const BugReportModal = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
+      // API call
       // await api.post('/report-issue', formData);
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -34,15 +34,12 @@ const BugReportModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      {/* Modal Content */}
       <div className="relative w-full max-w-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
           <div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -60,9 +57,7 @@ const BugReportModal = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          {/* Issue Summary */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
               Issue Summary
@@ -79,7 +74,6 @@ const BugReportModal = ({ isOpen, onClose }) => {
             />
           </div>
 
-          {/* Issue Type */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
               Type of Issue
@@ -98,7 +92,6 @@ const BugReportModal = ({ isOpen, onClose }) => {
             </select>
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
               Detailed Description
@@ -115,7 +108,6 @@ const BugReportModal = ({ isOpen, onClose }) => {
             />
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-2">
             <button
               type="button"

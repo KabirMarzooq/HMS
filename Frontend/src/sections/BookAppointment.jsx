@@ -8,7 +8,6 @@ import {
   Loader2,
   X,
 } from "lucide-react";
-// import axios from "axios";
 import api from "../services/api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -39,19 +38,10 @@ export default function BookAppointment() {
     additional_notes: "",
   });
 
-  // Fetch Doctors on load
   useEffect(() => {
     setLoading(true);
     const fetchDoctors = async () => {
       try {
-        // const token = localStorage.getItem("oncura_token");
-
-        // const response = await axios.get("http://backend.test/api/doctors", {
-        //   headers: {
-        //     Accept: "application/json",
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // });
         const response = await api.get("/doctors");
         setDoctors(response.data);
       } catch (err) {
@@ -72,7 +62,6 @@ export default function BookAppointment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 1. Basic Validation
     if (
       !formData.doctor_id ||
       !formData.appointment_date ||
@@ -86,28 +75,11 @@ export default function BookAppointment() {
     setSubmitting(true);
 
     try {
-      // 2. Get the token from localStorage
-      // const token = localStorage.getItem("oncura_token");
-
-      // // 3. Make the POST request
-      // const response = await axios.post(
-      //   "http://backend.test/api/appointments",
-      //   formData,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   },
-      // );
-
-      // 4. Success Handling
-      // toast.success("Success: " + response.data.message);
       const response = await api.post("/appointments", formData);
 
       toast.success("Appointment booked successfully!");
       navigate("/dashboard/my-appointments");
 
-      // Optional: Reset form or redirect
       setFormData({
         doctor_id: "",
         appointment_date: "",
@@ -116,7 +88,6 @@ export default function BookAppointment() {
         additional_notes: "",
       });
     } catch (err) {
-      // 5. Error Handling (Handles 409 Conflicts & Validation Errors)
       if (err.response && err.response.status === 409) {
         toast.error("Double Booking Error: " + err.response.data.message);
       } else {
@@ -149,7 +120,6 @@ export default function BookAppointment() {
       </header>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Step 1: Select Doctor */}
         <section className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800">
           <div className="flex items-center gap-2 mb-4 text-[#003333] dark:text-teal-400 font-semibold">
             <User size={20} />
@@ -195,7 +165,6 @@ export default function BookAppointment() {
           </div>
         </section>
 
-        {/* Step 2: Date & Time */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4 text-[#003333] dark:text-teal-400 font-semibold">
@@ -218,7 +187,6 @@ export default function BookAppointment() {
             />
           </section>
 
-          {/* Step 3: Reasons (The Pills) */}
           <section className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-800">
             <div className="flex items-center gap-2 mb-4 text-[#003333] dark:text-teal-400 font-semibold">
               <ClipboardList size={20} />
@@ -243,7 +211,6 @@ export default function BookAppointment() {
                 >
                   {reason}
 
-                  {/* Show X icon only if this specific reason is selected */}
                   {formData.reason === reason && (
                     <motion.span
                       initial={{ scale: 0, opacity: 0 }}

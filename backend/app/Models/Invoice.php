@@ -59,9 +59,6 @@ class Invoice extends Model
         return $this->hasOne(Receipt::class);
     }
 
-    /**
-     * Generate a unique invoice number like ONC-2024-00001
-     */
     public static function generateInvoiceNumber(): string
     {
         $year = now()->year;

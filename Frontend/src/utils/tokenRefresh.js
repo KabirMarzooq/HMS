@@ -2,18 +2,17 @@ import api from '../services/api';
 
 let refreshInterval = null;
 
-/**
- * Start automatic token refresh
- * Refreshes token every 50 minutes (10 minutes before expiration)
- */
+
+//   Start automatic token refresh
+//   Refreshes token every 50 minutes (10 minutes before expiration)
+ 
 export const startTokenRefresh = () => {
     // Clear any existing interval
     if (refreshInterval) {
         clearInterval(refreshInterval);
     }
 
-    // Refresh every 50 minutes (10 minutes before the 60-minute expiration)
-    const REFRESH_INTERVAL = 50 * 60 * 1000; // 50 minutes in milliseconds
+    const REFRESH_INTERVAL = 50 * 60 * 1000;
 
     refreshInterval = setInterval(async () => {
         const token = localStorage.getItem('oncura_token');
@@ -32,9 +31,9 @@ export const startTokenRefresh = () => {
     }, REFRESH_INTERVAL);
 };
 
-/**
- * Stop automatic token refresh (call on logout)
- */
+
+//   Stop automatic token refresh for logout
+
 export const stopTokenRefresh = () => {
     if (refreshInterval) {
         clearInterval(refreshInterval);

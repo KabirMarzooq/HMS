@@ -61,14 +61,12 @@ const emptyForm = {
   description: "",
 };
 
-// ── MAIN PAGE ─────────────────────────────────────────────────────────────────
 export default function Inventory() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
 
-  // Slide-over states
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isRestockOpen, setIsRestockOpen] = useState(null); // holds drug being restocked
   const [editingDrug, setEditingDrug] = useState(null); // holds drug being edited
@@ -91,7 +89,6 @@ export default function Inventory() {
     fetchDrugs();
   }, []);
 
-  // Debounced search + category filter
   useEffect(() => {
     const timer = setTimeout(() => fetchDrugs(searchTerm, filterCategory), 350);
     return () => clearTimeout(timer);
@@ -110,7 +107,6 @@ export default function Inventory() {
 
   return (
     <div className="p-2 sm:p-6">
-      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
@@ -312,7 +308,6 @@ export default function Inventory() {
   );
 }
 
-// ── DRUG TABLE ROW ────────────────────────────────────────────────────────────
 function DrugRow({ drug, onEdit, onRestock, onDelete }) {
   const statusConfig = {
     in_stock: {
@@ -339,7 +334,6 @@ function DrugRow({ drug, onEdit, onRestock, onDelete }) {
 
   return (
     <tr className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
-      {/* Drug Name */}
       <td className="p-4">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-teal-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -358,19 +352,16 @@ function DrugRow({ drug, onEdit, onRestock, onDelete }) {
         </div>
       </td>
 
-      {/* Category */}
       <td className="p-4">
         <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-medium">
           {drug.category}
         </span>
       </td>
 
-      {/* Unit Type */}
       <td className="p-4 text-sm text-slate-600 dark:text-slate-300">
         {drug.unit_type}
       </td>
 
-      {/* Unit Price */}
       <td className="p-4">
         <span className="font-bold text-slate-900 dark:text-white text-sm">
           ₦
@@ -380,7 +371,6 @@ function DrugRow({ drug, onEdit, onRestock, onDelete }) {
         </span>
       </td>
 
-      {/* Stock Qty */}
       <td className="p-4">
         <span
           className={`font-black text-lg ${
@@ -395,12 +385,10 @@ function DrugRow({ drug, onEdit, onRestock, onDelete }) {
         </span>
       </td>
 
-      {/* Low Stock Threshold */}
       <td className="p-4 text-sm text-slate-500 dark:text-slate-400">
         ≤ {drug.low_stock_threshold} units
       </td>
 
-      {/* Status Badge */}
       <td className="p-4">
         <span
           className={`flex items-center gap-1.5 w-fit px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${status.style}`}
@@ -409,10 +397,8 @@ function DrugRow({ drug, onEdit, onRestock, onDelete }) {
         </span>
       </td>
 
-      {/* Actions */}
       <td className="p-4 text-right">
         <div className="flex items-center justify-end gap-1">
-          {/* Restock */}
           <button
             onClick={onRestock}
             title="Add Stock"
@@ -421,7 +407,6 @@ function DrugRow({ drug, onEdit, onRestock, onDelete }) {
             <PackagePlus size={17} />
           </button>
 
-          {/* Edit */}
           <button
             onClick={onEdit}
             title="Edit Drug"
@@ -430,7 +415,6 @@ function DrugRow({ drug, onEdit, onRestock, onDelete }) {
             <Pencil size={16} />
           </button>
 
-          {/* Delete */}
           <button
             onClick={onDelete}
             title="Remove Drug"
@@ -444,12 +428,10 @@ function DrugRow({ drug, onEdit, onRestock, onDelete }) {
   );
 }
 
-// ── ADD / EDIT DRUG FORM ──────────────────────────────────────────────────────
 function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
 
-  // Populate form when editing
   useEffect(() => {
     if (editingDrug) {
       setForm({
@@ -505,7 +487,6 @@ function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
@@ -526,7 +507,6 @@ function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Drug Name */}
           <FormField label="Drug Name *">
             <input
               type="text"
@@ -537,7 +517,6 @@ function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
             />
           </FormField>
 
-          {/* Category */}
           <FormField label="Category *">
             <select
               className={inputClass}
@@ -553,7 +532,6 @@ function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
             </select>
           </FormField>
 
-          {/* Unit Type */}
           <FormField label="Unit Type *">
             <select
               className={inputClass}
@@ -569,7 +547,6 @@ function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
             </select>
           </FormField>
 
-          {/* Unit Price */}
           <FormField label="Unit Price (₦) *">
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
@@ -587,7 +564,6 @@ function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
             </div>
           </FormField>
 
-          {/* Stock Quantity + Low Stock Threshold side by side */}
           <div className="grid grid-cols-2 gap-3">
             <FormField label="Stock Quantity *">
               <input
@@ -611,7 +587,6 @@ function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
             </FormField>
           </div>
 
-          {/* Description */}
           <FormField label="Description (optional)">
             <textarea
               rows={3}
@@ -639,7 +614,6 @@ function DrugForm({ isOpen, onClose, editingDrug, onSaved }) {
   );
 }
 
-// ── RESTOCK MODAL ─────────────────────────────────────────────────────────────
 function RestockModal({ drug, onClose, onRestocked }) {
   const [quantity, setQuantity] = useState("");
   const [saving, setSaving] = useState(false);
@@ -682,7 +656,6 @@ function RestockModal({ drug, onClose, onRestocked }) {
           </button>
         </div>
 
-        {/* Current stock info */}
         <div className="flex gap-3 mb-5">
           <div className="flex-1 bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-3 border border-slate-100 dark:border-slate-700 text-center">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
@@ -744,7 +717,6 @@ function RestockModal({ drug, onClose, onRestocked }) {
   );
 }
 
-// ── DELETE CONFIRM MODAL ──────────────────────────────────────────────────────
 function DeleteModal({ drug, onClose, onDeleted }) {
   const [deleting, setDeleting] = useState(false);
 
@@ -801,7 +773,6 @@ function DeleteModal({ drug, onClose, onDeleted }) {
   );
 }
 
-// ── SMALL HELPERS ─────────────────────────────────────────────────────────────
 const inputClass =
   "w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-teal-500 text-sm";
 

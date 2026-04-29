@@ -24,7 +24,7 @@ import { useTheme } from "../layouts/ThemeContext";
 import api from "../services/api";
 import { stopTokenRefresh } from "../utils/tokenRefresh";
 
-// --- Role Configuration ---
+// Role Configuration
 const ROLE_NAV_ITEMS = {
   Patient: [
     {
@@ -196,23 +196,21 @@ export default function DashboardLayout() {
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
-    // Grab the user string from localStorage we saved during login
     const savedUser = localStorage.getItem("oncura_user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
   }, []);
 
-  if (!user) return null; // Or a loading spinner
+  if (!user) return null;
 
-  // Now use the real data!
-  const userRole = user.role; // e.g., "Doctor" or "Patient"
+  const userRole = user.role;
   const userName = user.name || "User";
 
   const normalizedRole =
     userRole.charAt(0).toUpperCase() + userRole.slice(1).toLowerCase();
 
-  // Dynamic Role Mapping (ensure your ROLE_NAV_ITEMS keys match DB roles)
+  // Dynamic Role Mapping - If role is not recognized, default to Patient
   const navItems = ROLE_NAV_ITEMS[normalizedRole] || ROLE_NAV_ITEMS["Patient"];
 
   const handleLogout = async () => {
@@ -233,11 +231,11 @@ export default function DashboardLayout() {
     }
   };
 
-  // Handle Initials - First and Last name with safety checks
+  // Handle Initials - First and Last name
   const getInitials = (name) => {
     if (!name || typeof name !== "string") return "?";
 
-    const nameParts = name.trim().split(" ").filter(Boolean); // Remove empty strings
+    const nameParts = name.trim().split(" ").filter(Boolean); // Removing empty strings
 
     if (nameParts.length === 0) return "?";
     if (nameParts.length === 1) return nameParts[0][0].toUpperCase();
@@ -250,7 +248,7 @@ export default function DashboardLayout() {
   return (
     <div className="font-sans transition-colors duration-300">
       <div className="min-h-[100dvh] w-full bg-[#F8FAFC] dark:bg-slate-950 flex flex-col md:flex-row transition-colors duration-300">
-        {/* Mobile Toggle Button - Only visible on small screens */}
+        {/* Mobile Toggle Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="lg:hidden fixed left-0 top-1/3 -translate-y-1/2 z-[60] bg-[#003333] text-white p-2 rounded-r-xl shadow-lg border border-l-0 border-white/20 transition-all hover:bg-teal-700"
@@ -351,7 +349,7 @@ export default function DashboardLayout() {
             </button>
           </div>
         </aside>
-        {/* Overlay to close sidebar when clicking outside on mobile */}
+        {/* Overlay to close sidebar */}
         {isOpen && (
           <div
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
@@ -359,12 +357,10 @@ export default function DashboardLayout() {
           />
         )}
 
-        {/* --- Main Content Area --- */}
+        {/* Main Content Area */}
         <main className="flex-1 flex flex-col">
-          {/* Top Header */}
           <header className="h-20 px-1 md:px-8 flex items-center justify-between border-b border-gray-200 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-950/50 backdrop-blur-xl sticky top-0 z-20 w-full">
             <div className="flex items-center sm:gap-4 gap-1">
-              {/* Search Bar is here... */}
               <div className="relative group">
                 <Search
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-teal-600 transition-colors"
@@ -439,7 +435,7 @@ export default function DashboardLayout() {
             </div>
           </header>
 
-          {/* Page Content with Animation */}
+          {/* Th different page Content Outlet */}
           <div className="px-2 sm:px-4 md:px-8 pb-4 md:pb-8 pt-5 flex-1 min-w-0 w-full max-w-full">
             <AnimatePresence mode="wait">
               <motion.div

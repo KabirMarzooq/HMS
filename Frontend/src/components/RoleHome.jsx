@@ -6,7 +6,7 @@ export default function RoleHome() {
 
   const { role } = JSON.parse(savedUser);
 
-  // Define the "Home" path for each role
+  // Definitions of the "Home" path for each role
   const roleDefaults = {
     patient: "/dashboard/my-appointments",
     doctor: "/dashboard/overview",
@@ -15,7 +15,6 @@ export default function RoleHome() {
     pharmacy: "/dashboard/all-prescriptions",
   };
 
-  // Redirect to the role's default, or fallback to logout/login
   const targetPath = roleDefaults[role.toLowerCase()] || "/login";
 
   return <Navigate to={targetPath} replace />;

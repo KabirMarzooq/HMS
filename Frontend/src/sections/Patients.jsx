@@ -21,11 +21,10 @@ export default function MyPatients() {
 
   const fetchConfirmedPatients = async () => {
     try {
-      // PRO TIP: It's best if your Laravel backend has an endpoint specifically
       // for confirmed appointments, e.g., `/doctor/appointments?status=confirmed`
       const res = await api.get("/doctor/appointments");
 
-      // Filter out only the confirmed appointments on the frontend just in case
+      // Filtering out only the confirmed appointments on the frontend also
       const confirmedOnly = res.data.filter(
         (appt) => appt.status?.toLowerCase() === "confirmed"
       );
@@ -141,7 +140,6 @@ export default function MyPatients() {
               </div>
             </div>
 
-            {/* Replaced Actions for Confirmed Patients */}
 
             <button
               onClick={() => console.log(`Open chat with: ${appt.patient_id}`)}

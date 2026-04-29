@@ -82,7 +82,6 @@ export default function AllPrescriptions() {
                 {p.medication}
               </h3>
 
-              {/* Patient Info — the key addition */}
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-7 h-7 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
                   <User size={13} />
@@ -97,7 +96,6 @@ export default function AllPrescriptions() {
                 </div>
               </div>
 
-              {/* Doctor Info */}
               <div className="flex items-center gap-2 mb-5">
                 <div className="w-7 h-7 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-500">
                   <Stethoscope size={13} />

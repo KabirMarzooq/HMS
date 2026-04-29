@@ -17,7 +17,7 @@ class RoleMiddleware
     {
         $user = auth('api')->user();
 
-        // Check if user is logged in AND if their role is in the allowed list
+        // Checking if user is logged in AND if their role is in the allowed list
         if (!$user || !in_array($user->role, $roles)) {
             return response()->json(['error' => 'Unauthorized. Only ' . implode(' or ', $roles) . ' allowed.'], 403);
         }

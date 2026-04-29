@@ -37,9 +37,6 @@ class Receipt extends Model
         return $this->belongsTo(User::class, 'patient_id');
     }
 
-    /**
-     * Generate a unique receipt number like REC-2024-00001
-     */
     public static function generateReceiptNumber(): string
     {
         $year = now()->year;

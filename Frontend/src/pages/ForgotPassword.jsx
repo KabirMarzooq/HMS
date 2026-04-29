@@ -103,7 +103,6 @@ function ForgotPassword() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden"
       >
-        {/* Header */}
         <div className="bg-gradient-to-r from-cyprus to-teal-800 p-8 text-white text-center">
           <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-4 border border-white/30">
             <Mail size={32} />
@@ -114,7 +113,6 @@ function ForgotPassword() {
           </p>
         </div>
 
-        {/* Form */}
         <div className="p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="relative">

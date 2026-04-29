@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // 1. Role Enum (Matches your React "ROLES" array exactly)
+            // Role Enum
             $table->enum('role', ['patient', 'doctor', 'receptionist', 'admin', 'pharmacy'])
                 ->default('patient')
                 ->after('email');
 
-            // 2. Phone Number (Required in your form, but safe to keep nullable in DB)
+            // Phone Number
             $table->string('phone')->nullable()->after('role');
 
-            // 3. Professional Details (Nullable: because Patients won't have these)
+            // Professional Details (Nullable: because Patients won't have these)
             $table->string('specialization')->nullable()->after('phone'); // For Doctors
             $table->string('license_id')->nullable()->after('specialization'); // For Doctors
             $table->string('staff_id')->nullable()->after('license_id'); // For Receptionists/Staff

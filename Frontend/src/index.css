@@ -16,12 +16,6 @@
         padding: 0;
     }
 
-    html,
-    body,
-    #root {
-        @apply h-full min-h-[100dvh] bg-gray-50 dark:bg-slate-950;
-    }
-
     body {
         background: url(./assets/Surgery.jfif) no-repeat;
         background-color: rgba(0, 0, 0, 0.4);
@@ -66,7 +60,6 @@
         @apply relative after:content-[''] after:absolute after:top-[50px] after:left-[47%] after:w-[5%] after:h-[2px] after:bg-[#004643] dark:after:bg-cloud-white;
     }
 
-    /* Navbar Underline Animations */
     .nav-link {
         position: relative;
     }
@@ -96,13 +89,11 @@
         width: 100%;
     }
 
-    /* Dark Mode Overrides for Navbar */
     html.dark .active::before,
     html.dark .nav-link:not(.active)::before {
         background-color: #FAFAFA;
     }
 
-    /* Medinfo Cards */
     .medinfo {
         transition: all ease 0.5s;
     }
@@ -114,7 +105,6 @@
         border-left: 1px solid #00464381;
     }
 
-    /* Scrollbar Hiding */
     .scrollbar-hide::-webkit-scrollbar {
         display: none;
     }
@@ -128,13 +118,11 @@
         animation-play-state: paused !important;
     }
 
-    /* Animations */
     .animate-float {
         animation: float 6s ease-in-out infinite;
     }
 }
 
-/* Define Keyframes outside layers for best compatibility in v4 */
 @keyframes scrollX {
     0% {
         transform: translateX(0);

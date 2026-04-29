@@ -28,7 +28,7 @@ class PatientProfile extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Computed age from date_of_birth
+    // Computing the age from the date of birth
     public function getAgeAttribute()
     {
         return $this->date_of_birth

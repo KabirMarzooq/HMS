@@ -21,7 +21,6 @@ import {
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
-// ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 export default function AllMedicalReports() {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -29,7 +28,6 @@ export default function AllMedicalReports() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    // Shared endpoint — accessible by admin and receptionist
     api
       .get("/patients")
       .then((res) => setPatients(res.data))
@@ -115,14 +113,12 @@ export default function AllMedicalReports() {
   );
 }
 
-// ─── PATIENT RECORD (read-only health folder) ─────────────────────────────────
 function PatientRecord({ patient, onBack }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
 
   const fetchRecord = () => {
-    // Shared endpoint — no /doctor prefix
     api
       .get(`/patients/${patient.id}/medical-record`)
       .then((res) => setData(res.data))
@@ -157,7 +153,6 @@ function PatientRecord({ patient, onBack }) {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Back Button */}
       <button
         onClick={onBack}
         className="flex items-center gap-2 text-slate-500 hover:text-teal-600 transition-colors text-sm font-medium cursor-pointer"
@@ -165,7 +160,6 @@ function PatientRecord({ patient, onBack }) {
         <ArrowLeft size={16} /> All Patients
       </button>
 
-      {/* ── FOLDER COVER (Patient Header) — NO edit/add buttons ── */}
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-4">
@@ -183,7 +177,6 @@ function PatientRecord({ patient, onBack }) {
             </div>
           </div>
 
-          {/* Read-only badge instead of action buttons */}
           <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 rounded-2xl">
             <ShieldAlert size={14} className="text-slate-400" />
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
@@ -192,7 +185,6 @@ function PatientRecord({ patient, onBack }) {
           </div>
         </div>
 
-        {/* Critical Alerts */}
         {(profile?.allergies || profile?.chronic_conditions) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
             {profile?.allergies && (
@@ -237,7 +229,6 @@ function PatientRecord({ patient, onBack }) {
           </div>
         )}
 
-        {/* Key Metrics Row */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <MetricChip
             icon={<Droplets size={14} />}
@@ -276,7 +267,6 @@ function PatientRecord({ patient, onBack }) {
         </div>
       </div>
 
-      {/* ── TABS ── */}
       <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 pb-0">
         {tabs.map((tab) => (
           <button
@@ -299,7 +289,6 @@ function PatientRecord({ patient, onBack }) {
         ))}
       </div>
 
-      {/* ── TAB CONTENT ── */}
       {activeTab === "overview" && <VisitTimeline records={records} />}
       {activeTab === "prescriptions" && (
         <PrescriptionsList prescriptions={prescriptions} />
@@ -308,7 +297,6 @@ function PatientRecord({ patient, onBack }) {
   );
 }
 
-// ─── VISIT TIMELINE (read-only) ───────────────────────────────────────────────
 function VisitTimeline({ records }) {
   if (records.length === 0) {
     return (
@@ -438,7 +426,6 @@ function VisitTimeline({ records }) {
   );
 }
 
-// ─── PRESCRIPTIONS TAB (read-only) ────────────────────────────────────────────
 function PrescriptionsList({ prescriptions }) {
   if (prescriptions.length === 0) {
     return (
@@ -501,7 +488,6 @@ function PrescriptionsList({ prescriptions }) {
   );
 }
 
-// ─── SMALL HELPERS ────────────────────────────────────────────────────────────
 const MetricChip = ({ icon, label, value, color }) => (
   <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-3 flex flex-col gap-1 border border-slate-100 dark:border-slate-700">
     <div

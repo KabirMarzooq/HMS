@@ -16,7 +16,6 @@ export default function AdminSchedule() {
   const fetchSchedules = async () => {
     try {
       const res = await api.get("/schedules");
-      // handles both paginated { data: [] } and plain array responses
       setAppointments(res.data?.data || res.data);
     } catch {
       toast.error("Error loading schedules.");
@@ -67,7 +66,6 @@ export default function AdminSchedule() {
       </h2>
 
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-8">
-        {/* Search */}
         <div className="relative w-full md:max-w-md">
           <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
@@ -83,7 +81,6 @@ export default function AdminSchedule() {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Status Filter */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -95,21 +92,18 @@ export default function AdminSchedule() {
             <option value="cancelled">Cancelled</option>
           </select>
 
-          {/* Count */}
           <span className="bg-white dark:bg-slate-800 px-4 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-teal-600 dark:text-teal-500 font-bold shadow-sm text-xs">
             {filteredAppointments.length} results
           </span>
         </div>
       </div>
 
-      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {filteredAppointments.map((appt) => (
           <div
             key={appt.id}
             className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300"
           >
-            {/* Status Badge */}
             <div className="flex justify-between items-center mb-5">
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Appt. #{appt.id}
@@ -123,7 +117,6 @@ export default function AdminSchedule() {
               </span>
             </div>
 
-            {/* Patient Info */}
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-teal-500/10 rounded-2xl flex items-center justify-center text-teal-600 dark:text-teal-400 shrink-0">
                 <User size={20} />
@@ -138,7 +131,6 @@ export default function AdminSchedule() {
               </div>
             </div>
 
-            {/* Doctor Info */}
             <div className="flex items-center gap-3 mb-5">
               <div className="w-10 h-10 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
                 <Stethoscope size={20} />
@@ -153,7 +145,6 @@ export default function AdminSchedule() {
               </div>
             </div>
 
-            {/* Date & Time */}
             <div className="space-y-2 mb-5">
               <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm font-medium">
                 <Calendar size={16} className="text-teal-500" />{" "}
@@ -165,7 +156,6 @@ export default function AdminSchedule() {
               </div>
             </div>
 
-            {/* Notes */}
             <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-transparent">
               <p className="text-[10px] font-bold text-slate-400 uppercase mb-2">
                 Reason for visit

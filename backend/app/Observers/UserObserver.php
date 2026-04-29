@@ -20,7 +20,7 @@ class UserObserver
 
     public function updated(User $user): void
     {
-        // Specifically call out role changes since they're sensitive
+        // Specifically calling out role changes since they're sensitive
         if ($user->wasChanged('role')) {
             SystemLog::log(
                 'user.role_changed',

@@ -17,7 +17,6 @@ import {
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
-// ── FORMAT HELPERS ────────────────────────────────────────────────────────────
 const formatNGN = (amount) =>
   new Intl.NumberFormat("en-NG", {
     style: "currency",
@@ -33,7 +32,6 @@ const formatDate = (date, opts = {}) =>
     ...opts,
   });
 
-// ── LOAD PAYSTACK SCRIPT ──────────────────────────────────────────────────────
 const loadPaystackScript = () =>
   new Promise((resolve) => {
     if (document.getElementById("paystack-script")) {
@@ -47,7 +45,6 @@ const loadPaystackScript = () =>
     document.body.appendChild(script);
   });
 
-// ── MAIN PAGE ─────────────────────────────────────────────────────────────────
 export default function BillsReceipts() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -67,7 +64,7 @@ export default function BillsReceipts() {
 
   useEffect(() => {
     fetchBills();
-    loadPaystackScript(); // preload so popup is instant
+    loadPaystackScript();
   }, []);
 
   if (loading)
@@ -114,7 +111,6 @@ export default function BillsReceipts() {
         </p>
       </div>
 
-      {/* Outstanding balance banner */}
       {data?.unpaid_count > 0 && (
         <div className="bg-gradient-to-r from-red-500 to-rose-600 rounded-3xl p-6 mb-8 text-white shadow-lg shadow-red-500/20">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -192,7 +188,6 @@ export default function BillsReceipts() {
   );
 }
 
-// ── INVOICE CARD ──────────────────────────────────────────────────────────────
 function InvoiceCard({ invoice, onView, onViewReceipt }) {
   const isPaid = invoice.status === "paid";
   const isOverdue = invoice.status === "overdue";
@@ -275,7 +270,6 @@ function InvoiceCard({ invoice, onView, onViewReceipt }) {
   );
 }
 
-// ── INVOICE DETAIL + PAYSTACK POPUP ──────────────────────────────────────────
 function InvoiceView({ invoiceId, onBack, onPaid }) {
   const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -292,26 +286,25 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
   const handlePayNow = async () => {
     setPaying(true);
     try {
-      // 1. Ask backend to initialize the transaction with Paystack
+      // Ask backend to initialize the transaction with Paystack
       const res = await api.post("/patient/payment/initialize", {
         invoice_id: invoiceId,
       });
 
       const { access_code, reference } = res.data;
 
-      // 2. Open Paystack inline popup
+      // Open Paystack inline popup
       await loadPaystackScript();
 
       const handler = window.PaystackPop.setup({
         key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-        email: invoice?.patient?.email, // fallback — Paystack already has it from init
-        amount: Math.round(invoice?.total_amount * 100), // kobo
+        email: invoice?.patient?.email,
+        amount: Math.round(invoice?.total_amount * 100),
         currency: "NGN",
         ref: reference,
         accessCode: access_code,
 
         onSuccess: async (transaction) => {
-          // 3. Verify payment with backend
           try {
             const verify = await api.get(
               `/patient/payment/verify/${transaction.reference}`
@@ -323,7 +316,6 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
               toast.error("Payment could not be verified. Contact support.");
             }
           } catch {
-            // Webhook may have already processed it — refresh anyway
             toast.success("Payment received! Refreshing...");
             onPaid();
           }
@@ -365,7 +357,6 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
       </button>
 
       <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl overflow-hidden shadow-sm">
-        {/* Header */}
         <div className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 p-6">
           <div className="flex justify-between items-start">
             <div>
@@ -381,7 +372,6 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
         </div>
 
         <div className="p-6 space-y-6">
-          {/* Doctor + appointment */}
           <div className="grid grid-cols-2 gap-4">
             <DetailChip
               icon={<Stethoscope size={14} />}
@@ -409,7 +399,6 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
             )}
           </div>
 
-          {/* Line items table */}
           <div>
             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
               Bill Breakdown
@@ -461,7 +450,6 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
             </div>
           </div>
 
-          {/* Due date warning */}
           {!isPaid && invoice?.due_date && (
             <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-4">
               <AlertCircle
@@ -483,7 +471,6 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
             </div>
           )}
 
-          {/* Paid confirmation */}
           {isPaid && invoice?.receipt && (
             <div className="flex items-start gap-3 bg-teal-50 dark:bg-teal-500/10 border border-teal-200 dark:border-teal-500/20 rounded-2xl p-4">
               <CheckCircle
@@ -502,7 +489,6 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
             </div>
           )}
 
-          {/* Pay button */}
           {!isPaid && (
             <button
               onClick={handlePayNow}
@@ -534,7 +520,6 @@ function InvoiceView({ invoiceId, onBack, onPaid }) {
   );
 }
 
-// ── RECEIPT VIEW ──────────────────────────────────────────────────────────────
 function ReceiptView({ receiptId, onBack }) {
   const [receipt, setReceipt] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -608,7 +593,6 @@ function ReceiptView({ receiptId, onBack }) {
         ref={printRef}
         className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl overflow-hidden shadow-sm"
       >
-        {/* Header */}
         <div className="flex justify-between items-center border-b-2 border-teal-500 p-6">
           <div>
             <h1 className="text-2xl font-black text-teal-700 dark:text-teal-400">
@@ -622,7 +606,6 @@ function ReceiptView({ receiptId, onBack }) {
         </div>
 
         <div className="p-6 space-y-5">
-          {/* Paid stamp */}
           <div className="bg-teal-50 dark:bg-teal-500/10 border-2 border-teal-200 dark:border-teal-500/30 rounded-2xl p-5 text-center">
             <CheckCircle size={32} className="text-teal-500 mx-auto mb-2" />
             <p className="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1">
@@ -633,7 +616,6 @@ function ReceiptView({ receiptId, onBack }) {
             </p>
           </div>
 
-          {/* Meta grid */}
           <div className="grid grid-cols-2 gap-3">
             <DetailChip
               label="Receipt No."
@@ -729,7 +711,6 @@ function ReceiptView({ receiptId, onBack }) {
   );
 }
 
-// ── SMALL HELPERS ─────────────────────────────────────────────────────────────
 const StatusBadge = ({ status, large = false }) => {
   const styles = {
     unpaid:

@@ -12,10 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class PaystackController extends Controller
 {
-    // ─────────────────────────────────────────────────────────────────────────
-    // STEP 1: Patient clicks "Pay Now"
-    // Frontend calls this to get a Paystack authorization URL / access code
-    // ─────────────────────────────────────────────────────────────────────────
     public function initializePayment(Request $request)
     {
         $request->validate([
@@ -29,10 +25,8 @@ class PaystackController extends Controller
 
         $patient = Auth::user();
 
-        // Amount must be in KOBO (multiply NGN by 100)
         $amountInKobo = (int) ($invoice->total_amount * 100);
 
-        // Call Paystack API to initialize transaction
         $response = $this->callPaystack('POST', '/transaction/initialize', [
             'email'     => $patient->email,
             'amount'    => $amountInKobo,
@@ -52,7 +46,6 @@ class PaystackController extends Controller
             ], 500);
         }
 
-        // Save a pending payment record
         Payment::create([
             'invoice_id'        => $invoice->id,
             'patient_id'        => $patient->id,
@@ -70,13 +63,8 @@ class PaystackController extends Controller
         ]);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // STEP 2: Paystack sends a webhook to this endpoint after payment
-    // This is what actually marks the invoice as paid
-    // ─────────────────────────────────────────────────────────────────────────
     public function webhook(Request $request)
     {
-        // 1. Verify the request is genuinely from Paystack
         $paystackSignature = $request->header('x-paystack-signature');
         $computedHash = hash_hmac(
             'sha512',
@@ -94,7 +82,6 @@ class PaystackController extends Controller
 
         Log::info('Paystack webhook received: ' . $event);
 
-        // 2. Only handle successful charge events
         if ($event === 'charge.success') {
             $data      = $payload['data'];
             $reference = $data['reference'];
@@ -107,14 +94,12 @@ class PaystackController extends Controller
             }
 
             DB::transaction(function () use ($data, $reference, $invoiceId) {
-                // Find the invoice
                 $invoice = Invoice::find($invoiceId);
 
                 if (!$invoice || $invoice->status === 'paid') {
-                    return; // Already paid or not found — skip
+                    return;
                 }
 
-                // Update the pending payment record
                 $payment = Payment::where('gateway_reference', $reference)->first();
 
                 if ($payment) {
@@ -125,7 +110,6 @@ class PaystackController extends Controller
                         'paid_at'          => now(),
                     ]);
                 } else {
-                    // Create payment if not found (edge case)
                     $payment = Payment::create([
                         'invoice_id'        => $invoiceId,
                         'patient_id'        => $invoice->patient_id,
@@ -140,7 +124,6 @@ class PaystackController extends Controller
                     ]);
                 }
 
-                // Mark invoice as paid
                 $invoice->update([
                     'status'  => 'paid',
                     'paid_at' => now(),
@@ -158,7 +141,6 @@ class PaystackController extends Controller
                     'issued_at'      => now(),
                 ]);
 
-                // Decrement stock for prescription invoices
                 if ($invoice->type === 'prescription') {
                     $items = \App\Models\InvoiceItem::where('invoice_id', $invoice->id)
                         ->whereNot('description', 'like', '%Service Charge%')
@@ -174,13 +156,9 @@ class PaystackController extends Controller
             });
         }
 
-        // Always return 200 to Paystack so it stops retrying
         return response()->json(['message' => 'OK'], 200);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // STEP 3: Frontend can verify payment status after popup closes
-    // ─────────────────────────────────────────────────────────────────────────
     public function verifyPayment($reference)
     {
         $response = $this->callPaystack('GET', '/transaction/verify/' . $reference);
@@ -189,7 +167,7 @@ class PaystackController extends Controller
             return response()->json(['verified' => false, 'message' => 'Verification failed'], 400);
         }
 
-        $status = $response['data']['status']; // 'success', 'failed', 'abandoned'
+        $status = $response['data']['status']; 
 
         return response()->json([
             'verified' => $status === 'success',
@@ -198,9 +176,6 @@ class PaystackController extends Controller
         ]);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // HELPER: Make a request to Paystack API
-    // ─────────────────────────────────────────────────────────────────────────
     private function callPaystack(string $method, string $endpoint, array $body = []): ?array
     {
         $secretKey = config('paystack.secretKey');
@@ -225,9 +200,6 @@ class PaystackController extends Controller
         return $result ? json_decode($result, true) : null;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // HELPER: Generate a unique transaction reference
-    // ─────────────────────────────────────────────────────────────────────────
     private function generateReference(int $invoiceId): string
     {
         return 'ONC-' . $invoiceId . '-' . strtoupper(uniqid());

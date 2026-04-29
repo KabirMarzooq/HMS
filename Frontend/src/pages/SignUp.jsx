@@ -88,7 +88,6 @@ function SignUp() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2"
       >
-        {/* Left Side: Branding */}
         <div className="hidden md:flex relative flex-col justify-between text-white bg-[url('/Ui.jfif')] bg-cover bg-center">
           <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-teal-200/50 to-teal-200/50 dark:from-cyprus/80 dark:via-teal-900/85 dark:to-black/90 z-0"></div>
 
@@ -114,7 +113,6 @@ function SignUp() {
           </div>
         </div>
 
-        {/* Right Side: Form */}
         <div className="p-8 sm:p-10 max-h-[90vh] overflow-y-auto">
           <Link to="/" className="flex items-center gap-3 mb-6">
             <div className="bg-cyprus w-10 h-10 rounded-full flex items-center justify-center">
@@ -129,7 +127,6 @@ function SignUp() {
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Full Name */}
             <div className="relative">
               <input
                 type="text"
@@ -153,7 +150,6 @@ function SignUp() {
               )}
             </div>
 
-            {/* Email */}
             <div className="relative">
               <input
                 type="email"
@@ -180,7 +176,6 @@ function SignUp() {
               )}
             </div>
 
-            {/* Password with Eye and MinLength */}
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -217,7 +212,6 @@ function SignUp() {
               )}
             </div>
 
-            {/* Confirm Password */}
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -250,7 +244,6 @@ function SignUp() {
               )}
             </div>
 
-            {/* Phone */}
             <div className="relative">
               <input
                 type="tel"
@@ -274,7 +267,6 @@ function SignUp() {
               )}
             </div>
 
-            {/* Role Selection */}
             <div className="relative">
               <select
                 {...register("role", { required: "Please select a role" })}
@@ -295,14 +287,12 @@ function SignUp() {
               )}
             </div>
 
-            {/* Conditional Role Fields with Fixed Lengths and Eye Toggle */}
             {selectedRole && selectedRole !== "patient" && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 className="space-y-4"
               >
-                {/* ID Field (License, Staff, Pharmacy Key or Admin Key) */}
                 <div className="relative">
                   <input
                     id="staffid"
@@ -338,7 +328,6 @@ function SignUp() {
                   )}
                 </div>
 
-                {/* Specialization (Doctor Only) */}
                 {selectedRole === "doctor" && (
                   <div className="relative">
                     <input

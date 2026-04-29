@@ -4,17 +4,14 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  User,
   Calendar,
   AlertCircle,
   X,
   Search,
-  Filter,
 } from "lucide-react";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
-// ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 export default function AdminReportRequests() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +52,6 @@ export default function AdminReportRequests() {
     return matchesSearch && matchesStatus;
   });
 
-  // Stats
   const pending = requests.filter((r) => r.status === "pending").length;
   const approved = requests.filter((r) => r.status === "approved").length;
   const rejected = requests.filter((r) => r.status === "rejected").length;
@@ -69,7 +65,6 @@ export default function AdminReportRequests() {
 
   return (
     <div className="p-3 sm:p-6">
-      {/* Header */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
           Medical Report Requests
@@ -79,7 +74,6 @@ export default function AdminReportRequests() {
         </p>
       </div>
 
-      {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <StatCard
           label="Pending Review"
@@ -104,7 +98,6 @@ export default function AdminReportRequests() {
         />
       </div>
 
-      {/* Search + Filter */}
       <div className="flex flex-col md:flex-row gap-4 mb-6"> 
         <div className="relative flex-1">
           <Search
@@ -136,7 +129,6 @@ export default function AdminReportRequests() {
         </div>
       </div>
 
-      {/* Empty State */}
       {filtered.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
@@ -154,7 +146,6 @@ export default function AdminReportRequests() {
         </div>
       )}
 
-      {/* Requests List */}
       <div className="space-y-4">
         {filtered.map((req) => (
           <RequestRow
@@ -166,7 +157,6 @@ export default function AdminReportRequests() {
         ))}
       </div>
 
-      {/* Reject Modal */}
       {rejectModal && (
         <RejectModal
           request={rejectModal}
@@ -181,7 +171,6 @@ export default function AdminReportRequests() {
   );
 }
 
-// ─── REQUEST ROW ──────────────────────────────────────────────────────────────
 function RequestRow({ request, onApprove, onReject }) {
   const statusConfig = {
     pending: {
@@ -209,15 +198,13 @@ function RequestRow({ request, onApprove, onReject }) {
   return (
     <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 hover:shadow-md transition-all">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        {/* Left: Patient info + request details */}
+   
         <div className="flex items-start gap-4">
-          {/* Avatar */}
           <div className="w-12 h-12 bg-teal-500 rounded-2xl flex items-center justify-center font-bold text-white text-lg uppercase flex-shrink-0">
             {request.patient?.name?.charAt(0) || "P"}
           </div>
 
           <div>
-            {/* Name + status */}
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <p className="font-bold text-slate-900 dark:text-white">
                 {request.patient?.name || "Unknown Patient"}
@@ -229,12 +216,10 @@ function RequestRow({ request, onApprove, onReject }) {
               </span>
             </div>
 
-            {/* Email */}
             <p className="text-xs text-slate-400 mb-2">
               {request.patient?.email}
             </p>
 
-            {/* Date range + reason */}
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
               <span className="flex items-center gap-1">
                 <Calendar size={11} className="text-teal-500" />
@@ -264,12 +249,10 @@ function RequestRow({ request, onApprove, onReject }) {
               </span>
             </div>
 
-            {/* Reason */}
             <p className="text-xs text-slate-400 italic mt-1.5">
               "{request.reason}"
             </p>
 
-            {/* Rejection reason if rejected */}
             {request.status === "rejected" && request.rejection_reason && (
               <div className="mt-2 flex items-start gap-2 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl px-3 py-2">
                 <XCircle
@@ -285,7 +268,6 @@ function RequestRow({ request, onApprove, onReject }) {
           </div>
         </div>
 
-        {/* Right: Action buttons (only for pending) */}
         {request.status === "pending" && (
           <div className="flex gap-2 flex-shrink-0">
             <button
@@ -307,7 +289,6 @@ function RequestRow({ request, onApprove, onReject }) {
   );
 }
 
-// ─── REJECT MODAL ─────────────────────────────────────────────────────────────
 function RejectModal({ request, onClose, onRejected }) {
   const [reason, setReason] = useState("");
   const [saving, setSaving] = useState(false);
@@ -337,7 +318,6 @@ function RejectModal({ request, onClose, onRejected }) {
         onClick={onClose}
       />
       <div className="relative bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-md border border-slate-200 dark:border-slate-700 shadow-2xl z-10">
-        {/* Header */}
         <div className="flex justify-between items-start mb-5">
           <div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -355,7 +335,6 @@ function RejectModal({ request, onClose, onRejected }) {
           </button>
         </div>
 
-        {/* Warning */}
         <div className="flex items-start gap-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-2xl p-4 mb-5">
           <AlertCircle
             size={16}
@@ -403,7 +382,6 @@ function RejectModal({ request, onClose, onRejected }) {
   );
 }
 
-// ─── STAT CARD ────────────────────────────────────────────────────────────────
 const StatCard = ({ label, value, icon, color, bg }) => (
   <div className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 flex items-center gap-4 shadow-sm">
     <div

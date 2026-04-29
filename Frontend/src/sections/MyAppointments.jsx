@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
 import api from "../services/api";
 import { Calendar, Clock, User, ChevronRight, X, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -7,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const [selectedAppt, setSelectedAppt] = useState(null); // For the Modal
+  const [selectedAppt, setSelectedAppt] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRescheduleMode, setIsRescheduleMode] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -40,7 +39,7 @@ const MyAppointments = () => {
       setLoading(true);
       const res = await api.patch(`/appointments/${id}/cancel`);
       toast.success("Appointment cancelled");
-      fetchAppointments(); // Refresh the list
+      fetchAppointments(); // Refreshing the list
     } catch (err) {
       toast.error("Could not cancel appointment");
     } finally {
@@ -57,7 +56,7 @@ const MyAppointments = () => {
       toast.success("Appointment rescheduled!");
       setIsRescheduleMode(false);
        setIsModalOpen(false);
-      fetchAppointments(); // Refresh the list
+      fetchAppointments(); // Refreshing the list
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Failed to reschedule. Please try again.";
       toast.error(errorMsg);
@@ -162,7 +161,6 @@ const MyAppointments = () => {
                   </button>
                 )}
 
-                {/* Add this inside your card's action <div> */}
                 {appt.status?.toLowerCase() === "pending" && (
                   <button
                     onClick={() => {
@@ -205,13 +203,11 @@ const MyAppointments = () => {
 const AppointmentDetailModal = ({ isOpen, onClose, appointment, onReschedule }) => {
   const navigate = useNavigate();
 
-   // ✅ "Try New Date" - Opens reschedule modal with same doctor
   const handleTryNewDate = () => {
     onReschedule(appointment);
     onClose();
   };
 
-  // ✅ "Find Similar Doctors" - Navigates to booking page with filters
   const handleFindSimilarDoctors = () => {
     navigate("/dashboard/bookAppointment", {
       state: {
@@ -230,13 +226,11 @@ const AppointmentDetailModal = ({ isOpen, onClose, appointment, onReschedule }) 
     <div
       className={`fixed inset-0 z-50 transition-opacity ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
     >
-      {/* Dark Overlay */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Slide Panel */}
       <div
         className={`absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-slate-800 overflow-y-auto custom-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] shadow-2xl transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"} p-8`}
       >
@@ -255,9 +249,7 @@ const AppointmentDetailModal = ({ isOpen, onClose, appointment, onReschedule }) 
             Reference ID: #ONC-{appointment.id}
           </p>
 
-          {/* Inside the Patient's View Details Sidebar */}
           <div className="space-y-6">
-            {/* Status Header */}
             <div
               className={`p-4 rounded-2xl flex items-center gap-3 ${
                 appointment.status === "cancelled"
@@ -277,7 +269,6 @@ const AppointmentDetailModal = ({ isOpen, onClose, appointment, onReschedule }) 
               </span>
             </div>
 
-            {/* Display the Reason if Cancelled */}
             {appointment.status?.toLowerCase() === "cancelled" && (
               <div className="mt-4 space-y-3">
                 <div className="bg-red-500/10 border border-red-500/20 p-5 rounded-2xl text-sm">
@@ -354,13 +345,11 @@ const RescheduleModal = ({ isOpen, onClose, appointment, onConfirm }) => {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal Content */}
       <div className="relative bg-slate-800 border border-slate-700 w-full max-w-md rounded-3xl p-8 shadow-2xl">
         <h3 className="text-xl font-bold mb-2">Reschedule Appointment</h3>
         <p className="text-slate-400 text-sm mb-6">

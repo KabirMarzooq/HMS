@@ -30,7 +30,6 @@ class AppointmentController extends Controller
             'additional_notes' => 'nullable|string'
         ]);
 
-        // Anti-Double-Booking Check
         $conflict = Appointment::where('doctor_id', $request->doctor_id)
             ->where('appointment_date', $request->appointment_date)
             ->where('appointment_time', $request->appointment_time)
@@ -40,10 +39,9 @@ class AppointmentController extends Controller
         if ($conflict) {
             return response()->json([
                 'message' => 'Sorry, this time slot is already booked for this doctor.'
-            ], 409); // 409 Conflict
+            ], 409);
         }
 
-        // Save the appointment
         $appointment = Appointment::create([
             'patient_id' => $request->user()->id, // Gets the ID from the logged-in user's token
             'doctor_id' => $request->doctor_id,
@@ -64,7 +62,7 @@ class AppointmentController extends Controller
     {
         // Get appointments for the logged-in user with doctor details
         $appointments = Appointment::where('patient_id', $request->user()->id)
-            ->with('doctor:id,name,specialization') // Load doctor relationship
+            ->with('doctor:id,name,specialization')
             ->orderBy('appointment_date', 'desc')
             ->orderBy('appointment_time', 'desc')
             ->latest()
@@ -76,7 +74,7 @@ class AppointmentController extends Controller
     public function cancel($id)
     {
         $appointment = Appointment::where('id', $id)
-            ->where('patient_id', auth('api')->id()) // Security: Ensure user owns it
+            ->where('patient_id', auth('api')->id()) 
             ->firstOrFail();
 
         $appointment->update(['status' => 'cancelled']);
@@ -98,7 +96,7 @@ class AppointmentController extends Controller
         $appointment->update([
             'appointment_date' => $request->appointment_date,
             'appointment_time' => $request->appointment_time,
-            'status' => 'pending' // Reset to pending so doctor can re-approve
+            'status' => 'pending' 
         ]);
 
         return response()->json(['message' => 'Rescheduled successfully']);
@@ -136,7 +134,6 @@ class AppointmentController extends Controller
             // Log but don't fail the acceptance if billing has an issue
             Log::error('Invoice generation failed: ' . $e->getMessage());
         }
-        // ────────────────────────────────────────────────────────────────────
 
         return response()->json(['message' => 'Appointment confirmed successfully.']);
     }

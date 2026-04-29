@@ -6,8 +6,6 @@ import {
   RefreshCw,
   Calendar,
   User,
-  Clipboard,
-  Clock,
 } from "lucide-react";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
@@ -23,7 +21,6 @@ export default function Pharmacy() {
 
   const fetchPrescriptions = async () => {
     try {
-      // Hits the new patient-specific endpoint we just created
       const res = await api.get("/patient/prescriptions");
       setPrescriptions(res.data);
     } catch (err) {
@@ -45,7 +42,6 @@ export default function Pharmacy() {
   const handleDownload = async (id) => {
     toast.loading("Generating PDF...", { id: "download" });
     try {
-      // In a real app, this might open a new window to a PDF route
       await api.get(`/patient/prescriptions/${id}/download`);
       toast.success("Download started!", { id: "download" });
     } catch (err) {
@@ -77,7 +73,6 @@ export default function Pharmacy() {
         </p>
       </div>
 
-      {/* Search Bar - Matching the Doctor's UI */}
       <div className="relative w-full max-w-xl mb-8">
         <Search
           className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"

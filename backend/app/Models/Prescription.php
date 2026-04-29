@@ -18,13 +18,13 @@ class Prescription extends Model
         'instructions'
     ];
 
-    // Link to the patient
+    // Link to patient
     public function patient()
     {
         return $this->belongsTo(User::class, 'patient_id');
     }
 
-    // Link to the doctor
+    // Link to doctor
     public function doctor()
     {
         return $this->belongsTo(User::class, 'doctor_id');

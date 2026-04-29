@@ -18,20 +18,16 @@ class MedicalRecordController extends Controller
     {
         $doctorId = Auth::id();
 
-        // 1. Get patient basic info + their profile (folder cover)
         $patient = User::where('id', $patientId)
-            // ->where('role', 'patient')
             ->with('patientProfile')
             ->firstOrFail();
 
-        // 2. Get chronological visit records for this patient by this doctor
         $records = MedicalRecord::where('patient_id', $patientId)
             ->where('doctor_id', $doctorId)
             ->with('doctor:id,name')
             ->orderBy('visit_date', 'desc')
             ->get();
 
-        // 3. Get prescriptions for this patient by this doctor
         $prescriptions = \App\Models\Prescription::where('patient_id', $patientId)
             ->where('doctor_id', $doctorId)
             ->orderBy('created_at', 'desc')
@@ -103,18 +99,15 @@ class MedicalRecordController extends Controller
 
     public function adminShow($patientId)
     {
-        // Get patient basic info + profile
         $patient = User::where('id', $patientId)
             ->with('patientProfile')
             ->firstOrFail();
 
-        // ALL records for this patient across ALL doctors
         $records = MedicalRecord::where('patient_id', $patientId)
             ->with('doctor:id,name,specialization')
             ->orderBy('visit_date', 'desc')
             ->get();
 
-        // ALL prescriptions for this patient across ALL doctors
         $prescriptions = \App\Models\Prescription::where('patient_id', $patientId)
             ->with('doctor:id,name')
             ->orderBy('created_at', 'desc')

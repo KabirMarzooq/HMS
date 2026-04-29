@@ -20,13 +20,11 @@ class Appointment extends Model
         'cancellation_reason'
     ];
 
-    // Helper to get the Patient info later
     public function patient()
     {
         return $this->belongsTo(User::class, 'patient_id');
     }
 
-    // Helper to get the Doctor info later
     public function doctor()
     {
         return $this->belongsTo(User::class, 'doctor_id');

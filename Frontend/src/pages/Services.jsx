@@ -105,20 +105,6 @@ function Services() {
         "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
       items: ["MRI Scans", "CT Imaging", "Ultrasound"],
     },
-    // {
-    //   category: "Emergency",
-    //   iconClass: "fa-solid fa-truck-medical",
-    //   features: "24/7 Emergency Care",
-    //   description:
-    //     "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    //   items: [
-    //     "Round-the-Clock Availability",
-    //     "Trauma Center",
-    //     "Critical Care Unit",
-    //     "Emergency Surgery",
-    //   ],
-    //   className: "items-center text-center",
-    // },
   ];
 
   const emergencyCards = [

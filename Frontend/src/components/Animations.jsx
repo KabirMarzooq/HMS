@@ -11,13 +11,12 @@ function AnimatedSection({
   const ref = useRef(null);
   const isInView = useInView(ref, { once });
 
-  // Determine animation offset based on direction
   const offset = {
     left: { x: -100, y: 0 },
     right: { x: 100, y: 0 },
     top: { x: 0, y: -100 },
     bottom: { x: 0, y: 100 },
-  }[direction] || { x: 0, y: 0 }; // fallback
+  }[direction] || { x: 0, y: 0 };
 
   return (
     <motion.section

@@ -12,15 +12,15 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { useTheme } from "../layouts/ThemeContext";
-import api from "../services/api"; // ✅ Import api
-import toast from "react-hot-toast"; // ✅ Import toast
+import api from "../services/api"; 
+import toast from "react-hot-toast";
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState("overview");
   const { theme, setTheme } = useTheme();
-  const navigate = useNavigate(); // ✅ For redirecting after account deletion
+  const navigate = useNavigate(); 
 
-  // ✅ Fetch user data from backend
+  // Fetch user data from backend
   const [doctor, setDoctor] = useState({
     firstName: "",
     lastName: "",
@@ -34,7 +34,7 @@ export default function Settings() {
 
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch user profile on component mount
+  // Fetch user profile when the component mount
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -62,7 +62,7 @@ export default function Settings() {
     fetchUserProfile();
   }, []);
 
-  // ✅ Update Email Handler
+  // Update usres Email Handler
   const handleUpdateEmail = async (e) => {
     e.preventDefault();
     const newEmail = e.target.newEmail.value;
@@ -85,7 +85,7 @@ export default function Settings() {
     }
   };
 
-  // ✅ Update Password Handler
+  // Update users Password Handler
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
     const currentPassword = e.target.currentPassword.value;
@@ -120,7 +120,7 @@ export default function Settings() {
     }
   };
 
-  // ✅ Delete Account Handler
+  // Delete user Account Handler
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
       "⚠️ ARE YOU ABSOLUTELY SURE?\n\nThis action is PERMANENT and IRREVERSIBLE.\n\n✓ All your appointments will be deleted\n✓ All your patient/doctor records will be removed\n✓ You will be logged out immediately\n\nType 'DELETE' in the next prompt to confirm."
@@ -155,14 +155,14 @@ export default function Settings() {
     }
   };
 
-  // Helper to get initials
+  // Get initials Helper for each user
   const getInitials = () => {
     const f = doctor.firstName ? doctor.firstName.charAt(0) : "";
     const l = doctor.lastName ? doctor.lastName.charAt(0) : "";
     return (f + l).toUpperCase() || "DR";
   };
 
-  // Toggles State
+  // Toggles States
   const [toggles, setToggles] = useState({
     twoFactor: false,
     notifAppt: true,
@@ -232,7 +232,7 @@ export default function Settings() {
 
         {/* Right Column: Content Area */}
         <div className="flex-1 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden min-h-[500px]">
-          {/* TAB 1: PROFILE OVERVIEW */}
+          {/* PROFILE OVERVIEW TAB */}
           {activeTab === "overview" && (
             <div className="p-2 sm:p-8 animate-in fade-in duration-300">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white p-3 sm:p-0 sm:mb-6">
@@ -240,7 +240,7 @@ export default function Settings() {
               </h3>
 
               <div className="flex flex-col md:flex-row items-start gap-8 bg-slate-50 dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-100 dark:border-transparent">
-                {/* Dynamic Avatar */}
+                
                 <div className="w-24 h-24 rounded-full flex-shrink-0 bg-teal-500 flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-teal-500/20">
                   {doctor.profileImage ? (
                     <img
@@ -334,7 +334,7 @@ export default function Settings() {
             </div>
           )}
 
-          {/* TAB 2: SECURITY */}
+          {/* SECURITY TAB */}
           {activeTab === "security" && (
             <div className="p-8 animate-in fade-in duration-300 space-y-10">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
@@ -342,7 +342,7 @@ export default function Settings() {
               </h3>
 
               <div className="space-y-8">
-                {/* ✅ CHANGE PASSWORD SECTION */}
+                {/* CHANGE PASSWORD SECTION */}
                 <form onSubmit={handleUpdatePassword} className="space-y-4">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">
                     Change Password
@@ -375,7 +375,7 @@ export default function Settings() {
 
                 <hr className="border-slate-100 dark:border-slate-700" />
 
-                {/* ✅ CHANGE EMAIL SECTION */}
+                {/* CHANGE EMAIL SECTION */}
                 <form onSubmit={handleUpdateEmail} className="space-y-4">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white">
                     Change Email Address
@@ -461,7 +461,7 @@ export default function Settings() {
                   </div>
                 </div>
 
-                {/* ✅ DANGER ZONE (ACCOUNT DELETION) */}
+                {/* DANGER ZONE (ACCOUNT DELETION) */}
                 <div className="bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/20 p-6 rounded-3xl">
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-500 rounded-2xl">
@@ -490,7 +490,7 @@ export default function Settings() {
             </div>
           )}
 
-          {/* TAB 3: AVAILABILITY */}
+          {/* AVAILABILITY TAB */}
           {activeTab === "availability" && (
             <div className="p-2 sm:p-8 animate-in fade-in duration-300">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white p-2 sm:p-0 sm:mb-6">
@@ -552,7 +552,7 @@ export default function Settings() {
             </div>
           )}
 
-          {/* TAB 4: NOTIFICATIONS */}
+          {/* NOTIFICATIONS TAB */}
           {activeTab === "notifications" && (
             <div className="py-8 px-3 sm:p-8 animate-in fade-in duration-300">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
@@ -621,7 +621,7 @@ export default function Settings() {
             </div>
           )}
 
-          {/* TAB 5: APPEARANCE */}
+          {/* APPEARANCE TAB */}
           {activeTab === "appearance" && (
             <div className="py-8 px-3 sm:p-8 animate-in fade-in duration-300 space-y-10">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">
@@ -714,9 +714,8 @@ export default function Settings() {
 
               <hr className="border-slate-100 dark:border-slate-700" />
 
-              {/* Language & Regional Settings */}
+              {/* Language & Region Settings */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Language Dropdown */}
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">
                     Display Language
@@ -752,7 +751,6 @@ export default function Settings() {
                   </p>
                 </div>
 
-                {/* Timezone Dropdown */}
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">
                     Local Timezone
@@ -791,7 +789,6 @@ export default function Settings() {
                 </div>
               </div>
 
-              {/* Save Preference Button */}
               <div className="pt-6 border-t border-slate-100 dark:border-slate-700 flex justify-end">
                 <button className="px-8 py-3 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-xl transition-all shadow-lg shadow-teal-500/20 cursor-pointer">
                   Save Preferences
@@ -805,7 +802,6 @@ export default function Settings() {
   );
 }
 
-// Reusable custom Toggle component
 const Toggle = ({ enabled, onChange }) => {
   return (
     <button

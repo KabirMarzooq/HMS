@@ -22,7 +22,6 @@ class SystemLog extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Static helper so you can call SystemLog::log() anywhere cleanly
     public static function log(string $action, string $description, $target = null): void
     {
         $user = auth('api')->user();

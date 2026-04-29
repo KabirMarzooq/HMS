@@ -7,11 +7,6 @@ import {
   Calendar,
   User,
   Trash2,
-  ChevronDown,
-  FileText,
-  Clipboard,
-  History,
-  CheckCircle,
 } from "lucide-react";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
@@ -28,15 +23,6 @@ export default function Prescriptions() {
 
   // Sidebar State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  // const [formData, setFormData] = useState({
-  //   patient_id: "",
-  //   medication: "",
-  //   dosage: "",
-  //   frequency: "",
-  //   duration: "",
-  //   instructions: "",
-  // });
-
   const [selectedPatient, setSelectedPatient] = useState("");
   const [drugLines, setDrugLines] = useState([
     {

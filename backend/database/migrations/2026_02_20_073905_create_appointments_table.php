@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
-            // Link to the users table for both patient and doctor
+            // Linked to the users table for both patient and doctor
             $table->foreignId('patient_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade');
             
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('reason');
             $table->text('additional_notes')->nullable(); // nullable because it's optional
             
-            // Default status is pending until a receptionist/doctor confirms it
+            // Default status is pending until a doctor confirms it
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();
         });
