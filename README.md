@@ -5,7 +5,7 @@
 
 **A full-stack, production-ready Hospital Management System built with Laravel & React**
 
---> LIVE • ([Oncura+](https://hms-limr.vercel.app))
+--> LIVE • [Oncura+](https://hms-limr.vercel.app)
 
 [Features](#-features) • [Tech Stack](#-tech-stack) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Demo](#-demo-accounts) • [Contributing](#-contributing)
 
