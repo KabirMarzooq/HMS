@@ -17,7 +17,7 @@
     }
 
     body {
-        background: url(./assets/Surgery.jfif) no-repeat;
+        background: url(./assets/surgery.jfif) no-repeat;
         background-color: rgba(0, 0, 0, 0.4);
         background-blend-mode: overlay;
         background-position: center;
