@@ -23,7 +23,11 @@ const processQueue = (error, token = null) => {
 // This Interceptor attaches the token to EVERY request automatically
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('oncura_token');
-    if (token) {
+    const isAuthRoute = config.url?.includes('/auth/login') ||
+        config.url?.includes('/auth/register') ||
+        config.url?.includes('/auth/forgot-password');
+
+    if (token && !isAuthRoute) {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -35,9 +39,9 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        const isAuthEndpoint = originalRequest.url?.includes('/auth/login') || 
-                              originalRequest.url?.includes('/auth/register') ||
-                              originalRequest.url?.includes('/auth/forgot-password');
+        const isAuthEndpoint = originalRequest.url?.includes('/auth/login') ||
+            originalRequest.url?.includes('/auth/register') ||
+            originalRequest.url?.includes('/auth/forgot-password');
 
         // If the error is a 401 and we haven't tried to refresh yet
         if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
@@ -69,15 +73,7 @@ api.interceptors.response.use(
 
             try {
                 // Try to refresh the token
-                const response = await axios.post(
-                    'http://backend.test/api/auth/refresh',
-                    {},
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
+                const response = await api.post('/auth/refresh', {});
 
                 const newToken = response.data.access_token;
                 localStorage.setItem('oncura_token', newToken);
