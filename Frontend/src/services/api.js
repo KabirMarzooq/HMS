@@ -2,7 +2,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const api = axios.create({
-    baseURL: 'http://backend.test/api', // Laravel API URL
+    baseURL: import.meta.env.VITE_API_BASE_URL, // Larave API URL
 });
 
 let isRefreshing = false;
